@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────────────────────
+   SISTEMA DE DISEÑO — TuFraganciaIdeal
+   Tailwind v4: todo lo que va en @theme se convierte en utilidad.
+   --color-champan  ->  bg-champan / text-champan / border-champan
+   Cambiás un hex acá y cambia toda la web. No toques colores sueltos
+   en los componentes.
+   ────────────────────────────────────────────────────────────── */
+@theme {
+  /* Base: negros cálidos, no grises. El fondo es "jugo de perfume
+     en sombra", no un #111 neutro. */
+  --color-noche: #14100c;
+  --color-carbon: #1d1712;
+  --color-humo: #2a2119;
+  --color-borde: #3a2f24;
+
+  /* Acentos */
+  --color-champan: #d9b679; /* producto, precios, CTA principal */
+  --color-oro-claro: #ebd3a3; /* hover / brillos */
+  --color-vetiver: #8a9a7b; /* SOLO "original verificado" */
+
+  /* Texto */
+  --color-marfil: #f2eadc;
+  --color-arena: #a3937c;
+
+  /* Tipografías (las inyecta next/font desde layout.tsx) */
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  /* Escala tipográfica (proporción ~1.25, redondeada a píxeles limpios) */
+  --text-micro: 0.75rem;
+  --text-cuerpo: 1rem;
+  --text-medio: 1.25rem;
+  --text-titulo: clamp(1.75rem, 1.2rem + 2.4vw, 3rem);
+  --text-hero: clamp(2.75rem, 1.5rem + 5.5vw, 5.5rem);
+
+  --radius-vial: 1.75rem;
+}
+
+/* ── Base ─────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  /* El header sticky mide ~72px: evita que las anclas queden tapadas. */
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-noche);
+  color: var(--color-marfil);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv05";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Números alineados en precios y mililitros. */
+.cifras {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Foco visible y coherente en todo el sitio (accesibilidad de teclado). */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-champan);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-champan);
+  color: var(--color-noche);
+}
+
+/* ── Utilidades propias ───────────────────────────────────────── */
+
+/* Vidrio: superficie translúcida con borde cálido. Se usa en el header
+   y en las tarjetas, nunca sobre fondos planos sin nada detrás. */
+@utility vidrio {
+  background-color: color-mix(in oklab, var(--color-carbon) 72%, transparent);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--color-borde) 85%, transparent);
+}
+
+/* Filo dorado superior: simula el reflejo del vidrio de un frasco. */
+@utility filo-oro {
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--color-champan) 55%, transparent),
+    transparent
+  );
+}
+
+/* Contenedor único del sitio. */
+@utility marco {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 768px) {
+  .marco {
+    padding-inline: 2.5rem;
+  }
+}
+
+/* ── Movimiento reducido ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
