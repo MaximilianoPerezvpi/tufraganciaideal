@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { useCarrito, useCarritoListo, useUnidades } from "@/lib/cartStore";
 
 /**
@@ -14,6 +16,25 @@ export default function BotonCarrito({ className = "" }: { className?: string })
   const unidades = useUnidades();
   const listo = useCarritoListo();
   const mostrar = listo && unidades > 0;
+
+  // Pulso del badge SOLO cuando las unidades suben (no al sacar del carrito,
+  // ni en el primer render cuando recién se hidrata el carrito guardado).
+  const previas = useRef(unidades);
+  const [pulso, setPulso] = useState(false);
+
+  useEffect(() => {
+    if (!listo) {
+      previas.current = unidades;
+      return;
+    }
+    if (unidades > previas.current) {
+      setPulso(true);
+      const t = setTimeout(() => setPulso(false), 450);
+      previas.current = unidades;
+      return () => clearTimeout(t);
+    }
+    previas.current = unidades;
+  }, [unidades, listo]);
 
   return (
     <button
@@ -37,9 +58,13 @@ export default function BotonCarrito({ className = "" }: { className?: string })
       </svg>
       <span>Carrito</span>
       {mostrar && (
-        <span className="cifras absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-champan px-1 text-[0.7rem] font-medium text-noche">
+        <motion.span
+          animate={{ scale: pulso ? 1.35 : 1 }}
+          transition={{ type: "spring", stiffness: 700, damping: 15 }}
+          className="cifras absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-champan px-1 text-[0.7rem] font-medium text-noche"
+        >
           {unidades}
-        </span>
+        </motion.span>
       )}
     </button>
   );

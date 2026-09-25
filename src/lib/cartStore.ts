@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { toast } from "sonner";
 import { buscarProducto, type Producto } from "@/data/productos";
 
 /**
@@ -55,6 +56,7 @@ export const useCarrito = create<EstadoCarrito>()(
 
       agregar: (slug, cantidad = 1) =>
         set((estado) => {
+          const producto = buscarProducto(slug);
           const existente = estado.items.find((i) => i.slug === slug);
           const nueva = limitar(slug, (existente?.cantidad ?? 0) + cantidad);
           if (nueva === 0) return estado; // sin stock: no se agrega nada
@@ -65,7 +67,14 @@ export const useCarrito = create<EstadoCarrito>()(
               )
             : [...estado.items, { slug, cantidad: nueva }];
 
-          // Agregar abre el carrito: confirma la acción sin un toast extra.
+          // Toast al toque + el carrito que se abre: la confirmación se ve
+          // aunque la persona ya haya scrolleado lejos del botón.
+          if (producto) {
+            toast.success(`${producto.marca} ${producto.nombre}`, {
+              description: "Se agregó al carrito.",
+            });
+          }
+
           return { items, abierto: true };
         }),
 

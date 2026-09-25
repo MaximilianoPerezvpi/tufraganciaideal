@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
@@ -40,7 +41,11 @@ export default function TarjetaProducto({
       {/* 📸 FOTO DEL PERFUME
           Archivo: /public/productos/<slug>.jpg — cuadrada 1000×1000, frasco
           sellado centrado. `sizes` evita que el celular baje la versión grande. */}
-      <div className="relative aspect-square overflow-hidden bg-humo">
+      <Link
+        href={`/producto/${producto.slug}`}
+        aria-label={`Ver ${producto.nombre} de ${producto.marca}`}
+        className="relative block aspect-square overflow-hidden bg-humo"
+      >
         <Image
           src={producto.imagen}
           alt={`${producto.nombre} de ${producto.marca}, ${producto.concentracion} ${producto.volumen_ml} ml`}
@@ -62,12 +67,17 @@ export default function TarjetaProducto({
             Sin stock por ahora
           </span>
         )}
-      </div>
+      </Link>
 
       <div className="flex flex-1 flex-col p-5">
         <p className="text-micro text-arena">{producto.marca}</p>
         <h3 className="mt-1 font-display text-[1.3rem] leading-tight text-marfil">
-          {producto.nombre}
+          <Link
+            href={`/producto/${producto.slug}`}
+            className="transition-colors hover:text-champan"
+          >
+            {producto.nombre}
+          </Link>
         </h3>
 
         {/* Ficha técnica: lo primero que mira alguien que ya sabe qué busca. */}

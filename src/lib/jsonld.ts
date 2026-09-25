@@ -9,7 +9,7 @@ import { site } from "@/lib/site";
  * un perfume, acá aparece sin tocar nada.
  */
 
-function oferta(p: Producto) {
+function oferta(p: Producto, url = `${site.url}/#catalogo`) {
   return {
     "@type": "Offer",
     priceCurrency: "UYU",
@@ -19,7 +19,7 @@ function oferta(p: Producto) {
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
     itemCondition: "https://schema.org/NewCondition",
-    url: `${site.url}/#catalogo`,
+    url,
     areaServed: { "@type": "Country", name: "Uruguay" },
     seller: { "@type": "Organization", name: site.nombre },
   };
@@ -45,5 +45,22 @@ export function catalogoJsonLd() {
         offers: oferta(p),
       },
     })),
+  };
+}
+
+/** Datos estructurados de un producto individual, para /producto/[slug]. */
+export function productoJsonLd(p: Producto) {
+  const url = `${site.url}/producto/${p.slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${p.marca} ${p.nombre} ${p.concentracion} ${p.volumen_ml} ml`,
+    brand: { "@type": "Brand", name: p.marca },
+    category: "Perfume",
+    description: p.descripcion,
+    image: `${site.url}${p.imagen}`,
+    size: `${p.volumen_ml} ml`,
+    url,
+    offers: oferta(p, url),
   };
 }

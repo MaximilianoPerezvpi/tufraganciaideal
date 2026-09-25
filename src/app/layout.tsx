@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Archivo } from "next/font/google";
+import { Toaster } from "sonner";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -89,6 +90,21 @@ export default function RootLayout({
     <html lang="es-UY" className={`${fraunces.variable} ${archivo.variable}`}>
       <body>
         {children}
+
+        {/* Toasts de confirmación (agregar al carrito, etc.), con la paleta del sitio. */}
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "var(--color-carbon)",
+              color: "var(--color-marfil)",
+              border: "1px solid var(--color-borde)",
+            },
+            descriptionClassName: "!text-arena",
+          }}
+          icons={{ success: "✓" }}
+        />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
