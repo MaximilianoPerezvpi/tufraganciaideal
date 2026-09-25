@@ -4,7 +4,12 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import DetalleProducto from "@/components/DetalleProducto";
-import { buscarProducto, productos, type Producto } from "@/data/productos";
+import {
+  buscarProducto,
+  imagenUrl,
+  productos,
+  type Producto,
+} from "@/data/productos";
 import { productoJsonLd } from "@/lib/jsonld";
 
 type Parametros = { params: Promise<{ slug: string }> };
@@ -22,6 +27,10 @@ export async function generateMetadata({
   if (!producto) return {};
 
   const titulo = `${producto.marca} ${producto.nombre} ${producto.concentracion} ${producto.volumen_ml} ml`;
+  // Foto propia (cuadrada) o el OG del sitio (1200×630) si todavía no la subiste.
+  const imagen = producto.imagen
+    ? { url: producto.imagen, width: 1000, height: 1000, alt: titulo }
+    : { url: imagenUrl(producto), width: 1200, height: 630, alt: titulo };
 
   return {
     title: titulo,
@@ -31,15 +40,13 @@ export async function generateMetadata({
       type: "website",
       title: titulo,
       description: producto.descripcion,
-      images: [
-        { url: producto.imagen, width: 1000, height: 1000, alt: titulo },
-      ],
+      images: [imagen],
     },
     twitter: {
       card: "summary_large_image",
       title: titulo,
       description: producto.descripcion,
-      images: [producto.imagen],
+      images: [imagen.url],
     },
   };
 }

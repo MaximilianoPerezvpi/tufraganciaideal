@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { MercadoPagoConfig, Preference } from "mercadopago";
-import { buscarProducto } from "@/data/productos";
+import { buscarProducto, imagenUrl } from "@/data/productos";
 import { site } from "@/lib/site";
 
 /**
@@ -82,7 +82,7 @@ export async function POST(request: Request) {
       id: producto.slug,
       title: `${producto.marca} ${producto.nombre}`,
       description: `${producto.concentracion} ${producto.volumen_ml} ml · Original sellado`,
-      picture_url: `${site.url}${producto.imagen}`,
+      picture_url: `${site.url}${imagenUrl(producto)}`,
       category_id: "fragrances",
       quantity: cantidad,
       unit_price: producto.precio_uyu,

@@ -38,12 +38,14 @@ export default function Catalogo() {
   );
   const [orden, setOrden] = useState<Orden>("destacados");
   const [busqueda, setBusqueda] = useState("");
+  const [soloEntregaInmediata, setSoloEntregaInmediata] = useState(false);
 
   const hayFiltrosActivos =
     filtro !== "todos" ||
     marca !== "todas" ||
     concentracion !== "todas" ||
-    busqueda.trim() !== "";
+    busqueda.trim() !== "" ||
+    soloEntregaInmediata;
 
   const visibles = useMemo(() => {
     const texto = busqueda.trim().toLowerCase();
@@ -53,6 +55,7 @@ export default function Catalogo() {
       if (marca !== "todas" && p.marca !== marca) return false;
       if (concentracion !== "todas" && p.concentracion !== concentracion)
         return false;
+      if (soloEntregaInmediata && !p.entregaInmediata) return false;
       if (texto) {
         const enTexto = `${p.marca} ${p.nombre}`.toLowerCase();
         if (!enTexto.includes(texto)) return false;
@@ -66,7 +69,7 @@ export default function Catalogo() {
       // "Destacados": van primero, sin romper el orden del archivo de datos.
       return Number(b.destacado ?? false) - Number(a.destacado ?? false);
     });
-  }, [filtro, marca, concentracion, orden, busqueda]);
+  }, [filtro, marca, concentracion, orden, busqueda, soloEntregaInmediata]);
 
   function limpiarFiltros() {
     setFiltro("todos");
@@ -74,6 +77,7 @@ export default function Catalogo() {
     setConcentracion("todas");
     setOrden("destacados");
     setBusqueda("");
+    setSoloEntregaInmediata(false);
   }
 
   return (
@@ -113,6 +117,20 @@ export default function Catalogo() {
                 </button>
               );
             })}
+
+            {/* Filtro rápido: solo lo que hay para entregar ya, sin esperar pedido. */}
+            <button
+              type="button"
+              onClick={() => setSoloEntregaInmediata((v) => !v)}
+              aria-pressed={soloEntregaInmediata}
+              className={`rounded-full border px-4 py-2 text-sm transition-colors ${
+                soloEntregaInmediata
+                  ? "border-champan bg-champan text-noche"
+                  : "border-champan/50 text-champan hover:bg-champan/10"
+              }`}
+            >
+              ⚡ Entrega Inmediata
+            </button>
           </div>
         </div>
 

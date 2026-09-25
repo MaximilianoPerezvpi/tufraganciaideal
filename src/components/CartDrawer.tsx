@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -11,6 +10,7 @@ import {
 } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
 import { site } from "@/lib/site";
+import ImagenProducto from "./ImagenProducto";
 
 /**
  * Carrito lateral.
@@ -156,10 +156,8 @@ export default function CartDrawer() {
                         className="flex gap-4 py-5"
                       >
                         <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-humo">
-                          <Image
-                            src={linea.producto.imagen}
-                            alt={`${linea.producto.nombre} de ${linea.producto.marca}`}
-                            fill
+                          <ImagenProducto
+                            producto={linea.producto}
                             sizes="80px"
                             className="object-cover"
                           />

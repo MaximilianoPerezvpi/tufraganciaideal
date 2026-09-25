@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
+import ImagenProducto from "./ImagenProducto";
 
 /**
  * Tarjeta de producto: un frasco original sellado.
@@ -46,12 +46,10 @@ export default function TarjetaProducto({
         aria-label={`Ver ${producto.nombre} de ${producto.marca}`}
         className="relative block aspect-square overflow-hidden bg-humo"
       >
-        <Image
-          src={producto.imagen}
-          alt={`${producto.nombre} de ${producto.marca}, ${producto.concentracion} ${producto.volumen_ml} ml`}
-          fill
+        <ImagenProducto
+          producto={producto}
+          prioridad={prioridad}
           sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 300px"
-          priority={prioridad}
           className={`object-cover transition-transform duration-500 group-hover:scale-[1.04] ${
             disponible ? "" : "opacity-40 grayscale"
           }`}
@@ -61,6 +59,12 @@ export default function TarjetaProducto({
         <span className="absolute left-3 top-3 rounded-full bg-noche/80 px-3 py-1 text-micro text-vetiver backdrop-blur-sm">
           100% original sellado
         </span>
+
+        {producto.entregaInmediata && (
+          <span className="absolute right-3 top-3 rounded-full bg-champan px-3 py-1 text-micro font-medium text-noche">
+            ⚡ Stock Inmediato
+          </span>
+        )}
 
         {!disponible && (
           <span className="absolute inset-x-0 bottom-0 bg-noche/85 py-2 text-center text-micro text-marfil">

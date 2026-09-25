@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -8,6 +7,7 @@ import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
 import TarjetaProducto from "./TarjetaProducto";
+import ImagenProducto from "./ImagenProducto";
 
 const CONFIANZA = [
   "100% Original Sellado",
@@ -63,17 +63,20 @@ export default function DetalleProducto({
       <section className="marco grid gap-10 py-8 md:py-14 lg:grid-cols-2 lg:gap-16">
         {/* Imagen principal */}
         <div className="relative aspect-square overflow-hidden rounded-2xl border border-borde bg-humo">
-          <Image
-            src={producto.imagen}
-            alt={`${producto.nombre} de ${producto.marca}, ${producto.concentracion} ${producto.volumen_ml} ml`}
-            fill
+          <ImagenProducto
+            producto={producto}
+            prioridad
             sizes="(max-width: 1024px) 92vw, 46vw"
-            priority
             className={`object-cover ${disponible ? "" : "opacity-40 grayscale"}`}
           />
           <span className="absolute left-4 top-4 rounded-full bg-noche/80 px-3 py-1 text-micro text-vetiver backdrop-blur-sm">
             100% original sellado
           </span>
+          {producto.entregaInmediata && (
+            <span className="absolute right-4 top-4 rounded-full bg-champan px-3 py-1 text-micro font-medium text-noche">
+              ⚡ Stock Inmediato
+            </span>
+          )}
           {!disponible && (
             <span className="absolute inset-x-0 bottom-0 bg-noche/85 py-2 text-center text-micro text-marfil">
               Sin stock por ahora

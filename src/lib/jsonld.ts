@@ -1,4 +1,4 @@
-import { productos, type Producto } from "@/data/productos";
+import { productos, imagenUrl, type Producto } from "@/data/productos";
 import { site } from "@/lib/site";
 
 /**
@@ -40,7 +40,7 @@ export function catalogoJsonLd() {
         brand: { "@type": "Brand", name: p.marca },
         category: "Perfume",
         description: p.descripcion,
-        image: `${site.url}${p.imagen}`,
+        image: `${site.url}${imagenUrl(p)}`,
         size: `${p.volumen_ml} ml`,
         offers: oferta(p),
       },
@@ -58,7 +58,7 @@ export function productoJsonLd(p: Producto) {
     brand: { "@type": "Brand", name: p.marca },
     category: "Perfume",
     description: p.descripcion,
-    image: `${site.url}${p.imagen}`,
+    image: `${site.url}${imagenUrl(p)}`,
     size: `${p.volumen_ml} ml`,
     url,
     offers: oferta(p, url),
