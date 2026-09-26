@@ -7,7 +7,7 @@ import Frasco from "./Frasco";
  */
 export default function Hero() {
   return (
-    <section id="inicio" className="relative overflow-hidden pt-[72px]">
+    <section id="inicio" className="relative overflow-hidden pt-[104px]">
       {/* Resplandor cálido detrás del frasco, muy sutil. */}
       <div
         aria-hidden
@@ -16,7 +16,8 @@ export default function Hero() {
 
       <div className="marco relative grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8">
         <div className="max-w-[34ch]">
-          <h1 className="font-display text-[length:var(--text-hero)] font-light leading-[0.95] tracking-[-0.02em] text-marfil">
+          <p className="kicker">Alta perfumería · Montevideo</p>
+          <h1 className="mt-4 font-display text-[length:var(--text-hero)] font-light leading-[0.95] tracking-[-0.02em] text-marfil">
             Perfumes originales, sellados, al precio de Uruguay.
           </h1>
 
@@ -41,19 +42,32 @@ export default function Hero() {
             </Link>
           </div>
 
-          {/* Las tres objeciones que frenan una compra de perfumería online. */}
-          <dl className="mt-12 grid max-w-md grid-cols-3 gap-px overflow-hidden rounded-xl border border-borde bg-borde text-center">
+          {/* Garantías de confianza: las dos objeciones que frenan una
+              compra de perfumería online. */}
+          <ul className="mt-12 flex flex-col gap-3">
             {[
-              { d: "Frascos", t: "Sellados de fábrica" },
-              { d: "Pago", t: "Tarjeta o efectivo" },
-              { d: "Envíos", t: "A todo Uruguay" },
-            ].map((item) => (
-              <div key={item.d} className="bg-carbon px-3 py-4">
-                <dt className="text-micro text-arena">{item.d}</dt>
-                <dd className="mt-1 text-sm text-marfil">{item.t}</dd>
-              </div>
+              "Garantía 100% Perfumes Sellados de Origen",
+              "Envíos asegurados por DAC y UES a todo Uruguay",
+            ].map((texto) => (
+              <li key={texto} className="flex items-center gap-3">
+                <span
+                  aria-hidden
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-oro-vivo/40 text-oro-vivo"
+                >
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none">
+                    <path
+                      d="M5 13l4 4L19 7"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span className="text-sm text-marfil">{texto}</span>
+              </li>
             ))}
-          </dl>
+          </ul>
         </div>
 
         <div className="flex justify-center lg:justify-end">

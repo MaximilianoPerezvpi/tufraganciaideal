@@ -18,6 +18,7 @@
   /* Acentos */
   --color-champan: #d9b679; /* producto, precios, CTA principal */
   --color-oro-claro: #ebd3a3; /* hover / brillos */
+  --color-oro-vivo: #d4af37; /* glow de tarjetas: más saturado que el champán de texto */
   --color-vetiver: #8a9a7b; /* SOLO "original verificado" */
 
   /* Texto */
@@ -41,8 +42,8 @@
 /* ── Base ─────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
-  /* El header sticky mide ~72px: evita que las anclas queden tapadas. */
-  scroll-padding-top: 5.5rem;
+  /* Barra de anuncio (32px) + header (72px): evita que las anclas queden tapadas. */
+  scroll-padding-top: 6.7rem;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -91,6 +92,22 @@ body {
     color-mix(in oklab, var(--color-champan) 55%, transparent),
     transparent
   );
+}
+
+/* Kicker editorial: la etiqueta chica en mayúsculas arriba de un título de
+   sección ("CATÁLOGO", "GARANTÍA"). Da el aire de revista de perfumería. */
+@utility kicker {
+  font-size: var(--text-micro);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-champan);
+}
+
+/* Glow dorado de tarjeta: un halo apenas visible al hover (usar con
+   `hover:glow-oro` + `transition-shadow`), nunca un brillo genérico blanco. */
+@utility glow-oro {
+  box-shadow: 0 0 32px -8px color-mix(in oklab, var(--color-oro-vivo) 45%, transparent);
 }
 
 /* Contenedor único del sitio. */

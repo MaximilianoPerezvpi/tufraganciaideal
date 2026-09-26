@@ -32,10 +32,10 @@ export default function TarjetaProducto({
 
   return (
     <article
-      className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-carbon transition-colors duration-300 ${
+      className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-carbon transition-[box-shadow,border-color] duration-300 hover:glow-oro ${
         producto.destacado
           ? "border border-champan/35"
-          : "border border-borde hover:border-champan/30"
+          : "border border-borde hover:border-oro-vivo/40"
       }`}
     >
       {/* 📸 FOTO DEL PERFUME
@@ -65,6 +65,11 @@ export default function TarjetaProducto({
             ⚡ Stock Inmediato
           </span>
         )}
+
+        {/* Badge de familia: Árabe o Diseñador. */}
+        <span className="absolute bottom-3 left-3 rounded-full border border-marfil/25 bg-noche/70 px-3 py-1 text-micro text-marfil backdrop-blur-sm">
+          {producto.categoria === "árabes" ? "Árabe" : "Diseñador"}
+        </span>
 
         {!disponible && (
           <span className="absolute inset-x-0 bottom-0 bg-noche/85 py-2 text-center text-micro text-marfil">
@@ -122,7 +127,7 @@ export default function TarjetaProducto({
             disabled={!disponible || sinMasStock}
             onClick={() => agregar(producto.slug)}
             whileTap={disponible && !sinMasStock ? { scale: 0.97 } : undefined}
-            className="mt-4 w-full rounded-full border border-champan/50 py-3 text-sm text-champan transition-colors hover:bg-champan hover:text-noche disabled:cursor-not-allowed disabled:border-borde disabled:text-arena disabled:hover:bg-transparent"
+            className="mt-4 w-full rounded-full border border-champan/50 py-3 text-sm text-champan transition-all duration-200 hover:-translate-y-0.5 hover:bg-champan hover:text-noche hover:shadow-[0_8px_24px_-8px_var(--color-oro-vivo)] disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-borde disabled:text-arena disabled:shadow-none disabled:hover:bg-transparent"
           >
             {!disponible
               ? "Sin stock"

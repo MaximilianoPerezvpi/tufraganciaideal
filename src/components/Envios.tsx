@@ -43,7 +43,8 @@ export default function Envios() {
     <section id="envios" className="scroll-mt-24 py-20 md:py-28">
       <div className="marco grid gap-14 lg:grid-cols-2 lg:gap-20">
         <div>
-          <h2 className="font-display text-[length:var(--text-titulo)] font-light leading-tight text-marfil">
+          <p className="kicker">Envíos y pagos</p>
+          <h2 className="mt-2 font-display text-[length:var(--text-titulo)] font-light leading-tight text-marfil">
             Cómo pagás y cómo te llega
           </h2>
           <p className="mt-4 max-w-[48ch] text-arena">

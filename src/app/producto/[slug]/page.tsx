@@ -75,7 +75,7 @@ export default async function PaginaProducto({ params }: Parametros) {
   return (
     <>
       <Header />
-      <main id="contenido" className="pt-[72px]">
+      <main id="contenido" className="pt-[104px]">
         <DetalleProducto producto={producto} relacionados={relacionados} />
       </main>
       <Footer />

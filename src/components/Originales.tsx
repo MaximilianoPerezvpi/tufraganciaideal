@@ -35,7 +35,8 @@ export default function Originales() {
     >
       <div className="marco">
         <div className="max-w-[52ch]">
-          <h2 className="font-display text-[length:var(--text-titulo)] font-light leading-tight text-marfil">
+          <p className="kicker">Garantía</p>
+          <h2 className="mt-2 font-display text-[length:var(--text-titulo)] font-light leading-tight text-marfil">
             Sellado, con lote y con garantía.
           </h2>
           <p className="mt-4 text-arena">
