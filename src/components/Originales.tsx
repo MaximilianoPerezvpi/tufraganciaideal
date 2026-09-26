@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 /**
  * Propuesta de valor: por qué comprar acá y no en cualquier lado.
@@ -48,7 +51,14 @@ export default function Originales() {
 
         <ol className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-borde bg-borde md:grid-cols-3">
           {PASOS.map((paso, i) => (
-            <li key={paso.titulo} className="bg-carbon p-6">
+            <motion.li
+              key={paso.titulo}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.5, delay: i * 0.12, ease: "easeOut" }}
+              className="bg-carbon p-6"
+            >
               <span aria-hidden className="cifras block text-sm text-vetiver">
                 {i + 1}
               </span>
@@ -59,7 +69,7 @@ export default function Originales() {
               <p className="mt-2 text-sm leading-relaxed text-arena">
                 {paso.texto}
               </p>
-            </li>
+            </motion.li>
           ))}
         </ol>
 

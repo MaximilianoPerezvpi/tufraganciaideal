@@ -123,6 +123,26 @@ body {
   }
 }
 
+/* Nota olfativa: degradado dorado en reposo (invisible, corrido fuera de
+   vista) que barre la pill al hacer hover. Se combina con
+   `whileHover={{ scale, y }}` de Framer Motion en el componente. */
+@utility nota-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in oklab, var(--color-oro-vivo) 55%, transparent) 50%,
+    transparent 70%
+  );
+  background-size: 250% 100%;
+  background-position: 200% 0;
+}
+
+@keyframes barrido-oro {
+  to {
+    background-position: -50% 0;
+  }
+}
+
 /* ── Movimiento reducido ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html {

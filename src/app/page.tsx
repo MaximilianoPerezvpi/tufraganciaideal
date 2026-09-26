@@ -5,6 +5,7 @@ import Originales from "@/components/Originales";
 import Envios from "@/components/Envios";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
+import BotonFlotanteWhatsApp from "@/components/BotonFlotanteWhatsApp";
 import { catalogoJsonLd } from "@/lib/jsonld";
 
 /**
@@ -23,8 +24,9 @@ export default function Home() {
       </main>
       <Footer />
 
-      {/* Vive fuera de <main>: se monta una sola vez y lo abre cualquier botón. */}
+      {/* Viven fuera de <main>: se montan una sola vez. */}
       <CartDrawer />
+      <BotonFlotanteWhatsApp />
 
       {/* Precios y stock legibles por Google, generados desde productos.ts */}
       <script

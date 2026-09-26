@@ -146,11 +146,17 @@ export default function CartDrawer() {
                 </div>
               ) : (
                 <ul className="divide-y divide-borde">
-                  <AnimatePresence initial={false}>
-                    {lineas.map((linea) => (
+                  <AnimatePresence>
+                    {lineas.map((linea, i) => (
                       <motion.li
                         key={linea.producto.slug}
                         layout
+                        initial={{ opacity: 0, x: 24 }}
+                        animate={{
+                          opacity: 1,
+                          x: 0,
+                          transition: { duration: 0.25, delay: i * 0.06 },
+                        }}
                         exit={{ opacity: 0, height: 0, marginTop: 0 }}
                         transition={{ duration: 0.2 }}
                         className="flex gap-4 py-5"

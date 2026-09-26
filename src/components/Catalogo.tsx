@@ -341,9 +341,15 @@ export default function Catalogo() {
             )}
           </div>
         ) : (
-          <div className="mx-auto mt-20 max-w-2xl">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mx-auto mt-20 max-w-2xl"
+          >
             <BannerConsultaWhatsApp />
-          </div>
+          </motion.div>
         )}
       </div>
     </section>

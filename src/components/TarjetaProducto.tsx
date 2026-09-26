@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
@@ -30,8 +31,24 @@ export default function TarjetaProducto({
   const disponible = hayStock(producto);
   const sinMasStock = enCarrito >= producto.stock;
 
+  // "¡Agregado!" en el botón por un instante, antes de que aparezca el
+  // toast: la confirmación se ve en el mismo lugar donde hiciste clic.
+  const [agregado, setAgregado] = useState(false);
+
+  useEffect(() => {
+    if (!agregado) return;
+    const t = setTimeout(() => setAgregado(false), 1200);
+    return () => clearTimeout(t);
+  }, [agregado]);
+
+  function manejarAgregar() {
+    agregar(producto.slug);
+    setAgregado(true);
+  }
+
   return (
-    <article
+    <motion.article
+      layout
       className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-carbon transition-[box-shadow,border-color] duration-300 hover:glow-oro ${
         producto.destacado
           ? "border border-champan/35"
@@ -125,18 +142,56 @@ export default function TarjetaProducto({
           <motion.button
             type="button"
             disabled={!disponible || sinMasStock}
-            onClick={() => agregar(producto.slug)}
-            whileTap={disponible && !sinMasStock ? { scale: 0.97 } : undefined}
-            className="mt-4 w-full rounded-full border border-champan/50 py-3 text-sm text-champan transition-all duration-200 hover:-translate-y-0.5 hover:bg-champan hover:text-noche hover:shadow-[0_8px_24px_-8px_var(--color-oro-vivo)] disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-borde disabled:text-arena disabled:shadow-none disabled:hover:bg-transparent"
+            onClick={manejarAgregar}
+            whileTap={disponible && !sinMasStock ? { scale: 0.95 } : undefined}
+            className={`mt-4 w-full overflow-hidden rounded-full border py-3 text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_var(--color-oro-vivo)] disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-borde disabled:text-arena disabled:shadow-none disabled:hover:bg-transparent ${
+              agregado
+                ? "border-vetiver bg-vetiver text-noche"
+                : "border-champan/50 text-champan hover:bg-champan hover:text-noche"
+            }`}
           >
-            {!disponible
-              ? "Sin stock"
-              : sinMasStock
-                ? `Ya tenés ${enCarrito} en el carrito`
-                : "Agregar al carrito"}
+            <AnimatePresence mode="wait" initial={false}>
+              {agregado ? (
+                <motion.span
+                  key="ok"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex items-center justify-center gap-1.5"
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden>
+                    <path
+                      d="M5 13l4 4L19 7"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  ¡Agregado!
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="label"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.15 }}
+                  className="block"
+                >
+                  {!disponible
+                    ? "Sin stock"
+                    : sinMasStock
+                      ? `Ya tenés ${enCarrito} en el carrito`
+                      : "Agregar al carrito"}
+                </motion.span>
+              )}
+            </AnimatePresence>
           </motion.button>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }

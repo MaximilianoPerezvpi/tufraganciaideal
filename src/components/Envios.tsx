@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { linkWhatsApp, site } from "@/lib/site";
 
 /**
@@ -66,9 +69,13 @@ export default function Envios() {
 
         <div>
           <ul className="grid gap-4">
-            {ENVIOS.map((e) => (
-              <li
+            {ENVIOS.map((e, i) => (
+              <motion.li
                 key={e.nombre}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.5, delay: i * 0.1, ease: "easeOut" }}
                 className="rounded-2xl border border-borde bg-carbon p-6"
               >
                 <div className="flex items-baseline justify-between gap-4">
@@ -82,11 +89,16 @@ export default function Envios() {
                 <p className="mt-2 text-sm leading-relaxed text-arena">
                   {e.detalle}
                 </p>
-              </li>
+              </motion.li>
             ))}
           </ul>
 
-          <div className="mt-8 rounded-2xl border border-champan/30 bg-champan/[0.06] p-6">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
+            className="mt-8 rounded-2xl border border-champan/30 bg-champan/[0.06] p-6">
             <p className="text-marfil">
               ¿No encontrás el perfume que buscás?
             </p>
@@ -102,7 +114,7 @@ export default function Envios() {
             >
               Consultar un perfume
             </a>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

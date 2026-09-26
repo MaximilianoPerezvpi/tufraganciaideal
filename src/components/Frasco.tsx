@@ -5,18 +5,23 @@ import { motion, useReducedMotion } from "framer-motion";
 /**
  * El frasco del hero.
  *
- * Es el ÚNICO momento de movimiento automático del sitio: al cargar, el frasco
- * aparece y el celofán del sellado dibuja su brillo. Todo lo demás se mueve
- * solo cuando el usuario hace algo.
+ * La entrada (fade + slide) la controla el `motion.div` padre en Hero.tsx,
+ * como parte del stagger del resto del hero. Acá solo viven dos movimientos
+ * propios: el brillo del celofán al aparecer, y un flote infinito y muy
+ * sutil una vez que ya está en pantalla — el único movimiento continuo del
+ * sitio, así que se apaga entero con `prefers-reduced-motion`.
  *
  * Es SVG puro: pesa ~3 KB, escala perfecto en cualquier pantalla y no bloquea
  * el LCP como lo haría una foto de 400 KB.
  */
 export default function Frasco() {
   const sinMovimiento = useReducedMotion();
-  const entrada = sinMovimiento
+  const flote = sinMovimiento
     ? {}
-    : { initial: { opacity: 0, y: 24 }, animate: { opacity: 1, y: 0 } };
+    : {
+        animate: { y: [0, -8, 0] },
+        transition: { duration: 4, repeat: Infinity, ease: "easeInOut" as const },
+      };
 
   return (
     <motion.svg
@@ -24,8 +29,7 @@ export default function Frasco() {
       role="img"
       aria-label="Frasco de perfume original sellado"
       className="h-full max-h-[70vh] w-full"
-      {...entrada}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      {...flote}
     >
       <defs>
         {/* Volumen del vidrio: claro en el borde izquierdo, oscuro al fondo. */}

@@ -175,12 +175,14 @@ export default function DetalleProducto({
                   <h3 className="text-micro text-arena">{titulo}</h3>
                   <ul className="mt-3 flex flex-wrap gap-1.5">
                     {notas.map((nota) => (
-                      <li
+                      <motion.li
                         key={nota}
-                        className="rounded-full border border-champan/30 px-2.5 py-1 text-micro text-champan"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="nota-shimmer cursor-default rounded-full border border-champan/30 px-2.5 py-1 text-micro text-champan hover:animate-[barrido-oro_0.9s_ease_forwards] hover:border-oro-vivo/60"
                       >
                         {nota}
-                      </li>
+                      </motion.li>
                     ))}
                   </ul>
                 </div>
