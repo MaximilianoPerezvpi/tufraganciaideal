@@ -21,7 +21,7 @@ const ORDENES: { id: Orden; etiqueta: string }[] = [
 ];
 
 /** Marcas presentes en el catálogo, sin repetir y en orden alfabético. */
-const MARCAS = Array.from(new Set(productos.map((p) => p.marca))).sort((a, b) =>
+const MARCAS = Array.from(new Set(productos.map((p) => p.casa))).sort((a, b) =>
   a.localeCompare(b, "es"),
 );
 
@@ -52,12 +52,12 @@ export default function Catalogo() {
 
     const filtrados = productos.filter((p) => {
       if (filtro !== "todos" && p.categoria !== filtro) return false;
-      if (marca !== "todas" && p.marca !== marca) return false;
+      if (marca !== "todas" && p.casa !== marca) return false;
       if (concentracion !== "todas" && p.concentracion !== concentracion)
         return false;
       if (soloEntregaInmediata && !p.entregaInmediata) return false;
       if (texto) {
-        const enTexto = `${p.marca} ${p.nombre}`.toLowerCase();
+        const enTexto = `${p.casa} ${p.nombre}`.toLowerCase();
         if (!enTexto.includes(texto)) return false;
       }
       return true;

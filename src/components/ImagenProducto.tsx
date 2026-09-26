@@ -28,7 +28,7 @@ export default function ImagenProducto({
   return (
     <Image
       src={producto.imagen}
-      alt={`${producto.nombre} de ${producto.marca}, ${producto.concentracion} ${producto.volumen_ml} ml`}
+      alt={`${producto.nombre} de ${producto.casa}, ${producto.concentracion} ${producto.volumen_ml} ml`}
       fill
       sizes={sizes}
       priority={prioridad}

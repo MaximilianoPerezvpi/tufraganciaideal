@@ -26,7 +26,7 @@ export async function generateMetadata({
   const producto = buscarProducto(slug);
   if (!producto) return {};
 
-  const titulo = `${producto.marca} ${producto.nombre} ${producto.concentracion} ${producto.volumen_ml} ml`;
+  const titulo = `${producto.casa} ${producto.nombre} ${producto.concentracion} ${producto.volumen_ml} ml`;
   // Foto propia (cuadrada) o el OG del sitio (1200×630) si todavía no la subiste.
   const imagen = producto.imagen
     ? { url: producto.imagen, width: 1000, height: 1000, alt: titulo }
@@ -54,12 +54,12 @@ export async function generateMetadata({
 /** Misma marca primero; si faltan para llegar a 4, completa con la misma categoría. */
 function relacionadosDe(producto: Producto): Producto[] {
   const mismaMarca = productos.filter(
-    (p) => p.slug !== producto.slug && p.marca === producto.marca,
+    (p) => p.slug !== producto.slug && p.casa === producto.casa,
   );
   const mismaCategoria = productos.filter(
     (p) =>
       p.slug !== producto.slug &&
-      p.marca !== producto.marca &&
+      p.casa !== producto.casa &&
       p.categoria === producto.categoria,
   );
   return [...mismaMarca, ...mismaCategoria].slice(0, 4);

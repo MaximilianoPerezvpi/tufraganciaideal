@@ -86,7 +86,7 @@ export default function DetalleProducto({
 
         {/* Ficha */}
         <div className="flex flex-col">
-          <p className="text-micro text-arena">{producto.marca}</p>
+          <p className="text-micro text-arena">{producto.casa}</p>
           <h1 className="mt-1 font-display text-[length:var(--text-titulo)] font-light leading-[1.05] text-marfil">
             {producto.nombre}
           </h1>

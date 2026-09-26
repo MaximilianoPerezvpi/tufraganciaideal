@@ -43,7 +43,7 @@ export default function TarjetaProducto({
           sellado centrado. `sizes` evita que el celular baje la versión grande. */}
       <Link
         href={`/producto/${producto.slug}`}
-        aria-label={`Ver ${producto.nombre} de ${producto.marca}`}
+        aria-label={`Ver ${producto.nombre} de ${producto.casa}`}
         className="relative block aspect-square overflow-hidden bg-humo"
       >
         <ImagenProducto
@@ -74,7 +74,7 @@ export default function TarjetaProducto({
       </Link>
 
       <div className="flex flex-1 flex-col p-5">
-        <p className="text-micro text-arena">{producto.marca}</p>
+        <p className="text-micro text-arena">{producto.casa}</p>
         <h3 className="mt-1 font-display text-[1.3rem] leading-tight text-marfil">
           <Link
             href={`/producto/${producto.slug}`}

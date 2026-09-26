@@ -165,7 +165,7 @@ export default function CartDrawer() {
 
                         <div className="min-w-0 flex-1">
                           <p className="text-micro text-arena">
-                            {linea.producto.marca}
+                            {linea.producto.casa}
                           </p>
                           <h3 className="truncate font-display text-[1.1rem] text-marfil">
                             {linea.producto.nombre}

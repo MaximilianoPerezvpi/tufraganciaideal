@@ -80,7 +80,7 @@ export async function POST(request: Request) {
 
     items.push({
       id: producto.slug,
-      title: `${producto.marca} ${producto.nombre}`,
+      title: `${producto.casa} ${producto.nombre}`,
       description: `${producto.concentracion} ${producto.volumen_ml} ml · Original sellado`,
       picture_url: `${site.url}${imagenUrl(producto)}`,
       category_id: "fragrances",

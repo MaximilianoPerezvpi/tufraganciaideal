@@ -36,8 +36,8 @@ export function catalogoJsonLd() {
       position: i + 1,
       item: {
         "@type": "Product",
-        name: `${p.marca} ${p.nombre} ${p.concentracion} ${p.volumen_ml} ml`,
-        brand: { "@type": "Brand", name: p.marca },
+        name: `${p.casa} ${p.nombre} ${p.concentracion} ${p.volumen_ml} ml`,
+        brand: { "@type": "Brand", name: p.casa },
         category: "Perfume",
         description: p.descripcion,
         image: `${site.url}${imagenUrl(p)}`,
@@ -54,8 +54,8 @@ export function productoJsonLd(p: Producto) {
   return {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: `${p.marca} ${p.nombre} ${p.concentracion} ${p.volumen_ml} ml`,
-    brand: { "@type": "Brand", name: p.marca },
+    name: `${p.casa} ${p.nombre} ${p.concentracion} ${p.volumen_ml} ml`,
+    brand: { "@type": "Brand", name: p.casa },
     category: "Perfume",
     description: p.descripcion,
     image: `${site.url}${imagenUrl(p)}`,
