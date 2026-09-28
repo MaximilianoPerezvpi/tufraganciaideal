@@ -57,10 +57,10 @@ function buscarFoto(slug, todosLosSlugs) {
 
 // Excepciones puntuales: el nombre del archivo no coincide con el slug
 // actual del producto (ej. quedó de una carga anterior con otra grafía) y
-// el escaneo automático no lo puede resolver solo.
-const FOTOS_EXCEPCION = {
-  "armaf|club de nuit intense men": "/productos/armaf-club-de-nuit-intense-man.jpg",
-};
+// el escaneo automático no lo puede resolver solo. Vacío por ahora: la
+// limpieza de 2026-09-28 sacó todas las fotos que no eran del producto real
+// (ver el comentario de IMÁGENES más abajo).
+const FOTOS_EXCEPCION = {};
 
 // Composiciones reales para los perfumes de diseñador ampliamente
 // documentados. El resto usa plantillas genéricas (ver TEMPLATES abajo).
@@ -537,6 +537,16 @@ const header = `/**
  * - Sin foto todavía: \`imagen\` queda sin definir y el fallback visual (ver
  *   \`src/components/ImagenProducto.tsx\`) se hace cargo, en vez de mandar
  *   una ruta rota.
+ *
+ * ⚠️ 2026-09-28: se vació /public/productos por completo. Un lote de fotos
+ * "descargadas automáticamente" resultó ser, en su totalidad, imágenes sin
+ * relación (stock de relojes, mapas, memes) o gráficos placeholder
+ * autogenerados con el texto "foto placeholder — reemplazar" quemado en la
+ * imagen — incluidos los que se venían tratando como reales desde el
+ * origen del proyecto. Verificalo vos mismo antes de confiar en una foto
+ * de este directorio: abrila y mirala, no asumas por el nombre del archivo.
+ * Excepción confirmada a mano: valentino-born-in-roma-uomo.webp (foto real,
+ * verificada).
  *
  * 💵 PRECIOS
  * En pesos uruguayos, IVA incluido. Carga oficial 2026-09 (solo precio por
