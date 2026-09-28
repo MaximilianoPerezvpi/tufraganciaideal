@@ -4,9 +4,13 @@ import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   categorias,
+  familiasOlfativas,
+  generos,
   productos,
   type Categoria,
   type Concentracion,
+  type FamiliaOlfativa,
+  type Genero,
 } from "@/data/productos";
 import { linkWhatsApp } from "@/lib/site";
 import TarjetaProducto from "./TarjetaProducto";
@@ -79,13 +83,17 @@ export default function Catalogo() {
   const [orden, setOrden] = useState<Orden>("destacados");
   const [busqueda, setBusqueda] = useState("");
   const [soloEntregaInmediata, setSoloEntregaInmediata] = useState(false);
+  const [genero, setGenero] = useState<Genero | "todos">("todos");
+  const [familia, setFamilia] = useState<FamiliaOlfativa | "todas">("todas");
 
   const hayFiltrosActivos =
     filtro !== "todos" ||
     marca !== "todas" ||
     concentracion !== "todas" ||
     busqueda.trim() !== "" ||
-    soloEntregaInmediata;
+    soloEntregaInmediata ||
+    genero !== "todos" ||
+    familia !== "todas";
 
   const visibles = useMemo(() => {
     const texto = busqueda.trim().toLowerCase();
@@ -96,6 +104,8 @@ export default function Catalogo() {
       if (concentracion !== "todas" && p.concentracion !== concentracion)
         return false;
       if (soloEntregaInmediata && !p.entregaInmediata) return false;
+      if (genero !== "todos" && p.genero !== genero) return false;
+      if (familia !== "todas" && p.familiaOlfativa !== familia) return false;
       if (texto) {
         const enTexto = `${p.casa} ${p.nombre}`.toLowerCase();
         if (!enTexto.includes(texto)) return false;
@@ -109,7 +119,16 @@ export default function Catalogo() {
       // "Destacados": van primero, sin romper el orden del archivo de datos.
       return Number(b.destacado ?? false) - Number(a.destacado ?? false);
     });
-  }, [filtro, marca, concentracion, orden, busqueda, soloEntregaInmediata]);
+  }, [
+    filtro,
+    marca,
+    concentracion,
+    orden,
+    busqueda,
+    soloEntregaInmediata,
+    genero,
+    familia,
+  ]);
 
   function limpiarFiltros() {
     setFiltro("todos");
@@ -118,6 +137,8 @@ export default function Catalogo() {
     setOrden("destacados");
     setBusqueda("");
     setSoloEntregaInmediata(false);
+    setGenero("todos");
+    setFamilia("todas");
   }
 
   return (
@@ -298,6 +319,55 @@ export default function Catalogo() {
               />
             </svg>
           </label>
+        </div>
+
+        {/* Filtros sensoriales: género y familia olfativa, en chips. */}
+        <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div role="group" aria-label="Filtrar por género" className="flex flex-wrap gap-2">
+            {generos.map((g) => {
+              const activo = g.id === genero;
+              return (
+                <button
+                  key={g.id}
+                  type="button"
+                  onClick={() => setGenero(g.id)}
+                  aria-pressed={activo}
+                  className={`rounded-full border px-3.5 py-1.5 text-micro transition-colors ${
+                    activo
+                      ? "border-champan bg-champan/10 text-champan"
+                      : "border-borde text-arena hover:border-arena hover:text-marfil"
+                  }`}
+                >
+                  {g.etiqueta}
+                </button>
+              );
+            })}
+          </div>
+
+          <div
+            role="group"
+            aria-label="Filtrar por familia olfativa"
+            className="flex flex-wrap gap-2"
+          >
+            {familiasOlfativas.map((f) => {
+              const activo = f.id === familia;
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setFamilia(f.id)}
+                  aria-pressed={activo}
+                  className={`rounded-full border px-3.5 py-1.5 text-micro transition-colors ${
+                    activo
+                      ? "border-oro-vivo bg-oro-vivo/10 text-oro-vivo"
+                      : "border-borde text-arena hover:border-arena hover:text-marfil"
+                  }`}
+                >
+                  {f.etiqueta}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <motion.div

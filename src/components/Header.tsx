@@ -34,7 +34,8 @@ export default function Header() {
       {/* Franja de anuncio: fija, siempre sólida (no se pone vidrio al scrollear). */}
       <div className="flex h-8 items-center justify-center bg-noche px-4 text-center">
         <p className="kicker text-[0.68rem]">
-          ✨ Envíos a todo Uruguay · Aceptamos Mercado Pago en hasta 12 cuotas
+          ✨ Envíos a todo Uruguay en 24-48 hs · 100% Originales Sellados ·
+          Hasta 12 cuotas vía Mercado Pago
         </p>
       </div>
 

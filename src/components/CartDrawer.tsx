@@ -11,6 +11,7 @@ import {
 import { precio } from "@/lib/format";
 import { site } from "@/lib/site";
 import ImagenProducto from "./ImagenProducto";
+import CheckoutModal from "./CheckoutModal";
 
 /**
  * Carrito lateral.
@@ -29,8 +30,7 @@ export default function CartDrawer() {
   const total = useTotal();
   const listo = useCarritoListo();
 
-  const [pagando, setPagando] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [checkoutAbierto, setCheckoutAbierto] = useState(false);
   const botonCerrar = useRef<HTMLButtonElement>(null);
 
   // Escape cierra, y el foco entra al panel al abrirse (accesibilidad).
@@ -47,38 +47,6 @@ export default function CartDrawer() {
       document.body.style.overflow = "";
     };
   }, [abierto, cerrar]);
-
-  async function finalizarCompra() {
-    setPagando(true);
-    setError(null);
-    try {
-      const respuesta = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          // Solo slug y cantidad: el precio lo pone el servidor.
-          items: lineas.map((l) => ({
-            slug: l.producto.slug,
-            cantidad: l.cantidad,
-          })),
-        }),
-      });
-
-      const datos = await respuesta.json();
-      if (!respuesta.ok || !datos.url) {
-        throw new Error(datos.error ?? "No pudimos iniciar el pago.");
-      }
-      // Redirección al Checkout Pro de Mercado Pago.
-      window.location.href = datos.url;
-    } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "No pudimos iniciar el pago. Probá de nuevo en un momento.",
-      );
-      setPagando(false);
-    }
-  }
 
   return (
     <AnimatePresence>
@@ -263,22 +231,12 @@ export default function CartDrawer() {
                   departamento.
                 </p>
 
-                {error && (
-                  <p
-                    role="alert"
-                    className="mt-4 rounded-lg border border-champan/40 bg-champan/10 px-4 py-3 text-sm text-marfil"
-                  >
-                    {error}
-                  </p>
-                )}
-
                 <button
                   type="button"
-                  onClick={finalizarCompra}
-                  disabled={pagando}
-                  className="mt-4 w-full rounded-full bg-champan py-4 font-medium text-noche transition-colors hover:bg-oro-claro disabled:cursor-wait disabled:opacity-70"
+                  onClick={() => setCheckoutAbierto(true)}
+                  className="mt-4 w-full rounded-full bg-champan py-4 font-medium text-noche transition-colors hover:bg-oro-claro"
                 >
-                  {pagando ? "Abriendo Mercado Pago…" : "Ir a pagar"}
+                  Ir a pagar
                 </button>
 
                 <p className="mt-3 text-center text-micro text-arena">
@@ -290,6 +248,13 @@ export default function CartDrawer() {
           </motion.aside>
         </>
       )}
+
+      <CheckoutModal
+        abierto={checkoutAbierto}
+        onCerrar={() => setCheckoutAbierto(false)}
+        items={lineas.map((l) => ({ slug: l.producto.slug, cantidad: l.cantidad }))}
+        total={total}
+      />
     </AnimatePresence>
   );
 }

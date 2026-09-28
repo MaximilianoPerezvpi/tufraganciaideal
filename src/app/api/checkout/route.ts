@@ -24,8 +24,34 @@ import { site } from "@/lib/site";
 export const runtime = "nodejs";
 
 type ItemEntrante = { slug: unknown; cantidad: unknown };
+type EnvioEntrante = {
+  nombre: unknown;
+  telefono: unknown;
+  departamento: unknown;
+  preferenciaEnvio: unknown;
+  direccion: unknown;
+};
 
 const MAX_UNIDADES_POR_PRODUCTO = 10;
+const CAMPOS_ENVIO = [
+  "nombre",
+  "telefono",
+  "departamento",
+  "preferenciaEnvio",
+  "direccion",
+] as const;
+
+/** Valida que los 5 campos de envío llegaron como texto no vacío. */
+function validarEnvio(envio: unknown): Record<string, string> | null {
+  if (typeof envio !== "object" || envio === null) return null;
+  const datos: Record<string, string> = {};
+  for (const campo of CAMPOS_ENVIO) {
+    const valor = (envio as EnvioEntrante)[campo];
+    if (typeof valor !== "string" || valor.trim() === "") return null;
+    datos[campo] = valor.trim();
+  }
+  return datos;
+}
 
 export async function POST(request: Request) {
   const token = process.env.MP_ACCESS_TOKEN;
@@ -38,7 +64,7 @@ export async function POST(request: Request) {
   }
 
   // ── 1. Validar lo que llegó ────────────────────────────────────────────
-  let cuerpo: { items?: ItemEntrante[] };
+  let cuerpo: { items?: ItemEntrante[]; envio?: unknown };
   try {
     cuerpo = await request.json();
   } catch {
@@ -48,6 +74,14 @@ export async function POST(request: Request) {
   const entrantes = Array.isArray(cuerpo.items) ? cuerpo.items : [];
   if (entrantes.length === 0) {
     return NextResponse.json({ error: "El carrito está vacío." }, { status: 400 });
+  }
+
+  const envio = validarEnvio(cuerpo.envio);
+  if (!envio) {
+    return NextResponse.json(
+      { error: "Faltan datos de envío." },
+      { status: 400 },
+    );
   }
 
   // ── 2. Recalcular precios y stock contra el catálogo real ──────────────
@@ -135,6 +169,11 @@ export async function POST(request: Request) {
         // Tu número de orden interno. Cambialo por el ID real cuando tengas
         // base de datos: es lo que te permite cruzar pago ↔ pedido.
         external_reference: `TFI-${Date.now()}`,
+
+        // Datos de envío del formulario previo al pago. Quedan guardados del
+        // lado de Mercado Pago (dashboard/API de pagos): esta web todavía no
+        // tiene un panel de pedidos propio que los lea.
+        metadata: envio,
 
         // 🔔 Webhook: Mercado Pago avisa acá cuándo se aprueba un pago.
         // Creá /api/webhooks/mercadopago cuando quieras descontar stock y

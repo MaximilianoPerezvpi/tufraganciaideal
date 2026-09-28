@@ -7,6 +7,7 @@ import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
 import ImagenProducto from "./ImagenProducto";
+import VistaRapidaModal from "./VistaRapidaModal";
 
 /**
  * Tarjeta de producto: un frasco original sellado.
@@ -46,7 +47,10 @@ export default function TarjetaProducto({
     setAgregado(true);
   }
 
+  const [vistaRapidaAbierta, setVistaRapidaAbierta] = useState(false);
+
   return (
+    <>
     <motion.article
       layout
       className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-carbon transition-[box-shadow,border-color] duration-300 hover:glow-oro ${
@@ -58,42 +62,55 @@ export default function TarjetaProducto({
       {/* 📸 FOTO DEL PERFUME
           Archivo: /public/productos/<slug>.jpg — cuadrada 1000×1000, frasco
           sellado centrado. `sizes` evita que el celular baje la versión grande. */}
-      <Link
-        href={`/producto/${producto.slug}`}
-        aria-label={`Ver ${producto.nombre} de ${producto.casa}`}
-        className="relative block aspect-square overflow-hidden bg-humo"
-      >
-        <ImagenProducto
-          producto={producto}
-          prioridad={prioridad}
-          sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 300px"
-          className={`object-cover transition-transform duration-500 group-hover:scale-[1.04] ${
-            disponible ? "" : "opacity-40 grayscale"
-          }`}
-        />
+      <div className="relative aspect-square overflow-hidden bg-humo">
+        <Link
+          href={`/producto/${producto.slug}`}
+          aria-label={`Ver ${producto.nombre} de ${producto.casa}`}
+          className="absolute inset-0 block"
+        >
+          <ImagenProducto
+            producto={producto}
+            prioridad={prioridad}
+            sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 300px"
+            className={`object-cover transition-transform duration-500 group-hover:scale-[1.04] ${
+              disponible ? "" : "opacity-40 grayscale"
+            }`}
+          />
 
-        {/* Badge de autenticidad: verde verificado, el mismo en todo el sitio. */}
-        <span className="absolute left-3 top-3 rounded-full bg-noche/80 px-3 py-1 text-micro text-vetiver backdrop-blur-sm">
-          100% original sellado
-        </span>
-
-        {producto.entregaInmediata && (
-          <span className="absolute right-3 top-3 rounded-full bg-champan px-3 py-1 text-micro font-medium text-noche">
-            ⚡ Stock Inmediato
+          {/* Badge de autenticidad: verde verificado, el mismo en todo el sitio. */}
+          <span className="absolute left-3 top-3 rounded-full bg-noche/80 px-3 py-1 text-micro text-vetiver backdrop-blur-sm">
+            100% original sellado
           </span>
-        )}
 
-        {/* Badge de familia: Árabe o Diseñador. */}
-        <span className="absolute bottom-3 left-3 rounded-full border border-marfil/25 bg-noche/70 px-3 py-1 text-micro text-marfil backdrop-blur-sm">
-          {producto.categoria === "árabes" ? "Árabe" : "Diseñador"}
-        </span>
+          {producto.entregaInmediata && (
+            <span className="absolute right-3 top-3 rounded-full bg-champan px-3 py-1 text-micro font-medium text-noche">
+              ⚡ Stock Inmediato
+            </span>
+          )}
 
-        {!disponible && (
-          <span className="absolute inset-x-0 bottom-0 bg-noche/85 py-2 text-center text-micro text-marfil">
-            Sin stock por ahora
+          {/* Badge de familia: Árabe o Diseñador. */}
+          <span className="absolute bottom-3 left-3 rounded-full border border-marfil/25 bg-noche/70 px-3 py-1 text-micro text-marfil backdrop-blur-sm">
+            {producto.categoria === "árabes" ? "Árabe" : "Diseñador"}
           </span>
-        )}
-      </Link>
+
+          {!disponible && (
+            <span className="absolute inset-x-0 bottom-0 bg-noche/85 py-2 text-center text-micro text-marfil">
+              Sin stock por ahora
+            </span>
+          )}
+        </Link>
+
+        {/* Vista Rápida: hermano del Link, no anidado en el <a>. Centrado
+            sobre la imagen al hacer hover, para no chocar con los badges
+            de las esquinas. */}
+        <button
+          type="button"
+          onClick={() => setVistaRapidaAbierta(true)}
+          className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 scale-95 rounded-full border border-marfil/30 bg-noche/85 px-5 py-2.5 text-micro text-marfil opacity-0 backdrop-blur-sm transition-all duration-200 hover:border-champan hover:text-champan group-hover:scale-100 group-hover:opacity-100"
+        >
+          Vista rápida
+        </button>
+      </div>
 
       <div className="flex flex-1 flex-col p-5">
         <p className="text-micro text-arena">{producto.casa}</p>
@@ -193,5 +210,12 @@ export default function TarjetaProducto({
         </div>
       </div>
     </motion.article>
+
+    <VistaRapidaModal
+      producto={producto}
+      abierto={vistaRapidaAbierta}
+      onCerrar={() => setVistaRapidaAbierta(false)}
+    />
+    </>
   );
 }

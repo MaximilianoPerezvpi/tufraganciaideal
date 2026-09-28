@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
+import { ocasionesDe, textoLongevidad, textoProyeccion } from "@/lib/perfume";
 import TarjetaProducto from "./TarjetaProducto";
 import ImagenProducto from "./ImagenProducto";
+import BarraIntensidad from "./BarraIntensidad";
 
 const CONFIANZA = [
   "100% Original Sellado",
@@ -38,6 +40,27 @@ export default function DetalleProducto({
   useEffect(() => {
     setCantidad((c) => Math.min(Math.max(c, 1), Math.max(restante, 1)));
   }, [restante]);
+
+  // Barra fija de compra (solo mobile): aparece cuando el botón principal
+  // de "Añadir al carrito" sale de la pantalla al scrollear.
+  const botonPrincipalRef = useRef<HTMLDivElement>(null);
+  const [mostrarBarraFija, setMostrarBarraFija] = useState(false);
+
+  useEffect(() => {
+    const el = botonPrincipalRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entrada]) => setMostrarBarraFija(!entrada.isIntersecting),
+      { threshold: 0 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  function agregarAlCarrito() {
+    agregar(producto.slug, cantidad);
+    setCantidad(1);
+  }
 
   return (
     <>
@@ -102,8 +125,22 @@ export default function DetalleProducto({
             {precio(producto.precio_uyu)}
           </p>
 
+          {/* Indicadores técnicos */}
+          <div className="mt-5 grid grid-cols-2 gap-4 rounded-xl border border-borde bg-carbon p-4">
+            <BarraIntensidad
+              etiqueta="Duración"
+              valor={producto.longevidad}
+              detalle={textoLongevidad(producto.longevidad)}
+            />
+            <BarraIntensidad
+              etiqueta="Estela"
+              valor={producto.proyeccion}
+              detalle={textoProyeccion(producto.proyeccion)}
+            />
+          </div>
+
           {/* Selector de cantidad + agregar */}
-          <div className="mt-6 flex flex-wrap items-center gap-4">
+          <div ref={botonPrincipalRef} className="mt-6 flex flex-wrap items-center gap-4">
             <div className="flex items-center rounded-full border border-borde">
               <button
                 type="button"
@@ -131,10 +168,7 @@ export default function DetalleProducto({
             <motion.button
               type="button"
               disabled={!disponible || restante <= 0}
-              onClick={() => {
-                agregar(producto.slug, cantidad);
-                setCantidad(1);
-              }}
+              onClick={agregarAlCarrito}
               whileTap={disponible && restante > 0 ? { scale: 0.97 } : undefined}
               className="h-12 flex-1 min-w-[12rem] rounded-full bg-champan px-8 font-medium text-noche transition-colors hover:bg-oro-claro disabled:cursor-not-allowed disabled:bg-borde disabled:text-arena"
             >
@@ -144,6 +178,19 @@ export default function DetalleProducto({
                   ? `Ya tenés ${enCarrito} en el carrito`
                   : "Añadir al carrito"}
             </motion.button>
+          </div>
+
+          {/* Ocasiones recomendadas: calculadas, no son dato del catálogo. */}
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            <span className="text-micro text-arena">Ideal para</span>
+            {ocasionesDe(producto).map((ocasion) => (
+              <span
+                key={ocasion}
+                className="rounded-full border border-borde px-3 py-1 text-micro text-marfil"
+              >
+                {ocasion}
+              </span>
+            ))}
           </div>
 
           {/* Insignias de confianza */}
@@ -205,6 +252,39 @@ export default function DetalleProducto({
           </div>
         </section>
       )}
+
+      {/* Barra fija de compra: solo mobile, solo cuando el botón principal
+          ya no está a la vista. */}
+      <AnimatePresence>
+        {mostrarBarraFija && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 320, damping: 34 }}
+            className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-between gap-4 border-t border-borde bg-carbon/95 px-4 py-3 backdrop-blur-md md:hidden"
+          >
+            <div className="min-w-0">
+              <p className="truncate text-micro text-arena">{producto.nombre}</p>
+              <p className="cifras text-lg text-champan">
+                {precio(producto.precio_uyu)}
+              </p>
+            </div>
+            <button
+              type="button"
+              disabled={!disponible || restante <= 0}
+              onClick={agregarAlCarrito}
+              className="shrink-0 rounded-full bg-champan px-6 py-3 text-sm font-medium text-noche transition-colors hover:bg-oro-claro disabled:cursor-not-allowed disabled:bg-borde disabled:text-arena"
+            >
+              {!disponible
+                ? "Sin stock"
+                : restante <= 0
+                  ? "En el carrito"
+                  : "Añadir al carrito"}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
