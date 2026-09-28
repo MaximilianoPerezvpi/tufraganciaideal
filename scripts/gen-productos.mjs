@@ -1,4 +1,4 @@
-import { writeFileSync } from "node:fs";
+import { writeFileSync, readdirSync } from "node:fs";
 import { rows } from "./gen-rows.mjs";
 
 function slugify(s) {
@@ -10,11 +10,55 @@ function slugify(s) {
     .replace(/^-+|-+$/g, "");
 }
 
-// Fotos reales que ya existen en /public/productos y coinciden con un
-// producto de esta carga (mismo perfume, precio actualizado a la lista).
-const FOTOS = {
-  "lattafa|fakhar women": "/productos/lattafa-fakhar-women.jpg",
-  "lattafa|qaed al fursan": "/productos/lattafa-qaed-al-fursan.jpg",
+// ── Fotos ────────────────────────────────────────────────────────────
+// La fuente de verdad es la carpeta /public/productos: se escanea acá y se
+// matchea contra el slug de cada producto. Nunca se hardcodea la lista de
+// archivos: si mañana agregás/sacás una foto, esto se actualiza solo la
+// próxima vez que corras este generador.
+const DIR_PRODUCTOS = new URL("../public/productos/", import.meta.url);
+const EXTENSIONES_FOTO = [".webp", ".jpg", ".jpeg", ".png"];
+
+let ARCHIVOS_FOTO = [];
+try {
+  ARCHIVOS_FOTO = readdirSync(DIR_PRODUCTOS).filter((f) =>
+    EXTENSIONES_FOTO.some((ext) => f.toLowerCase().endsWith(ext)),
+  );
+} catch {
+  console.warn("⚠️  No pude leer public/productos/: todos los productos usan el fallback visual.");
+}
+
+/**
+ * Busca la foto de un producto por su slug:
+ * 1) Coincidencia exacta `<slug>.<ext>` (más confiable, cubre casi todo).
+ * 2) Si no hay exacta, el archivo que EMPIEZA con el slug (variantes con
+ *    sufijo, ej. slug "valentino-donna-born-in-roma-intense" y archivo
+ *    "valentino-donna-born-in-roma-intense-100ml-edp.webp") — pero SOLO si
+ *    ese archivo no es, a su vez, la foto exacta de OTRO producto del
+ *    catálogo (ej. no dejar que "la-vie-est-belle" en general se quede con
+ *    la foto que en realidad es de "la-vie-est-belle-50ml-edp"; dos
+ *    productos distintos con el mismo nombre base y solo una talla con
+ *    foto).
+ * Sin coincidencia → undefined: `imagen` queda sin definir y el fallback
+ * visual (ImagenProducto.tsx) se hace cargo, en vez de mandar una ruta rota.
+ */
+function buscarFoto(slug, todosLosSlugs) {
+  for (const ext of EXTENSIONES_FOTO) {
+    if (ARCHIVOS_FOTO.includes(`${slug}${ext}`)) return `/productos/${slug}${ext}`;
+  }
+  const perteneceAOtroSlug = (archivo) => {
+    const base = archivo.replace(/\.[^.]+$/, "");
+    return base !== slug && todosLosSlugs.has(base);
+  };
+  const candidatos = ARCHIVOS_FOTO.filter(
+    (f) => f.startsWith(slug) && !perteneceAOtroSlug(f),
+  ).sort();
+  return candidatos.length > 0 ? `/productos/${candidatos[0]}` : undefined;
+}
+
+// Excepciones puntuales: el nombre del archivo no coincide con el slug
+// actual del producto (ej. quedó de una carga anterior con otra grafía) y
+// el escaneo automático no lo puede resolver solo.
+const FOTOS_EXCEPCION = {
   "armaf|club de nuit intense men": "/productos/armaf-club-de-nuit-intense-man.jpg",
 };
 
@@ -365,12 +409,17 @@ function limpiarNombre(nombre) {
   return nombre.replace(/\s+/g, " ").trim();
 }
 
-function buildProducto(row, index, usedSlugs) {
-  const [casa, nombreRaw, precio_uyu, volOverride, concentracion, categoria, entregaInmediata, stock] = row;
+/**
+ * Slug de una fila. Se calcula en una pasada previa y aparte porque
+ * `buscarFoto` necesita conocer el conjunto COMPLETO de slugs del catálogo
+ * antes de poder asignar ninguna foto (ver comentario en `buscarFoto`).
+ */
+function calcularSlug(row, usedSlugs) {
+  const [casa, nombreRaw, , volOverride, concentracion] = row;
   const nombre = limpiarNombre(nombreRaw);
   const volumen_ml = volOverride ?? 100;
 
-  let baseSlug = slugify(`${casa} ${nombre} ${volumen_ml}ml ${concentracion}`);
+  const baseSlug = slugify(`${casa} ${nombre} ${volumen_ml}ml ${concentracion}`);
   let slug = slugify(`${casa} ${nombre}`);
   if (usedSlugs.has(slug)) slug = baseSlug;
   let n = 2;
@@ -379,9 +428,16 @@ function buildProducto(row, index, usedSlugs) {
     n++;
   }
   usedSlugs.add(slug);
+  return slug;
+}
+
+function buildProducto(row, index, slug, todosLosSlugs) {
+  const [casa, nombreRaw, precio_uyu, volOverride, concentracion, categoria, entregaInmediata, stock] = row;
+  const nombre = limpiarNombre(nombreRaw);
+  const volumen_ml = volOverride ?? 100;
 
   const fotoKey = `${casa.toLowerCase()}|${nombre.toLowerCase()}`;
-  const imagen = FOTOS[fotoKey];
+  const imagen = FOTOS_EXCEPCION[fotoKey] ?? buscarFoto(slug, todosLosSlugs);
 
   const bespokeKeys = [
     `${casa.toLowerCase()}|${nombre.toLowerCase()}|${concentracion}|${volumen_ml}`,
@@ -421,7 +477,11 @@ function buildProducto(row, index, usedSlugs) {
 }
 
 const usedSlugs = new Set();
-const productos = rows.map((row, i) => buildProducto(row, i, usedSlugs));
+const slugsPorFila = rows.map((row) => calcularSlug(row, usedSlugs));
+const todosLosSlugs = new Set(slugsPorFila);
+const productos = rows.map((row, i) =>
+  buildProducto(row, i, slugsPorFila[i], todosLosSlugs),
+);
 
 function tsString(s) {
   return JSON.stringify(s);
@@ -466,13 +526,17 @@ const header = `/**
  * está acá es lo que se cobra.
  *
  * 📸 IMÁGENES
- * Guardá cada foto en  /public/productos/<slug>.jpg
+ * Este archivo se genera con \`node scripts/gen-productos.mjs\`, que ESCANEA
+ * /public/productos y le asigna a cada producto el archivo cuyo nombre
+ * coincide (exacto o por prefijo) con su \`slug\`. Nunca edites \`imagen\` acá
+ * a mano: se pisa en la próxima corrida. Para agregar una foto:
+ * - Guardala en /public/productos/<slug>.webp (o .jpg/.jpeg/.png).
  * - Cuadrada, 1000×1000 px, el frasco centrado sobre fondo oscuro o neutro.
  * - Comprimila antes de subirla (squoosh.app, calidad ~75). Apuntá a <150 KB.
- * - El nombre del archivo tiene que coincidir exacto con el campo \`slug\`.
- * - Si todavía no tenés la foto, dejá \`imagen\` sin definir: la tarjeta y la
- *   página de producto muestran solas un fallback prolijo (ver
- *   \`src/components/ImagenProducto.tsx\`) en vez de un ícono roto.
+ * - Corré el generador de nuevo para que quede linkeada.
+ * - Sin foto todavía: \`imagen\` queda sin definir y el fallback visual (ver
+ *   \`src/components/ImagenProducto.tsx\`) se hace cargo, en vez de mandar
+ *   una ruta rota.
  *
  * 💵 PRECIOS
  * En pesos uruguayos, IVA incluido. Carga oficial 2026-09 (solo precio por
