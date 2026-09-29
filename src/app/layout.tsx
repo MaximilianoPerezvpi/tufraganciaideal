@@ -60,14 +60,13 @@ export const metadata: Metadata = {
     siteName: site.nombre,
     title: TITULO_COMPARTIR,
     description: DESCRIPCION_COMPARTIR,
-    // 📸 Subí una imagen 1200×630 a /public/og.jpg (frasco + logo sobre fondo oscuro).
-    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: site.nombre }],
+    images: [{ url: "/hero-bg.png", width: 1024, height: 1536, alt: site.nombre }],
   },
   twitter: {
     card: "summary_large_image",
     title: TITULO_COMPARTIR,
     description: DESCRIPCION_COMPARTIR,
-    images: ["/og.jpg"],
+    images: ["/hero-bg.png"],
   },
   robots: { index: true, follow: true },
   category: "shopping",

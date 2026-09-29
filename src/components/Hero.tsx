@@ -36,25 +36,25 @@ export default function Hero() {
       id="inicio"
       className="relative flex min-h-[88vh] items-center overflow-hidden pt-[104px]"
     >
-      {/* Fondo (imagen propia, generada, sin fotos de terceros) + degradé
-          oscuro encima para que el texto siempre tenga contraste. */}
-      <div aria-hidden className="absolute inset-0 -z-10">
+      {/* Fondo: frasco YSL MYSLF L'Absolu + degradé oscuro encima para que
+          el texto siempre tenga contraste. */}
+      <div aria-hidden className="absolute inset-0 -z-10 bg-cover bg-center">
         <Image
-          src="/hero-bg.jpg"
+          src="/hero-bg.png"
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent" />
       </div>
 
       <motion.div
         initial="oculto"
         animate="visible"
         variants={contenedor}
-        className="marco relative py-16 md:py-20"
+        className="marco relative z-10 py-16 md:py-20"
       >
         <div className="max-w-[36ch]">
           <motion.span
@@ -85,7 +85,7 @@ export default function Hero() {
 
           <motion.div
             variants={item}
-            className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center"
+            className="relative z-10 mt-10 flex flex-col gap-3 sm:flex-row sm:items-center"
           >
             <Link
               href="/catalogo"

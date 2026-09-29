@@ -4,6 +4,7 @@ import StockInmediato from "@/components/StockInmediato";
 import ExploraCategorias from "@/components/ExploraCategorias";
 import AsesorOlfativo from "@/components/AsesorOlfativo";
 import CTACatalogo from "@/components/CTACatalogo";
+import LuxuryBanner from "@/components/LuxuryBanner";
 import Originales from "@/components/Originales";
 import Testimonios from "@/components/Testimonios";
 import Envios from "@/components/Envios";
@@ -28,6 +29,7 @@ export default function Home() {
         <ExploraCategorias />
         <AsesorOlfativo />
         <CTACatalogo />
+        <LuxuryBanner />
         <Originales />
         <Testimonios />
         <Envios />
