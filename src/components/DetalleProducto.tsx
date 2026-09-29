@@ -6,8 +6,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
+import { calificacionDe } from "@/lib/resenas";
 import {
-  calificacionDe,
   ocasionesDe,
   textoLongevidad,
   textoProyeccion,
@@ -16,6 +16,7 @@ import TarjetaProducto from "./TarjetaProducto";
 import ImagenProducto from "./ImagenProducto";
 import BarraIntensidad from "./BarraIntensidad";
 import Estrellas from "./Estrellas";
+import ResenasProducto from "./ResenasProducto";
 
 const CONFIANZA = [
   "100% Original Sellado",
@@ -40,6 +41,7 @@ export default function DetalleProducto({
   const restante = Math.max(0, producto.stock - enCarrito);
 
   const [cantidad, setCantidad] = useState(1);
+  const calificacion = calificacionDe(producto);
 
   // Si ya tenés casi todo el stock en el carrito, el selector no puede pedir
   // más de lo que queda: se recorta solo cuando `restante` cambia.
@@ -120,7 +122,18 @@ export default function DetalleProducto({
             {producto.nombre}
           </h1>
 
-          <Estrellas {...calificacionDe(producto)} className="mt-2.5" />
+          {calificacion ? (
+            <a href="#opiniones" className="mt-2.5 self-start">
+              <Estrellas {...calificacion} />
+            </a>
+          ) : (
+            <a
+              href="#opiniones"
+              className="mt-2.5 self-start text-micro text-arena underline-offset-4 transition-colors hover:text-champan hover:underline"
+            >
+              Sin reseñas todavía · Escribí la primera
+            </a>
+          )}
 
           <p className="cifras mt-2 text-sm text-arena">
             {producto.concentracion} · {producto.volumen_ml} ml
@@ -247,6 +260,8 @@ export default function DetalleProducto({
           </div>
         </div>
       </section>
+
+      <ResenasProducto producto={producto} />
 
       {/* Relacionados */}
       {relacionados.length > 0 && (

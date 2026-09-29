@@ -51,29 +51,3 @@ export function ocasionesDe(producto: Producto): string[] {
   ]);
   return Array.from(set).slice(0, 4);
 }
-
-/** Hash chiquito y estable de un string, para derivar valores "al azar"
- * que no cambian entre reload ni entre servidor y cliente. */
-function hashDeSlug(slug: string): number {
-  let h = 0;
-  for (let i = 0; i < slug.length; i++) {
-    h = (h * 31 + slug.charCodeAt(i)) >>> 0;
-  }
-  return h;
-}
-
-/**
- * Prueba social simulada (no hay sistema de reseñas todavía): una
- * calificación entre 4.5 y 5.0 y una cantidad de reseñas entre 12 y 96,
- * derivadas del slug para que cada producto tenga siempre el mismo valor
- * en vez de un número mágico repetido en todo el catálogo.
- */
-export function calificacionDe(producto: Producto): {
-  estrellas: number;
-  resenas: number;
-} {
-  const h = hashDeSlug(producto.slug);
-  const estrellas = Math.round((4.5 + (h % 6) / 10) * 10) / 10; // 4.5–5.0
-  const resenas = 12 + (h % 85); // 12–96
-  return { estrellas, resenas };
-}

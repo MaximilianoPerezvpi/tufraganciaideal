@@ -14,9 +14,8 @@ function FilaEstrellas() {
 }
 
 /**
- * Prueba social: 5 estrellas doradas con relleno proporcional (soporta
- * decimales, ej. 4.7) + texto opcional. Valores calculados en `perfume.ts`,
- * no hay sistema de reseñas real todavía.
+ * 5 estrellas doradas con relleno proporcional (soporta decimales, ej. 4.7)
+ * + texto opcional. El promedio sale de reseñas reales (`lib/resenas.ts`).
  */
 export default function Estrellas({
   estrellas,
@@ -41,7 +40,7 @@ export default function Estrellas({
         </div>
       </div>
       <span className="cifras text-micro text-arena">
-        {estrellas.toFixed(1)}/5{resenas != null ? ` (${resenas} reseñas)` : ""}
+        {estrellas.toFixed(1)}/5{resenas != null ? ` (${resenas} ${resenas === 1 ? "reseña" : "reseñas"})` : ""}
       </span>
     </div>
   );

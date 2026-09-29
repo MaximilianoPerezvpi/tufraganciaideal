@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
-import { calificacionDe } from "@/lib/perfume";
+import { calificacionDe } from "@/lib/resenas";
 import Estrellas from "./Estrellas";
 import ImagenProducto from "./ImagenProducto";
 import VistaRapidaModal from "./VistaRapidaModal";
@@ -26,6 +26,7 @@ export default function TarjetaProducto({
   /** true en las primeras tarjetas: le dice a next/image que las cargue ya. */
   prioridad?: boolean;
 }) {
+  const calificacion = calificacionDe(producto);
   const agregar = useCarrito((e) => e.agregar);
   const enCarrito = useCarrito(
     (e) => e.items.find((i) => i.slug === producto.slug)?.cantidad ?? 0,
@@ -125,7 +126,9 @@ export default function TarjetaProducto({
           </Link>
         </h3>
 
-        <Estrellas estrellas={calificacionDe(producto).estrellas} className="mt-1.5" />
+        {calificacion && (
+          <Estrellas {...calificacion} className="mt-1.5" />
+        )}
 
         {/* Ficha técnica: lo primero que mira alguien que ya sabe qué busca. */}
         <p className="cifras mt-1 text-sm text-arena">

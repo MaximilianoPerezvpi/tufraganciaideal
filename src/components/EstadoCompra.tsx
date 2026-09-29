@@ -59,6 +59,16 @@ export default function EstadoCompra({ estado }: { estado: Estado }) {
         </p>
       )}
 
+      {estado === "exito" && (
+        <p className="mt-6 text-sm text-arena">
+          Cuando lo recibas y lo pruebes,{" "}
+          <Link href="/opinar" className="text-champan underline-offset-4 hover:underline">
+            contanos qué te pareció
+          </Link>
+          : tu opinión ayuda a otros a elegir.
+        </p>
+      )}
+
       <div className="mt-10 flex flex-col gap-3 sm:flex-row">
         <Link
           href="/catalogo"
