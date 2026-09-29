@@ -81,7 +81,7 @@ export default function Originales() {
             si alguna vez recibís algo que no sea original.
           </p>
           <Link
-            href="#catalogo"
+            href="/catalogo"
             className="shrink-0 rounded-full border border-vetiver px-6 py-3 text-sm text-vetiver transition-colors hover:bg-vetiver hover:text-noche"
           >
             Ver perfumes en stock

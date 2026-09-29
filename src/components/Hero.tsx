@@ -62,7 +62,7 @@ export default function Hero() {
             className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center"
           >
             <Link
-              href="#catalogo"
+              href="/catalogo"
               className="rounded-full bg-champan px-8 py-4 text-center font-medium text-noche transition-transform duration-200 hover:scale-[1.02] hover:bg-oro-claro active:scale-[0.99]"
             >
               Ver perfumes en stock

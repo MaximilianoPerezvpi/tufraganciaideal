@@ -66,7 +66,7 @@ export default function DetalleProducto({
     <>
       <div className="marco pt-10">
         <Link
-          href="/#catalogo"
+          href="/catalogo"
           className="inline-flex items-center gap-2 text-sm text-arena transition-colors hover:text-marfil"
         >
           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" aria-hidden>

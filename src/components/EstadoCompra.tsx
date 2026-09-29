@@ -61,7 +61,7 @@ export default function EstadoCompra({ estado }: { estado: Estado }) {
 
       <div className="mt-10 flex flex-col gap-3 sm:flex-row">
         <Link
-          href="/#catalogo"
+          href="/catalogo"
           className="rounded-full bg-champan px-8 py-4 text-center font-medium text-noche transition-colors hover:bg-oro-claro"
         >
           {estado === "error" ? "Volver al carrito" : "Seguir mirando perfumes"}

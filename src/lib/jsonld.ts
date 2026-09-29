@@ -9,7 +9,7 @@ import { site } from "@/lib/site";
  * un perfume, acá aparece sin tocar nada.
  */
 
-function oferta(p: Producto, url = `${site.url}/#catalogo`) {
+function oferta(p: Producto, url = `${site.url}/catalogo`) {
   return {
     "@type": "Offer",
     priceCurrency: "UYU",

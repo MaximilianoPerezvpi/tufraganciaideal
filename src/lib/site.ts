@@ -27,7 +27,7 @@ export function linkWhatsApp(mensaje: string): string {
 
 /** Navegación principal: una sola fuente de verdad para header y footer. */
 export const navegacion = [
-  { href: "#catalogo", etiqueta: "Catálogo" },
-  { href: "#originales", etiqueta: "Originales" },
-  { href: "#envios", etiqueta: "Envíos y pagos" },
+  { href: "/catalogo", etiqueta: "Catálogo" },
+  { href: "/#originales", etiqueta: "Originales" },
+  { href: "/#envios", etiqueta: "Envíos y pagos" },
 ] as const;

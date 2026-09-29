@@ -73,9 +73,28 @@ const MARCAS = Array.from(new Set(productos.map((p) => p.casa))).sort((a, b) =>
 const CONTROL =
   "h-11 rounded-full border border-borde bg-carbon px-4 text-sm text-marfil outline-none transition-colors focus-visible:border-champan hover:border-arena";
 
+type CatalogoProps = {
+  /** Estado inicial de cada filtro. Los pasa `src/app/catalogo/page.tsx`
+   * (server component) leyendo `searchParams`, en vez de que este
+   * componente llame a `useSearchParams()` él mismo: ese hook obliga a
+   * Next.js a descartar el HTML estático de TODO lo que envuelve y
+   * renderizarlo solo del lado del cliente (visto en build: el `<Suspense>`
+   * alrededor caía en BAILOUT_TO_CLIENT_SIDE_RENDERING — la grilla entera
+   * desaparecía del HTML servido, aunque en el navegador se viera bien).
+   * Recibir el valor ya resuelto como prop evita el problema sin tocar
+   * nada de la lógica de filtros/animaciones de acá abajo. */
+  categoriaInicial?: Categoria | "todos";
+  generoInicial?: Genero | "todos";
+  familiaInicial?: FamiliaOlfativa | "todas";
+};
+
 /** Grilla del catálogo: búsqueda, filtros por familia/marca/concentración y orden. */
-export default function Catalogo() {
-  const [filtro, setFiltro] = useState<Categoria | "todos">("todos");
+export default function Catalogo({
+  categoriaInicial = "todos",
+  generoInicial = "todos",
+  familiaInicial = "todas",
+}: CatalogoProps = {}) {
+  const [filtro, setFiltro] = useState<Categoria | "todos">(categoriaInicial);
   const [marca, setMarca] = useState<string>("todas");
   const [concentracion, setConcentracion] = useState<Concentracion | "todas">(
     "todas",
@@ -83,8 +102,8 @@ export default function Catalogo() {
   const [orden, setOrden] = useState<Orden>("destacados");
   const [busqueda, setBusqueda] = useState("");
   const [soloEntregaInmediata, setSoloEntregaInmediata] = useState(false);
-  const [genero, setGenero] = useState<Genero | "todos">("todos");
-  const [familia, setFamilia] = useState<FamiliaOlfativa | "todas">("todas");
+  const [genero, setGenero] = useState<Genero | "todos">(generoInicial);
+  const [familia, setFamilia] = useState<FamiliaOlfativa | "todas">(familiaInicial);
 
   const hayFiltrosActivos =
     filtro !== "todos" ||
