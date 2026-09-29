@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
-import BotonFlotanteWhatsApp from "@/components/BotonFlotanteWhatsApp";
 import DetalleProducto from "@/components/DetalleProducto";
 import {
   buscarProducto,
@@ -82,7 +81,6 @@ export default async function PaginaProducto({ params }: Parametros) {
       <Footer />
 
       <CartDrawer />
-      <BotonFlotanteWhatsApp />
 
       <script
         type="application/ld+json"

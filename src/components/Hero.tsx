@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 import Frasco from "./Frasco";
@@ -25,6 +26,22 @@ const item: Variants = {
 export default function Hero() {
   return (
     <section id="inicio" className="relative overflow-hidden pt-[104px]">
+      {/* Fondo atmosférico (imagen propia, generada, sin fotos de terceros)
+          + degradé oscuro encima para que el texto siempre tenga contraste,
+          sea cual sea el ancho de pantalla. */}
+      <div aria-hidden className="absolute inset-0 -z-10">
+        <Image
+          src="/hero-bg.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-noche via-transparent to-transparent" />
+      </div>
+
       {/* Resplandor cálido detrás del frasco, muy sutil. */}
       <div
         aria-hidden

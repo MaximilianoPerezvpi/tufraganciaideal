@@ -9,9 +9,8 @@ export const site = {
   descripcion:
     "Perfumes originales sellados en Uruguay: frascos completos de nicho, diseñador y árabes. Comprá online con Mercado Pago y recibilo en todo el país.",
 
-  // WhatsApp de CONSULTAS (no de pedidos: las compras van por el carrito).
-  // TODO: confirmá el número (formato internacional, sin + ni espacios).
-  whatsapp: "59899000000",
+  // WhatsApp de consultas y pedidos (formato internacional, sin + ni espacios).
+  whatsapp: "59897443176",
   instagram: "tufraganciaideal",
   instagramUrl: "https://instagram.com/tufraganciaideal",
   email: "hola@tufraganciaideal.uy", // TODO
@@ -27,6 +26,7 @@ export function linkWhatsApp(mensaje: string): string {
 
 /** Navegación principal: una sola fuente de verdad para header y footer. */
 export const navegacion = [
+  { href: "/", etiqueta: "Inicio" },
   { href: "/catalogo", etiqueta: "Catálogo" },
   { href: "/#originales", etiqueta: "Originales" },
   { href: "/#envios", etiqueta: "Envíos y pagos" },

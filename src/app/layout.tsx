@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Archivo } from "next/font/google";
 import { Toaster } from "sonner";
 import { site } from "@/lib/site";
+import BotonFlotanteWhatsApp from "@/components/BotonFlotanteWhatsApp";
 import "./globals.css";
 
 /* Fraunces para títulos: serif de contraste alto con "wonk" activado — da el
@@ -104,6 +105,9 @@ export default function RootLayout({
     <html lang="es-UY" className={`${fraunces.variable} ${archivo.variable}`}>
       <body>
         {children}
+
+        {/* Montado una sola vez acá (antes se repetía en cada página). */}
+        <BotonFlotanteWhatsApp />
 
         {/* Toasts de confirmación (agregar al carrito, etc.), con la paleta del sitio. */}
         <Toaster

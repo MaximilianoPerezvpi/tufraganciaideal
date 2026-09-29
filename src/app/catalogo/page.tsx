@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
-import BotonFlotanteWhatsApp from "@/components/BotonFlotanteWhatsApp";
 import Catalogo from "@/components/Catalogo";
 import {
   CATEGORIA_DESDE_PARAM,
@@ -61,7 +60,6 @@ export default async function PaginaCatalogo({
       <Footer />
 
       <CartDrawer />
-      <BotonFlotanteWhatsApp />
 
       <script
         type="application/ld+json"

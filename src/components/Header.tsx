@@ -1,25 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { navegacion } from "@/lib/site";
 import BotonCarrito from "./BotonCarrito";
 
 /**
- * Header fijo. Arriba de todo es invisible (no compite con el hero) y
- * se convierte en vidrio esmerilado apenas scrolleás. El carrito está siempre
- * visible, también en mobile: es el botón que tiene que estar a mano.
+ * Header fijo, siempre con fondo oscuro y vidrio esmerilado (antes solo
+ * arriba del todo era transparente y se ponía "vidrio" recién al scrollear;
+ * ahora es legible desde el primer frame, sobre cualquier hero). El carrito
+ * está siempre visible, también en mobile: es el botón que tiene que estar
+ * a mano.
  */
 export default function Header() {
-  const [scrolleado, setScrolleado] = useState(false);
   const [menuAbierto, setMenuAbierto] = useState(false);
-
-  useEffect(() => {
-    const alScrollear = () => setScrolleado(window.scrollY > 24);
-    alScrollear();
-    window.addEventListener("scroll", alScrollear, { passive: true });
-    return () => window.removeEventListener("scroll", alScrollear);
-  }, []);
 
   // Bloquea el scroll del body cuando el menú mobile está abierto.
   useEffect(() => {
@@ -39,30 +34,26 @@ export default function Header() {
         </p>
       </div>
 
-      <div
-        className={`transition-colors duration-300 ${
-          scrolleado || menuAbierto ? "vidrio" : "border-b border-transparent"
-        }`}
-      >
+      <div className="vidrio">
         <div className="marco flex h-[72px] items-center justify-between gap-4">
-          <a href="#inicio" className="flex items-baseline gap-2">
+          <Link href="/" className="flex items-baseline gap-2">
             <span className="font-display text-[1.35rem] leading-none text-marfil">
               TuFragancia
             </span>
             <span className="font-display text-[1.35rem] italic leading-none text-champan">
               Ideal
             </span>
-          </a>
+          </Link>
 
           <nav aria-label="Principal" className="hidden items-center gap-8 md:flex">
             {navegacion.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
                 className="text-sm text-arena transition-colors hover:text-marfil"
               >
                 {item.etiqueta}
-              </a>
+              </Link>
             ))}
             <BotonCarrito />
           </nav>
@@ -106,14 +97,14 @@ export default function Header() {
             >
               <div className="marco flex flex-col gap-1 pb-6">
                 {navegacion.map((item) => (
-                  <a
+                  <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setMenuAbierto(false)}
                     className="border-b border-borde/60 py-4 text-lg text-marfil"
                   >
                     {item.etiqueta}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </motion.nav>

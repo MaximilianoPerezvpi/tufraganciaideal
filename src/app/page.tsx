@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import TrustBadges from "@/components/TrustBadges";
 import StockInmediato from "@/components/StockInmediato";
 import ExploraCategorias from "@/components/ExploraCategorias";
 import AsesorOlfativo from "@/components/AsesorOlfativo";
@@ -9,7 +10,6 @@ import Testimonios from "@/components/Testimonios";
 import Envios from "@/components/Envios";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
-import BotonFlotanteWhatsApp from "@/components/BotonFlotanteWhatsApp";
 import { catalogoJsonLd } from "@/lib/jsonld";
 
 /**
@@ -26,6 +26,7 @@ export default function Home() {
       <Header />
       <main id="contenido">
         <Hero />
+        <TrustBadges />
         <StockInmediato />
         <ExploraCategorias />
         <AsesorOlfativo />
@@ -36,9 +37,8 @@ export default function Home() {
       </main>
       <Footer />
 
-      {/* Viven fuera de <main>: se montan una sola vez. */}
+      {/* Vive fuera de <main>: se monta una sola vez. */}
       <CartDrawer />
-      <BotonFlotanteWhatsApp />
 
       {/* Precios y stock legibles por Google, generados desde productos.ts */}
       <script
