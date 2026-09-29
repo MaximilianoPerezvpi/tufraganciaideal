@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { navegacion } from "@/lib/site";
 import BotonCarrito from "./BotonCarrito";
+import SearchBar from "./SearchBar";
 
 /**
  * Header fijo, siempre con fondo oscuro y vidrio esmerilado (antes solo
@@ -44,6 +45,8 @@ export default function Header() {
               Ideal
             </span>
           </Link>
+
+          <SearchBar />
 
           <nav aria-label="Principal" className="hidden items-center gap-8 md:flex">
             {navegacion.map((item) => (

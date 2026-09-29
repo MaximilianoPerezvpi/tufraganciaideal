@@ -53,7 +53,7 @@ export default function TarjetaProducto({
     <>
     <motion.article
       layout
-      className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-carbon transition-[box-shadow,border-color] duration-300 hover:glow-oro ${
+      className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-carbon transition-all duration-300 hover:-translate-y-1 hover:glow-oro ${
         producto.destacado
           ? "border border-champan/35"
           : "border border-borde hover:border-oro-vivo/40"
@@ -72,7 +72,7 @@ export default function TarjetaProducto({
             producto={producto}
             prioridad={prioridad}
             sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 300px"
-            className={`object-cover transition-transform duration-500 group-hover:scale-[1.04] ${
+            className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
               disponible ? "" : "opacity-40 grayscale"
             }`}
           />

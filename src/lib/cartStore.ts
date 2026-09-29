@@ -70,8 +70,8 @@ export const useCarrito = create<EstadoCarrito>()(
           // Toast al toque + el carrito que se abre: la confirmación se ve
           // aunque la persona ya haya scrolleado lejos del botón.
           if (producto) {
-            toast.success(`${producto.casa} ${producto.nombre}`, {
-              description: "Se agregó al carrito.",
+            toast.success(`${producto.nombre} agregado al carrito`, {
+              description: producto.casa,
             });
           }
 

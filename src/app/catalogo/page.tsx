@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import Catalogo from "@/components/Catalogo";
 import {
@@ -57,7 +56,6 @@ export default async function PaginaCatalogo({
           familiaInicial={FAMILIA_DESDE_PARAM[params.familia ?? ""] ?? "todas"}
         />
       </main>
-      <Footer />
 
       <CartDrawer />
 

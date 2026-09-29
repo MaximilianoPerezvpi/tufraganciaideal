@@ -8,7 +8,6 @@ import CTACatalogo from "@/components/CTACatalogo";
 import Originales from "@/components/Originales";
 import Testimonios from "@/components/Testimonios";
 import Envios from "@/components/Envios";
-import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import { catalogoJsonLd } from "@/lib/jsonld";
 
@@ -35,7 +34,6 @@ export default function Home() {
         <Testimonios />
         <Envios />
       </main>
-      <Footer />
 
       {/* Vive fuera de <main>: se monta una sola vez. */}
       <CartDrawer />

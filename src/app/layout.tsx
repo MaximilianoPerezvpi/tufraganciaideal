@@ -3,6 +3,7 @@ import { Fraunces, Archivo } from "next/font/google";
 import { Toaster } from "sonner";
 import { site } from "@/lib/site";
 import BotonFlotanteWhatsApp from "@/components/BotonFlotanteWhatsApp";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 /* Fraunces para títulos: serif de contraste alto con "wonk" activado — da el
@@ -106,7 +107,8 @@ export default function RootLayout({
       <body>
         {children}
 
-        {/* Montado una sola vez acá (antes se repetía en cada página). */}
+        {/* Montados una sola vez acá (antes se repetían en cada página). */}
+        <Footer />
         <BotonFlotanteWhatsApp />
 
         {/* Toasts de confirmación (agregar al carrito, etc.), con la paleta del sitio. */}

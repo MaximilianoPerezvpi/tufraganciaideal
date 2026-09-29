@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   useCarrito,
@@ -114,17 +115,19 @@ export default function CartDrawer() {
             <div className="flex-1 overflow-y-auto px-6">
               {!listo ? null : lineas.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center text-center">
-                  <p className="text-marfil">Todavía no agregaste nada.</p>
+                  <p className="font-display text-[1.3rem] text-marfil">
+                    Aún no has elegido ninguna fragancia
+                  </p>
                   <p className="mt-2 max-w-[30ch] text-sm text-arena">
                     Elegí un perfume del catálogo y aparece acá.
                   </p>
-                  <button
-                    type="button"
+                  <Link
+                    href="/"
                     onClick={cerrar}
-                    className="mt-6 rounded-full border border-champan/50 px-6 py-3 text-sm text-champan transition-colors hover:bg-champan hover:text-noche"
+                    className="mt-6 rounded-full bg-champan px-6 py-3 text-sm font-medium text-noche transition-colors hover:bg-oro-claro"
                   >
-                    Ver el catálogo
-                  </button>
+                    Explorar Catálogo
+                  </Link>
                 </div>
               ) : (
                 <ul className="divide-y divide-borde">

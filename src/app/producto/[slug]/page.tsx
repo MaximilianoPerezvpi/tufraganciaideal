@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import DetalleProducto from "@/components/DetalleProducto";
 import {
@@ -78,7 +77,6 @@ export default async function PaginaProducto({ params }: Parametros) {
       <main id="contenido" className="pt-[104px]">
         <DetalleProducto producto={producto} relacionados={relacionados} />
       </main>
-      <Footer />
 
       <CartDrawer />
 
