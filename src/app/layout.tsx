@@ -20,13 +20,27 @@ const archivo = Archivo({
   variable: "--font-archivo",
 });
 
+// Título y descripción para compartir (WhatsApp, redes): literales acá,
+// a propósito, sin pasar por `site.descripcion` — ese texto lo usan otras
+// páginas (JSON-LD, /catalogo) y no lo tocamos con este cambio puntual.
+const TITULO_COMPARTIR =
+  "TuFragancia Ideal | Perfumes Árabes y de Diseñador en Uruguay";
+const DESCRIPCION_COMPARTIR =
+  "Descubre nuestra selección de perfumes 100% originales. Envíos a todo el país.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  // ⚠️ Apunta al dominio de Vercel, no a `site.url` (tufraganciaideal.uy):
+  // así pedido explícitamente, para que las previsualizaciones de WhatsApp
+  // funcionen ya mismo contra lo que está realmente publicado. El resto de
+  // las URLs absolutas del sitio (JSON-LD, sitemap, canonical de /catalogo,
+  // vuelta de Mercado Pago) siguen usando `site.url` — cuando el dominio
+  // .uy esté realmente en línea, conviene unificar todo a ese.
+  metadataBase: new URL("https://tufraganciaideal-self.vercel.app"),
   title: {
-    default: "Perfumes originales en Uruguay | TuFraganciaIdeal",
+    default: TITULO_COMPARTIR,
     template: "%s | TuFraganciaIdeal",
   },
-  description: site.descripcion,
+  description: DESCRIPCION_COMPARTIR,
   keywords: [
     "perfumes originales Uruguay",
     "comprar perfumes online Uruguay",
@@ -42,15 +56,15 @@ export const metadata: Metadata = {
     locale: "es_UY",
     url: site.url,
     siteName: site.nombre,
-    title: "Perfumes originales sellados, con envío a todo Uruguay",
-    description: site.descripcion,
+    title: TITULO_COMPARTIR,
+    description: DESCRIPCION_COMPARTIR,
     // 📸 Subí una imagen 1200×630 a /public/og.jpg (frasco + logo sobre fondo oscuro).
     images: [{ url: "/og.jpg", width: 1200, height: 630, alt: site.nombre }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Perfumes originales sellados, con envío a todo Uruguay",
-    description: site.descripcion,
+    title: TITULO_COMPARTIR,
+    description: DESCRIPCION_COMPARTIR,
     images: ["/og.jpg"],
   },
   robots: { index: true, follow: true },

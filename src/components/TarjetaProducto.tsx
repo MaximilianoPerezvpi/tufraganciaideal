@@ -161,10 +161,10 @@ export default function TarjetaProducto({
             disabled={!disponible || sinMasStock}
             onClick={manejarAgregar}
             whileTap={disponible && !sinMasStock ? { scale: 0.95 } : undefined}
-            className={`mt-4 w-full overflow-hidden rounded-full border py-3 text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_var(--color-oro-vivo)] disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-borde disabled:text-arena disabled:shadow-none disabled:hover:bg-transparent ${
+            className={`mt-4 w-full overflow-hidden rounded-full border py-3 text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_var(--color-oro-vivo)] disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-borde disabled:bg-transparent disabled:text-arena disabled:shadow-none ${
               agregado
                 ? "border-vetiver bg-vetiver text-noche"
-                : "border-champan/50 text-champan hover:bg-champan hover:text-noche"
+                : "border-transparent bg-[#D4AF37] font-semibold text-black hover:bg-[#b5952f]"
             }`}
           >
             <AnimatePresence mode="wait" initial={false}>
