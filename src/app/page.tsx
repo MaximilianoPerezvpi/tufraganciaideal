@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import TrustBadges from "@/components/TrustBadges";
 import StockInmediato from "@/components/StockInmediato";
 import ExploraCategorias from "@/components/ExploraCategorias";
 import AsesorOlfativo from "@/components/AsesorOlfativo";
@@ -25,7 +24,6 @@ export default function Home() {
       <Header />
       <main id="contenido">
         <Hero />
-        <TrustBadges />
         <StockInmediato />
         <ExploraCategorias />
         <AsesorOlfativo />
