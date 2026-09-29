@@ -43,7 +43,7 @@ export default function BotonCarrito({ className = "" }: { className?: string })
       aria-label={
         mostrar ? `Abrir carrito (${unidades} productos)` : "Abrir carrito"
       }
-      className={`relative flex h-10 items-center gap-2 rounded-full border border-champan/50 px-4 text-sm text-champan transition-colors hover:bg-champan hover:text-noche ${className}`}
+      className={`relative flex h-11 items-center gap-2 rounded-full border border-champan/50 px-4 text-sm text-champan transition-colors hover:bg-champan hover:text-noche ${className}`}
     >
       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
         <path

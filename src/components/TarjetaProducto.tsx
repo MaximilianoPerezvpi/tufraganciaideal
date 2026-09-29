@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
+import { calificacionDe } from "@/lib/perfume";
+import Estrellas from "./Estrellas";
 import ImagenProducto from "./ImagenProducto";
 import VistaRapidaModal from "./VistaRapidaModal";
 
@@ -122,6 +124,8 @@ export default function TarjetaProducto({
             {producto.nombre}
           </Link>
         </h3>
+
+        <Estrellas estrellas={calificacionDe(producto).estrellas} className="mt-1.5" />
 
         {/* Ficha técnica: lo primero que mira alguien que ya sabe qué busca. */}
         <p className="cifras mt-1 text-sm text-arena">

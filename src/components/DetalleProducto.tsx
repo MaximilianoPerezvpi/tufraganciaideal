@@ -6,10 +6,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
-import { ocasionesDe, textoLongevidad, textoProyeccion } from "@/lib/perfume";
+import {
+  calificacionDe,
+  ocasionesDe,
+  textoLongevidad,
+  textoProyeccion,
+} from "@/lib/perfume";
 import TarjetaProducto from "./TarjetaProducto";
 import ImagenProducto from "./ImagenProducto";
 import BarraIntensidad from "./BarraIntensidad";
+import Estrellas from "./Estrellas";
 
 const CONFIANZA = [
   "100% Original Sellado",
@@ -113,6 +119,9 @@ export default function DetalleProducto({
           <h1 className="mt-1 font-display text-[length:var(--text-titulo)] font-light leading-[1.05] text-marfil">
             {producto.nombre}
           </h1>
+
+          <Estrellas {...calificacionDe(producto)} className="mt-2.5" />
+
           <p className="cifras mt-2 text-sm text-arena">
             {producto.concentracion} · {producto.volumen_ml} ml
           </p>

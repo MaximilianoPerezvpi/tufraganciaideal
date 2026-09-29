@@ -85,7 +85,7 @@ export default function SearchBar() {
             type="button"
             onClick={() => setAbiertoMobile(true)}
             aria-label="Buscar"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-arena transition-colors hover:text-marfil"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-arena transition-colors hover:text-marfil"
           >
             <IconoLupa className="h-4.5 w-4.5" />
           </button>

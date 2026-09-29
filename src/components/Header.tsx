@@ -69,7 +69,7 @@ export default function Header() {
               aria-expanded={menuAbierto}
               aria-controls="menu-mobile"
               aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
-              className="flex h-10 w-10 flex-col items-center justify-center gap-[5px]"
+              className="flex h-11 w-11 flex-col items-center justify-center gap-[5px]"
             >
               <motion.span
                 animate={menuAbierto ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
