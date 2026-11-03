@@ -12,8 +12,7 @@ import { buscarProducto, type Producto } from "@/data/productos";
  * Decisión importante: en localStorage se guardan SOLO `slug` y `cantidad`.
  * Nada de precios ni nombres. Si mañana cambiás un precio en `productos.ts`,
  * el carrito de alguien que lo abrió la semana pasada se actualiza solo, y
- * nadie puede editar el localStorage para pagar menos (igual el servidor
- * recalcula todo en /api/checkout).
+ * el mensaje de pedido por WhatsApp sale siempre con el precio vigente.
  */
 
 export type ItemCarrito = {

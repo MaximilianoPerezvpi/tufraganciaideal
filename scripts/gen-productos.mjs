@@ -521,9 +521,8 @@ const header = `/**
  * Única fuente de datos del sitio. Para agregar un perfume copiás un objeto
  * y listo: no hay que tocar ningún componente.
  *
- * ⚠️ Este archivo también se usa EN EL SERVIDOR (/api/checkout) para recalcular
- * el precio de cada compra. Nunca se le cree el precio al navegador: lo que
- * está acá es lo que se cobra.
+ * Lo que está acá es el precio que ve el cliente y el que viaja en el mensaje
+ * de "Hacer Pedido por WhatsApp" (ver src/lib/pedidoWhatsApp.ts).
  *
  * 📸 IMÁGENES
  * Este archivo se genera con \`node scripts/gen-productos.mjs\`, que ESCANEA
@@ -548,9 +547,14 @@ const header = `/**
  * Excepción confirmada a mano: valentino-born-in-roma-uomo.webp (foto real,
  * verificada).
  *
- * 💵 PRECIOS
- * En pesos uruguayos, IVA incluido. Carga oficial 2026-09 (solo precio por
- * menor — el archivo no guarda precio mayorista).
+ * 💵 PRECIOS — moneda única: PESOS URUGUAYOS (UYU)
+ * \`precio_uyu\` es el precio final en UYU, IVA incluido, número entero sin
+ * puntos ni símbolo (3200, no "$ 3.200"). Carga oficial 2026-09 (solo precio
+ * por menor — el archivo no guarda precio mayorista).
+ * Para ver la lista completa de precios actuales: \`npm run precios\` (la
+ * imprime en consola y la guarda en precios-actuales.csv).
+ * Para CAMBIAR un precio: editá la 3ª columna de scripts/gen-rows.mjs y
+ * corré \`node scripts/gen-productos.mjs\`. No lo edites acá: se pisa.
  *
  * 📦 STOCK
  * \`stock\` es binario en esta carga: 1 = disponible, 0 = sin stock. No indica
@@ -651,14 +655,14 @@ export const productos: Producto[] = [
 `;
 
 const footer = `
-/** Busca por slug. Lo usa el checkout para recalcular precios en el servidor. */
+/** Busca por slug (páginas de producto, carrito). */
 export function buscarProducto(slug: string): Producto | undefined {
   return productos.find((p) => p.slug === slug);
 }
 
 /**
  * URL de la foto para lugares que necesitan un string plano (metadata,
- * JSON-LD, \`picture_url\` de Mercado Pago): si el producto todavía no tiene
+ * JSON-LD): si el producto todavía no tiene
  * foto propia, cae al OG del sitio en vez de mandar una ruta rota.
  *
  * Para renderizar en pantalla usá \`<ImagenProducto>\` en vez de esto: ahí sí

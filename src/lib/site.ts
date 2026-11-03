@@ -7,7 +7,7 @@ export const site = {
   // TODO: poné el dominio final. Se usa para canonical, sitemap y Open Graph.
   url: "https://tufraganciaideal.uy",
   descripcion:
-    "Perfumes originales sellados en Uruguay: frascos completos de nicho, diseñador y árabes. Comprá online con Mercado Pago y recibilo en todo el país.",
+    "Perfumes originales sellados en Uruguay: frascos completos de nicho, diseñador y árabes. Pedí por WhatsApp y recibilo en todo el país.",
 
   // WhatsApp de consultas y pedidos (formato internacional, sin + ni espacios).
   whatsapp: "59897443176",

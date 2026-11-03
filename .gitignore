@@ -4,3 +4,8 @@ out
 .env*.local
 .vercel
 .DS_Store
+
+# Generados localmente
+graphify-out/
+*.tsbuildinfo
+precios-actuales.csv

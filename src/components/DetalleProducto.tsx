@@ -7,6 +7,7 @@ import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
 import { calificacionDe } from "@/lib/resenas";
+import { linkPedidoProducto } from "@/lib/pedidoWhatsApp";
 import {
   ocasionesDe,
   textoLongevidad,
@@ -17,6 +18,7 @@ import ImagenProducto from "./ImagenProducto";
 import BarraIntensidad from "./BarraIntensidad";
 import Estrellas from "./Estrellas";
 import ResenasProducto from "./ResenasProducto";
+import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
 
 const CONFIANZA = [
   "100% Original Sellado",
@@ -49,8 +51,8 @@ export default function DetalleProducto({
     setCantidad((c) => Math.min(Math.max(c, 1), Math.max(restante, 1)));
   }, [restante]);
 
-  // Barra fija de compra (solo mobile): aparece cuando el botón principal
-  // de "Añadir al carrito" sale de la pantalla al scrollear.
+  // Barra fija de compra (solo mobile): aparece cuando el bloque de compra
+  // principal sale de la pantalla al scrollear.
   const botonPrincipalRef = useRef<HTMLDivElement>(null);
   const [mostrarBarraFija, setMostrarBarraFija] = useState(false);
 
@@ -161,45 +163,52 @@ export default function DetalleProducto({
             />
           </div>
 
-          {/* Selector de cantidad + agregar */}
-          <div ref={botonPrincipalRef} className="mt-6 flex flex-wrap items-center gap-4">
-            <div className="flex items-center rounded-full border border-borde">
-              <button
-                type="button"
-                onClick={() => setCantidad((c) => Math.max(1, c - 1))}
-                disabled={cantidad <= 1}
-                aria-label="Restar una unidad"
-                className="h-12 w-12 text-lg text-arena transition-colors hover:text-marfil disabled:opacity-30 disabled:hover:text-arena"
-              >
-                −
-              </button>
-              <span className="cifras w-8 text-center text-marfil">
-                {cantidad}
-              </span>
-              <button
-                type="button"
-                onClick={() => setCantidad((c) => Math.min(restante, c + 1))}
-                disabled={cantidad >= restante}
-                aria-label="Sumar una unidad"
-                className="h-12 w-12 text-lg text-arena transition-colors hover:text-marfil disabled:opacity-30 disabled:hover:text-arena"
-              >
-                +
-              </button>
-            </div>
+          {/* Pedido por WhatsApp (acción principal) + carrito */}
+          <div ref={botonPrincipalRef} className="mt-6">
+            <BotonPedidoWhatsApp
+              href={linkPedidoProducto(producto)}
+              className="h-14 w-full px-8 text-base"
+            />
 
-            <motion.button
-              type="button"
-              disabled={!disponible || restante <= 0}
-              onClick={agregarAlCarrito}
-              whileTap={disponible && restante > 0 ? { scale: 0.97 } : undefined}
-              className="h-12 flex-1 min-w-[12rem] rounded-full bg-champan px-8 font-medium text-noche transition-colors hover:bg-oro-claro disabled:cursor-not-allowed disabled:bg-borde disabled:text-arena"
-            >
-              {!disponible
-                ? "Sin stock"
-                : restante <= 0
-                  ? `Ya tenés ${enCarrito} en el carrito`
-                  : "Añadir al carrito"}
-            </motion.button>
+            <div className="mt-4 flex flex-wrap items-center gap-4">
+              <div className="flex items-center rounded-full border border-borde">
+                <button
+                  type="button"
+                  onClick={() => setCantidad((c) => Math.max(1, c - 1))}
+                  disabled={cantidad <= 1}
+                  aria-label="Restar una unidad"
+                  className="h-12 w-12 text-lg text-arena transition-colors hover:text-marfil disabled:opacity-30 disabled:hover:text-arena"
+                >
+                  −
+                </button>
+                <span className="cifras w-8 text-center text-marfil">
+                  {cantidad}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setCantidad((c) => Math.min(restante, c + 1))}
+                  disabled={cantidad >= restante}
+                  aria-label="Sumar una unidad"
+                  className="h-12 w-12 text-lg text-arena transition-colors hover:text-marfil disabled:opacity-30 disabled:hover:text-arena"
+                >
+                  +
+                </button>
+              </div>
+
+              <motion.button
+                type="button"
+                disabled={!disponible || restante <= 0}
+                onClick={agregarAlCarrito}
+                whileTap={disponible && restante > 0 ? { scale: 0.97 } : undefined}
+                className="h-12 flex-1 min-w-[12rem] rounded-full border border-champan px-8 font-medium text-champan transition-colors hover:bg-champan hover:text-noche disabled:cursor-not-allowed disabled:border-borde disabled:bg-transparent disabled:text-arena"
+              >
+                {!disponible
+                  ? "Sin stock"
+                  : restante <= 0
+                    ? `Ya tenés ${enCarrito} en el carrito`
+                    : "Añadir al carrito"}
+              </motion.button>
+            </div>
           </div>
 
           {/* Ocasiones recomendadas: calculadas, no son dato del catálogo. */}
@@ -294,18 +303,12 @@ export default function DetalleProducto({
                 {precio(producto.precio_uyu)}
               </p>
             </div>
-            <button
-              type="button"
-              disabled={!disponible || restante <= 0}
-              onClick={agregarAlCarrito}
-              className="shrink-0 rounded-full bg-champan px-6 py-3 text-sm font-medium text-noche transition-colors hover:bg-oro-claro disabled:cursor-not-allowed disabled:bg-borde disabled:text-arena"
+            <BotonPedidoWhatsApp
+              href={linkPedidoProducto(producto)}
+              className="shrink-0 px-5 py-3 text-sm"
             >
-              {!disponible
-                ? "Sin stock"
-                : restante <= 0
-                  ? "En el carrito"
-                  : "Añadir al carrito"}
-            </button>
+              Pedir por WhatsApp
+            </BotonPedidoWhatsApp>
           </motion.div>
         )}
       </AnimatePresence>

@@ -22,7 +22,7 @@ const SECCIONES = [
   {
     titulo: "Costo de envío",
     texto:
-      "El costo se calcula automáticamente según tu departamento en el paso de checkout, antes de confirmar el pago: siempre vas a saber cuánto pagás por el envío antes de pagar.",
+      "El costo depende de tu departamento y te lo confirmamos por WhatsApp junto con el pedido: siempre vas a saber cuánto pagás por el envío antes de pagar.",
   },
   {
     titulo: "Seguimiento del pedido",

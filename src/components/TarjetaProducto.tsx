@@ -7,6 +7,8 @@ import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
 import { calificacionDe } from "@/lib/resenas";
+import { linkPedidoProducto } from "@/lib/pedidoWhatsApp";
+import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
 import Estrellas from "./Estrellas";
 import ImagenProducto from "./ImagenProducto";
 import VistaRapidaModal from "./VistaRapidaModal";
@@ -214,6 +216,13 @@ export default function TarjetaProducto({
               )}
             </AnimatePresence>
           </motion.button>
+
+          <BotonPedidoWhatsApp
+            href={linkPedidoProducto(producto)}
+            className="mt-2 w-full py-3 text-sm"
+          >
+            Pedir por WhatsApp
+          </BotonPedidoWhatsApp>
         </div>
       </div>
     </motion.article>

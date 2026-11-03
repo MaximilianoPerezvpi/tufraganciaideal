@@ -9,8 +9,8 @@ const GARANTIAS = [
     texto: "Cada frasco llega con su celofán de fábrica, sin abrir.",
   },
   {
-    titulo: "Pago protegido",
-    texto: "Pagás con Mercado Pago: si algo sale mal, tu dinero está cubierto.",
+    titulo: "Pedido directo",
+    texto: "Pedís por WhatsApp y hablás con una persona, no con un bot.",
   },
   {
     titulo: "Atención por WhatsApp",

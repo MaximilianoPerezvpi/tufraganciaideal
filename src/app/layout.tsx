@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   // así pedido explícitamente, para que las previsualizaciones de WhatsApp
   // funcionen ya mismo contra lo que está realmente publicado. El resto de
   // las URLs absolutas del sitio (JSON-LD, sitemap, canonical de /catalogo,
-  // vuelta de Mercado Pago) siguen usando `site.url` — cuando el dominio
+  // previsualizaciones) siguen usando `site.url` — cuando el dominio
   // .uy esté realmente en línea, conviene unificar todo a ese.
   metadataBase: new URL("https://tufraganciaideal-self.vercel.app"),
   title: {
@@ -95,7 +95,7 @@ const jsonLd = {
   areaServed: { "@type": "Country", name: "Uruguay" },
   priceRange: "$$",
   currenciesAccepted: "UYU",
-  paymentAccepted: "Mercado Pago, Tarjetas de crédito y débito, Abitab, Redpagos",
+  paymentAccepted: "Transferencia bancaria, Efectivo",
 };
 
 export default function RootLayout({

@@ -5,9 +5,11 @@ import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
 import { textoLongevidad, textoProyeccion } from "@/lib/perfume";
+import { linkPedidoProducto } from "@/lib/pedidoWhatsApp";
 import Modal from "./Modal";
 import ImagenProducto from "./ImagenProducto";
 import BarraIntensidad from "./BarraIntensidad";
+import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
 
 /** Vista rápida: pirámide olfativa y métricas sin salir del catálogo. */
 export default function VistaRapidaModal({
@@ -84,11 +86,15 @@ export default function VistaRapidaModal({
           </dl>
 
           <div className="mt-6 flex flex-col gap-2">
+            <BotonPedidoWhatsApp
+              href={linkPedidoProducto(producto)}
+              className="w-full py-3 text-sm"
+            />
             <button
               type="button"
               disabled={!disponible || sinMasStock}
               onClick={() => agregar(producto.slug)}
-              className="w-full rounded-full bg-champan py-3 text-sm font-medium text-noche transition-colors hover:bg-oro-claro disabled:cursor-not-allowed disabled:bg-borde disabled:text-arena"
+              className="w-full rounded-full border border-champan py-3 text-sm font-medium text-champan transition-colors hover:bg-champan hover:text-noche disabled:cursor-not-allowed disabled:border-borde disabled:bg-transparent disabled:text-arena"
             >
               {!disponible
                 ? "Sin stock"

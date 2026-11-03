@@ -10,7 +10,8 @@ const GARANTIAS = [
   "Devolución total si no es original",
 ];
 
-const MEDIOS_PAGO = ["Visa", "Mastercard", "Mercado Pago", "OCA", "Abitab", "Redpagos"];
+// TODO: confirmá los medios de pago que realmente aceptás (ver también Envios.tsx).
+const MEDIOS_PAGO = ["Transferencia bancaria", "Efectivo"];
 const AGENCIAS_ENVIO = ["DAC", "UES"];
 
 const ENLACES_LEGALES = [
@@ -38,7 +39,7 @@ const FAQ = [
   {
     pregunta: "¿Qué medios de pago aceptan?",
     respuesta:
-      "Todo a través de Mercado Pago: tarjetas OCA, Visa y Mastercard (hasta 12 cuotas), o en efectivo por Abitab y Redpagos. Tus datos de tarjeta nunca pasan por esta web.",
+      "Los pedidos se hacen por WhatsApp: ahí te confirmamos stock y coordinamos el pago por transferencia bancaria, o en efectivo al retirar en Montevideo.",
   },
 ];
 

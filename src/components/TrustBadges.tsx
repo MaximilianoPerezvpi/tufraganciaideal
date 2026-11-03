@@ -6,8 +6,8 @@ const GARANTIAS = [
   },
   {
     icono: "🔒",
-    titulo: "Pago 100% Seguro",
-    texto: "Mercado Pago o transferencia bancaria, hasta 12 cuotas.",
+    titulo: "Pedido por WhatsApp",
+    texto: "Confirmás stock y coordinás pago y envío con nosotros.",
   },
   {
     icono: "✅",

@@ -6,20 +6,17 @@ import { linkWhatsApp, site } from "@/lib/site";
 /**
  * Logística: pagos y envíos.
  * ⚠️ TODO: ajustá precios de envío, agencias y horarios a tu operativa real.
+ * ⚠️ TODO: confirmá que estas formas de pago son las que realmente aceptás.
  */
 
 const PAGOS = [
   {
-    nombre: "Tarjeta de crédito",
-    detalle: "OCA, Visa y Mastercard. Hasta 12 cuotas según el banco.",
-  },
-  {
-    nombre: "Tarjeta de débito",
-    detalle: "Débito uruguayo, el cobro se acredita al instante.",
+    nombre: "Transferencia bancaria",
+    detalle: "Te pasamos los datos de la cuenta por WhatsApp al confirmar el pedido.",
   },
   {
     nombre: "Efectivo",
-    detalle: "Abitab y Redpagos: te damos el cupón y pagás en la red.",
+    detalle: "Al retirar en el punto de encuentro coordinado en Montevideo.",
   },
 ];
 
@@ -51,12 +48,12 @@ export default function Envios() {
             Cómo pagás y cómo te llega
           </h2>
           <p className="mt-4 max-w-[48ch] text-arena">
-            El pago lo procesa Mercado Pago, así que tus datos de tarjeta nunca
-            pasan por esta web. Despachamos el mismo día que se acredita el pago
-            y te mandamos el número de seguimiento por mail.
+            Hacés el pedido por WhatsApp desde el carrito o la ficha del
+            perfume: te confirmamos stock, coordinamos el pago y despachamos
+            el mismo día que se acredita, con número de seguimiento.
           </p>
 
-          <h3 className="mt-10 text-sm text-marfil">Formas de pago con Mercado Pago</h3>
+          <h3 className="mt-10 text-sm text-marfil">Formas de pago</h3>
           <dl className="mt-4 divide-y divide-borde border-y border-borde">
             {PAGOS.map((p) => (
               <div key={p.nombre} className="flex flex-wrap gap-x-6 gap-y-1 py-4">

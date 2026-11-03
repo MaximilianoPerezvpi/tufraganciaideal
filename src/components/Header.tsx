@@ -31,7 +31,7 @@ export default function Header() {
       <div className="flex h-8 items-center justify-center bg-noche px-4 text-center">
         <p className="kicker text-[0.68rem]">
           ✨ Envíos a todo Uruguay en 24-48 hs · 100% Originales Sellados ·
-          Hasta 12 cuotas vía Mercado Pago
+          Pedidos por WhatsApp
         </p>
       </div>
 

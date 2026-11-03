@@ -1,39 +1,33 @@
 # TuFraganciaIdeal
 
 E-commerce de perfumes originales sellados. Next.js 15 (App Router) +
-Tailwind v4 + Framer Motion + Zustand, con checkout de Mercado Pago Uruguay.
-Pensado para deployear en Vercel.
+Tailwind v4 + Framer Motion + Zustand. Los pedidos se hacen por WhatsApp
+(sin pasarela de pago). Pensado para deployear en Vercel.
 
 ## Arrancar
 
 ```bash
 npm install
-cp .env.example .env.local   # y completá las credenciales
-npm run dev                  # http://localhost:3000
+npm run dev       # http://localhost:3000
+npm run precios   # lista de precios actuales (consola + precios-actuales.csv)
 ```
 
 ## Variables de entorno
 
-| Variable | Qué es |
-| --- | --- |
-| `MP_ACCESS_TOKEN` | Access Token de Mercado Pago. TEST mientras probás, producción al publicar. Nunca lo subas al repo. |
-| `NEXT_PUBLIC_SITE_URL` | URL pública sin barra final. En local `http://localhost:3000`. |
-
-Las sacás de <https://www.mercadopago.com.uy/developers/panel/app>. En Vercel se
-cargan en **Settings → Environment Variables** (y después redeploy).
+Ninguna. El sitio no cobra ni guarda datos: no hay credenciales que cargar.
 
 ## Deploy en Vercel
 
 1. Subí esta carpeta a un repo de GitHub.
 2. En Vercel: **Add New → Project → Import** el repo.
-3. Cargá las dos variables de entorno.
-4. Cuando tengas el dominio, cambiá `url` en `src/lib/site.ts`.
+3. Cuando tengas el dominio, cambiá `url` en `src/lib/site.ts`.
 
 ## Lo primero que tenés que editar
 
 | Qué | Dónde |
 | --- | --- |
-| Perfumes, precios, stock, notas | `src/data/productos.ts` |
+| Precios y stock | `scripts/gen-rows.mjs` → `node scripts/gen-productos.mjs` (genera `src/data/productos.ts`) |
+| Notas, descripciones, género | `scripts/gen-productos.mjs` |
 | Fotos de los perfumes | `public/productos/<slug>.jpg` |
 | WhatsApp de consultas, Instagram, dominio | `src/lib/site.ts` |
 | Formas de pago y envíos | `src/components/Envios.tsx` |
@@ -51,43 +45,31 @@ Buscá `TODO` en el proyecto: marqué cada dato que es placeholder.
 ## Cómo funciona la compra
 
 ```
-Tarjeta → "Agregar al carrito"           (Zustand, guarda slug + cantidad)
-        → CartDrawer                     (abre, muestra total en UYU)
-        → "Finalizar compra"
-        → POST /api/checkout             (el servidor RECALCULA precios y stock)
-        → Preference de Mercado Pago
-        → redirect al Checkout Pro
-        → /compra/exito | /compra/pendiente | /compra/error
+Ficha / vista rápida / tarjeta → "Hacer Pedido por WhatsApp"
+        → wa.me/59897443176 con el perfume y su precio ya escritos
+
+Carrito (Zustand, guarda slug + cantidad) → "Hacer Pedido por WhatsApp"
+        → wa.me/59897443176 con cada línea, subtotales y total en UYU
 ```
 
-Dos decisiones que importan:
+- Los mensajes se arman en `src/lib/pedidoWhatsApp.ts`; el número sale de
+  `site.whatsapp` en `src/lib/site.ts`.
+- El carrito guarda solo `slug` y `cantidad`: el precio del mensaje siempre
+  sale de `productos.ts`, así que un cambio de precio se refleja al instante.
+- La web **no cobra**: stock, forma de pago y envío se confirman en el chat.
+  El stock vive en `productos.ts` y se baja a mano después de cada venta.
 
-- **El navegador nunca manda precios.** El carrito guarda solo `slug` y
-  `cantidad`; `/api/checkout` busca cada producto en `productos.ts` y arma la
-  preferencia con el precio real. Editar el localStorage no sirve de nada.
-- **`binary_mode: false`.** Abitab y Redpagos generan un pago *pendiente* que se
-  acredita cuando la persona va a pagar. Con `binary_mode: true` Mercado Pago
-  los rechazaría y perderías esas ventas.
+## Precios
 
-### Lo que todavía falta para operar en serio
+Todos en pesos uruguayos (UYU), IVA incluido, como número entero
+(`precio_uyu: 3200`). Para cambiarlos:
 
-El checkout cobra bien, pero el sitio **no sabe** que cobró. Antes de vender de
-verdad te faltan dos cosas:
+1. `npm run precios` → genera `precios-actuales.csv` (tiene una columna
+   vacía `precio_nuevo_uyu` para anotar los nuevos).
+2. Editá la 3ª columna de cada fila en `scripts/gen-rows.mjs`.
+3. `node scripts/gen-productos.mjs` → regenera `src/data/productos.ts`.
 
-1. **Webhook** en `/api/webhooks/mercadopago`: Mercado Pago avisa ahí cuándo se
-   aprueba un pago. Es lo que te permite confirmar la venta sin mirar el panel.
-   La `notification_url` ya está configurada apuntando a esa ruta.
-2. **Stock real**: hoy vive en `productos.ts`, o sea que se descuenta a mano.
-   Dos personas pueden comprar la última unidad al mismo tiempo. Con el webhook
-   + una base (Vercel Postgres, Supabase) eso se resuelve.
-
-Mientras tanto: revisá el panel de Mercado Pago después de cada venta y bajá el
-`stock` en el archivo.
-
-### Probar el pago sin plata real
-
-Con el Access Token de TEST, creá un usuario de prueba comprador en el panel de
-Mercado Pago y usá sus tarjetas de test. Las compras de prueba no se cobran.
+No edites `productos.ts` a mano: se pisa en la próxima corrida del generador.
 
 ## Fotos de producto
 
@@ -133,8 +115,6 @@ src/
 │  ├─ layout.tsx              tipografías, metadatos SEO, datos estructurados
 │  ├─ page.tsx                arma la home con las secciones
 │  ├─ globals.css             sistema de diseño (colores, tipos, utilidades)
-│  ├─ api/checkout/route.ts   crea la preferencia de Mercado Pago
-│  ├─ compra/exito|pendiente|error/   retorno del checkout
 │  ├─ sitemap.ts              /sitemap.xml automático
 │  ├─ robots.ts               /robots.txt automático
 │  └─ icon.svg                favicon
@@ -145,14 +125,15 @@ src/
 │  ├─ Catalogo.tsx            grilla + filtro por familia
 │  ├─ TarjetaProducto.tsx     ficha del frasco + agregar al carrito
 │  ├─ BotonCarrito.tsx        botón con contador de unidades
-│  ├─ CartDrawer.tsx          carrito lateral + finalizar compra
+│  ├─ CartDrawer.tsx          carrito lateral + pedido por WhatsApp
+│  ├─ BotonPedidoWhatsApp.tsx botón "Hacer Pedido por WhatsApp"
 │  ├─ Originales.tsx          garantía de autenticidad
 │  ├─ Envios.tsx              pagos y envíos
-│  ├─ EstadoCompra.tsx        pantallas de retorno de Mercado Pago
 │  └─ Footer.tsx
 ├─ data/productos.ts          el catálogo entero
 └─ lib/
    ├─ cartStore.ts            carrito (Zustand + localStorage)
+   ├─ pedidoWhatsApp.ts       mensajes de pedido para WhatsApp
    ├─ site.ts                 config: dominio, contacto, navegación
    ├─ format.ts               formato de pesos uruguayos
    └─ jsonld.ts               datos estructurados del catálogo para Google
