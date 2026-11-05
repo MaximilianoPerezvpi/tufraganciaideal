@@ -1,4 +1,9 @@
-import { productos, imagenUrl, type Producto } from "@/data/productos";
+import {
+  disponibilidad,
+  productos,
+  imagenUrl,
+  type Producto,
+} from "@/data/productos";
 import { site } from "@/lib/site";
 import { calificacionDe, resenasDe } from "@/lib/resenas";
 
@@ -10,15 +15,19 @@ import { calificacionDe, resenasDe } from "@/lib/resenas";
  * un perfume, acá aparece sin tocar nada.
  */
 
+// "A pedido" es BackOrder: se puede pedir, pero no está en stock físico.
+const DISPONIBILIDAD_SCHEMA = {
+  stock: "https://schema.org/InStock",
+  pedido: "https://schema.org/BackOrder",
+  agotado: "https://schema.org/OutOfStock",
+} as const;
+
 function oferta(p: Producto, url = `${site.url}/catalogo`) {
   return {
     "@type": "Offer",
     priceCurrency: "UYU",
     price: p.precio_uyu,
-    availability:
-      p.stock > 0
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
+    availability: DISPONIBILIDAD_SCHEMA[disponibilidad(p)],
     itemCondition: "https://schema.org/NewCondition",
     url,
     areaServed: { "@type": "Country", name: "Uruguay" },

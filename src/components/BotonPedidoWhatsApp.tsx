@@ -4,21 +4,32 @@ import type { ReactNode } from "react";
  * Botón "Hacer Pedido por WhatsApp". Es un link (abre wa.me en otra
  * pestaña): el texto del pedido ya viene armado en `href`
  * (ver `src/lib/pedidoWhatsApp.ts`).
+ *
+ * `origen` y `slug` viajan como data-attributes: los lee el listener de
+ * clics de `Analytics.tsx` para medir el contacto (nunca como una venta).
  */
 export default function BotonPedidoWhatsApp({
   href,
   className = "",
   children = "Hacer Pedido por WhatsApp",
+  origen,
+  slug,
 }: {
   href: string;
   className?: string;
   children?: ReactNode;
+  /** Dónde está el botón: "tarjeta", "ficha", "carrito"… */
+  origen: string;
+  /** Perfume consultado, si el botón es de un producto. */
+  slug?: string;
 }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      data-wa-origen={origen}
+      data-wa-slug={slug}
       className={`flex items-center justify-center gap-2 rounded-full bg-vetiver font-medium text-noche transition-colors hover:bg-vetiver/85 ${className}`}
     >
       <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 fill-current" aria-hidden>

@@ -69,7 +69,7 @@ const FOTOS_EXCEPCION = {};
 const BESPOKE = {
   "dior|sauvage|EDT": {
     notas: { salida: ["Bergamota de Calabria", "Pimienta"], corazon: ["Lavanda", "Geranio"], fondo: ["Ambroxan", "Cedro", "Pachulí"] },
-    descripcion: "El más vendido del mundo. No hace falta presentarlo.",
+    descripcion: "Fresco y especiado, con fondo de ambroxan. Un clásico masculino para todos los días.",
     familia: "Amaderado / Especiado", genero: "masculino",
   },
   "dior|sauvage|EDP": {
@@ -104,7 +104,7 @@ const BESPOKE = {
   },
   "versace|eros|EDT": {
     notas: { salida: ["Menta", "Manzana verde", "Limón"], corazon: ["Salvia", "Geranio", "Canela"], fondo: ["Vainilla", "Haba tonka", "Ámbar", "Cedro"] },
-    descripcion: "Fresco y dulce a la vez. Uno de los más pedidos de Versace.",
+    descripcion: "Fresco y dulce a la vez: menta, manzana verde y vainilla.",
     familia: "Amaderado / Especiado", genero: "masculino",
   },
   "versace|eros flame|EDP": {
@@ -179,7 +179,7 @@ const BESPOKE = {
   },
   "lattafa|khamrah|EDP": {
     notas: { salida: ["Canela", "Nuez moscada", "Frutas"], corazon: ["Dátil", "Especias"], fondo: ["Vainilla", "Ámbar", "Benjuí"] },
-    descripcion: "Gourmand especiado, el que más se pide en el local.",
+    descripcion: "Gourmand especiado: canela, dátil y vainilla, ideal para el frío.",
     familia: "Gourmand / Dulce", genero: "unisex",
   },
   "lattafa|fakhar women|EDP": {
@@ -259,25 +259,21 @@ const BESPOKE = {
   },
 };
 
-// Plantillas genéricas por familia olfativa, para el resto del catálogo
-// (perfumes sin ficha propia documentada). Ciclan por índice: "placeholders
-// elegantes" tal como pidió el cliente, no ficha oficial de la marca.
-const T_ARABES = [
-  { notas: { salida: ["Bergamota", "Especias"], corazon: ["Ámbar", "Azafrán"], fondo: ["Oud", "Almizcle", "Sándalo"] }, descripcion: "Oriental especiado, de esos que dejan estela.", familia: "Oriental / Oud" },
-  { notas: { salida: ["Frutos rojos", "Bergamota"], corazon: ["Flor de azahar", "Praliné"], fondo: ["Vainilla", "Caramelo", "Almizcle"] }, descripcion: "Gourmand dulce, fácil de reconocer en la fila del súper.", familia: "Gourmand / Dulce" },
-  { notas: { salida: ["Piña", "Manzana"], corazon: ["Jazmín", "Rosa"], fondo: ["Ámbar gris", "Pachulí", "Almizcle"] }, descripcion: "Afrutado con fondo amaderado, buen rendimiento por toque.", familia: "Floral / Frutal" },
-  { notas: { salida: ["Pomelo", "Menta"], corazon: ["Salvia", "Jengibre"], fondo: ["Ámbar", "Almizcle", "Cedro"] }, descripcion: "Fresco especiado, cómodo para el uso diario.", familia: "Cítrico / Fresco" },
-  { notas: { salida: ["Café", "Canela"], corazon: ["Dátil", "Especias"], fondo: ["Vainilla", "Ámbar", "Benjuí"] }, descripcion: "Gourmand cálido, ideal para el frío.", familia: "Gourmand / Dulce" },
-  { notas: { salida: ["Mandarina", "Cardamomo"], corazon: ["Rosa", "Azafrán"], fondo: ["Oud", "Cuero", "Almizcle"] }, descripcion: "Oud clásico, denso y con mucha proyección.", familia: "Oriental / Oud" },
-];
+// Sin ficha verificada (no está en BESPOKE): NO se inventan notas ni familia.
+// `notas` y `familiaOlfativa` quedan sin definir — la web muestra "consultanos
+// cómo huele" y el producto no entra en el filtro por familia ni en el asesor
+// — y la descripción se arma solo con datos reales de la fila.
+const CONCENTRACION_LARGA = {
+  EDT: "Eau de Toilette",
+  EDP: "Eau de Parfum",
+  Parfum: "Parfum",
+  Elixir: "Elixir",
+};
 
-const T_DISENADOR = [
-  { notas: { salida: ["Bergamota", "Pimienta rosa"], corazon: ["Salvia", "Cardamomo"], fondo: ["Cedro", "Ámbar", "Haba tonka"] }, descripcion: "Amaderado especiado, versátil para toda ocasión.", familia: "Amaderado / Especiado" },
-  { notas: { salida: ["Pomelo", "Limón", "Toque marino"], corazon: ["Geranio", "Lavanda"], fondo: ["Almizcle", "Cedro", "Ámbar"] }, descripcion: "Fresco y limpio, el clásico de uso diario.", familia: "Cítrico / Fresco" },
-  { notas: { salida: ["Mandarina", "Frutos rojos"], corazon: ["Jazmín", "Rosa"], fondo: ["Vainilla", "Almizcle", "Sándalo"] }, descripcion: "Floral elegante, para el día y para la noche.", familia: "Floral / Frutal" },
-  { notas: { salida: ["Pera", "Especias"], corazon: ["Haba tonka", "Jazmín"], fondo: ["Cedro", "Ámbar", "Vainilla"] }, descripcion: "Cálido y envolvente, con buena duración.", familia: "Gourmand / Dulce" },
-  { notas: { salida: ["Bergamota", "Ángelica"], corazon: ["Lavanda", "Cumarina"], fondo: ["Pachulí", "Almizcle", "Ámbar"] }, descripcion: "Jabonoso y prolijo, de los que siempre preguntan qué es.", familia: "Amaderado / Especiado" },
-];
+function descripcionNeutra({ casa, categoria, concentracion, volumen_ml }) {
+  const tipo = categoria === "árabes" ? "Perfume árabe" : "Perfume de diseñador";
+  return `${tipo} de ${casa}: ${CONCENTRACION_LARGA[concentracion]} de ${volumen_ml} ml, original y sellado.`;
+}
 
 // ── Género ───────────────────────────────────────────────────────────
 // 1) palabra explícita en el nombre (máxima confianza)
@@ -431,7 +427,7 @@ function calcularSlug(row, usedSlugs) {
   return slug;
 }
 
-function buildProducto(row, index, slug, todosLosSlugs) {
+function buildProducto(row, slug, todosLosSlugs) {
   const [casa, nombreRaw, precio_uyu, volOverride, concentracion, categoria, entregaInmediata, stock] = row;
   const nombre = limpiarNombre(nombreRaw);
   const volumen_ml = volOverride ?? 100;
@@ -448,12 +444,7 @@ function buildProducto(row, index, slug, todosLosSlugs) {
   for (const k of bespokeKeys) {
     if (BESPOKE[k]) { ficha = BESPOKE[k]; break; }
   }
-  if (!ficha) {
-    const pool = categoria === "árabes" ? T_ARABES : T_DISENADOR;
-    ficha = pool[index % pool.length];
-  }
-
-  const genero = inferirGenero(casa, nombre, ficha.genero);
+  const genero = inferirGenero(casa, nombre, ficha?.genero);
   const metricas = METRICAS_POR_CONCENTRACION[concentracion];
 
   return {
@@ -464,13 +455,15 @@ function buildProducto(row, index, slug, todosLosSlugs) {
     precio_uyu,
     volumen_ml,
     concentracion,
-    notas: ficha.notas,
+    notas: ficha?.notas,
     imagen,
     stock,
-    descripcion: ficha.descripcion,
+    descripcion:
+      ficha?.descripcion ??
+      descripcionNeutra({ casa, categoria, concentracion, volumen_ml }),
     entregaInmediata: entregaInmediata || undefined,
     genero,
-    familiaOlfativa: ficha.familia,
+    familiaOlfativa: ficha?.familia,
     longevidad: metricas.longevidad,
     proyeccion: metricas.proyeccion,
   };
@@ -480,7 +473,7 @@ const usedSlugs = new Set();
 const slugsPorFila = rows.map((row) => calcularSlug(row, usedSlugs));
 const todosLosSlugs = new Set(slugsPorFila);
 const productos = rows.map((row, i) =>
-  buildProducto(row, i, slugsPorFila[i], todosLosSlugs),
+  buildProducto(row, slugsPorFila[i], todosLosSlugs),
 );
 
 function tsString(s) {
@@ -502,13 +495,13 @@ function tsProducto(p) {
   lines.push(`    concentracion: ${tsString(p.concentracion)},`);
   lines.push(`    volumen_ml: ${p.volumen_ml},`);
   lines.push(`    precio_uyu: ${p.precio_uyu},`);
-  lines.push(`    notas: ${tsNotas(p.notas)},`);
+  if (p.notas) lines.push(`    notas: ${tsNotas(p.notas)},`);
   if (p.imagen) lines.push(`    imagen: ${tsString(p.imagen)},`);
   lines.push(`    stock: ${p.stock},`);
   lines.push(`    descripcion: ${tsString(p.descripcion)},`);
   if (p.entregaInmediata) lines.push(`    entregaInmediata: true,`);
   lines.push(`    genero: ${tsString(p.genero)},`);
-  lines.push(`    familiaOlfativa: ${tsString(p.familiaOlfativa)},`);
+  if (p.familiaOlfativa) lines.push(`    familiaOlfativa: ${tsString(p.familiaOlfativa)},`);
   lines.push(`    longevidad: ${p.longevidad},`);
   lines.push(`    proyeccion: ${p.proyeccion},`);
   lines.push(`  },`);
@@ -557,15 +550,22 @@ const header = `/**
  * corré \`node scripts/gen-productos.mjs\`. No lo edites acá: se pisa.
  *
  * 📦 STOCK
- * \`stock\` es binario en esta carga: 1 = disponible, 0 = sin stock. No indica
- * cantidad de unidades.
+ * \`stock\` es binario en esta carga: 1 = se puede pedir, 0 = sin stock. No
+ * indica cantidad de unidades. La disponibilidad que ve el cliente sale de
+ * \`disponibilidad()\` (al final del archivo):
+ *   - "stock"   → \`entregaInmediata\`: frasco físico en Uruguay, listo para entregar.
+ *   - "pedido"  → se consigue a pedido; disponibilidad y plazo se confirman
+ *                 por WhatsApp antes de aceptar el pedido.
+ *   - "agotado" → \`stock: 0\`.
  *
- * 🧭 NOTAS Y DESCRIPCIÓN
- * Para los ítems sin ficha propia documentada, \`notas\` y \`descripcion\` son
- * placeholders elegantes por familia olfativa (no ficha oficial de la
- * marca) — el cliente autorizó explícitamente este criterio para la carga
- * masiva. Los perfumes de diseñador ampliamente conocidos (Sauvage, Bleu de
- * Chanel, Le Male, Eros, etc.) sí tienen su composición real.
+ * 🧭 NOTAS, FAMILIA Y DESCRIPCIÓN
+ * Solo los perfumes con ficha verificada (BESPOKE en scripts/gen-productos.mjs)
+ * tienen \`notas\`, \`familiaOlfativa\` y descripción propia. El resto NO
+ * tiene notas ni familia (la web muestra "consultanos cómo huele") y su
+ * descripción se arma solo con datos reales: tipo, casa, concentración y ml.
+ * Para completar una ficha, agregala a BESPOKE con datos verificados y
+ * regenerá. Hasta 2026-11 se usaban plantillas rotativas que no
+ * correspondían al perfume real: se eliminaron.
  *
  * 🚻 GÉNERO / 📊 LONGEVIDAD Y PROYECCIÓN
  * \`genero\` sale de: 1) palabra explícita en el nombre, 2) reconocimiento de
@@ -610,19 +610,21 @@ export type Producto = {
   /** Contenido del frasco sellado: 50, 100, 200… */
   volumen_ml: number;
   concentracion: Concentracion;
-  notas: Notas;
+  /** Pirámide verificada. Sin definir = sin ficha verificada todavía. */
+  notas?: Notas;
   /** Ruta pública de la foto. Sin definir = fallback visual (ver ImagenProducto). */
   imagen?: string;
   /** 1 = disponible, 0 = sin stock (no se puede comprar). */
   stock: number;
   /** Una línea honesta sobre cuándo usarlo. Nada de "elegancia atemporal". */
   descripcion: string;
-  /** Stock físico ya en el local: se puede entregar en el momento. */
+  /** Frasco físico en Uruguay, listo para entregar ("En stock"). */
   entregaInmediata?: boolean;
   /** Se muestra primero y con el borde dorado. Máximo 2 o 3. */
   destacado?: boolean;
   genero: Genero;
-  familiaOlfativa: FamiliaOlfativa;
+  /** Familia de la ficha verificada. Sin definir = no entra en filtros por familia. */
+  familiaOlfativa?: FamiliaOlfativa;
   /** 1 a 5. 4 ≈ 8-10 h. */
   longevidad: number;
   /** 1 a 5. 4 ≈ estela alta. */
@@ -673,10 +675,30 @@ export function imagenUrl(p: Producto): string {
   return p.imagen ?? "/og.jpg";
 }
 
-/** true si queda al menos una unidad. */
+/** true si se puede pedir (en stock o a pedido). */
 export function hayStock(p: Producto): boolean {
   return p.stock > 0;
 }
+
+/**
+ * Cómo lo puede conseguir el cliente:
+ * - "stock":   frasco físico en Uruguay, listo para entregar.
+ * - "pedido":  se consigue a pedido; disponibilidad y plazo se confirman
+ *              por WhatsApp antes de aceptar el pedido.
+ * - "agotado": sin stock por ahora.
+ */
+export type Disponibilidad = "stock" | "pedido" | "agotado";
+
+export function disponibilidad(p: Producto): Disponibilidad {
+  if (p.stock <= 0) return "agotado";
+  return p.entregaInmediata ? "stock" : "pedido";
+}
+
+export const ETIQUETA_DISPONIBILIDAD: Record<Disponibilidad, string> = {
+  stock: "En stock",
+  pedido: "A pedido",
+  agotado: "Sin stock por ahora",
+};
 `;
 
 const body = productos.map(tsProducto).join("\n");

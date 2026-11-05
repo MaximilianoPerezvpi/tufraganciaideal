@@ -8,6 +8,7 @@ import LuxuryBanner from "@/components/LuxuryBanner";
 import Originales from "@/components/Originales";
 import Testimonios from "@/components/Testimonios";
 import Envios from "@/components/Envios";
+import CTAWhatsApp from "@/components/CTAWhatsApp";
 import CartDrawer from "@/components/CartDrawer";
 import { catalogoJsonLd } from "@/lib/jsonld";
 
@@ -16,8 +17,11 @@ import { catalogoJsonLd } from "@/lib/jsonld";
  * alcanza con mover una línea acá.
  *
  * La grilla completa del catálogo (226 productos) vive en /catalogo, no acá:
- * este home solo da vistazos (stock inmediato, categorías, asesor) e invita
- * a seguir — ver CTACatalogo.
+ * este home solo da vistazos (en stock, categorías, asesor) e invita a
+ * seguir — ver CTACatalogo. Orden comercial: propuesta → en stock →
+ * categorías → asesor → catálogo → garantías → envíos y pagos → opiniones
+ * → CTA a WhatsApp. Las preguntas frecuentes viven en el Footer (todas
+ * las páginas).
  */
 export default function Home() {
   return (
@@ -31,8 +35,9 @@ export default function Home() {
         <CTACatalogo />
         <LuxuryBanner />
         <Originales />
-        <Testimonios />
         <Envios />
+        <Testimonios />
+        <CTAWhatsApp />
       </main>
 
       {/* Vive fuera de <main>: se monta una sola vez. */}

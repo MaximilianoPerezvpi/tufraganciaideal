@@ -29,14 +29,17 @@ export default function Header() {
     <header className="fixed inset-x-0 top-0 z-50">
       {/* Franja de anuncio: fija, siempre sólida (no se pone vidrio al scrollear). */}
       <div className="flex h-8 items-center justify-center bg-noche px-4 text-center">
-        <p className="kicker text-[0.68rem]">
-          ✨ Envíos a todo Uruguay en 24-48 hs · 100% Originales Sellados ·
-          Pedidos por WhatsApp
+        {/* En celular, versión corta: la larga ocupaba 3 líneas y se cortaba. */}
+        <p className="kicker truncate text-[0.68rem]">
+          ✨ Envíos a todo Uruguay
+          <span className="hidden sm:inline">
+            {" "}· 100% Originales Sellados · Pedidos por WhatsApp
+          </span>
         </p>
       </div>
 
       <div className="vidrio">
-        <div className="marco flex h-[72px] items-center justify-between gap-4">
+        <div className="marco flex h-[72px] items-center justify-between gap-2 sm:gap-4">
           <Link href="/" className="flex items-baseline gap-2">
             <span className="font-display text-[1.35rem] leading-none text-marfil">
               TuFragancia
@@ -61,7 +64,7 @@ export default function Header() {
             <BotonCarrito />
           </nav>
 
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex shrink-0 items-center gap-1 md:hidden">
             <BotonCarrito />
             <button
               type="button"

@@ -9,8 +9,8 @@ const GARANTIAS = [
     texto: "Cada frasco llega con su celofán de fábrica, sin abrir.",
   },
   {
-    titulo: "Pedido directo",
-    texto: "Pedís por WhatsApp y hablás con una persona, no con un bot.",
+    titulo: "Envíos a todo Uruguay",
+    texto: "El costo de envío te lo confirmamos antes de que pagues.",
   },
   {
     titulo: "Atención por WhatsApp",

@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/Header";
+
+export const metadata: Metadata = {
+  title: "Página no encontrada",
+  robots: { index: false, follow: true },
+};
 
 export default function NoEncontrado() {
   return (

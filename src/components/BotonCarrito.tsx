@@ -43,7 +43,7 @@ export default function BotonCarrito({ className = "" }: { className?: string })
       aria-label={
         mostrar ? `Abrir carrito (${unidades} productos)` : "Abrir carrito"
       }
-      className={`relative flex h-11 items-center gap-2 rounded-full border border-champan/50 px-4 text-sm text-champan transition-colors hover:bg-champan hover:text-noche ${className}`}
+      className={`relative flex h-11 items-center gap-2 rounded-full border border-champan/50 px-3.5 text-sm sm:px-4 text-champan transition-colors hover:bg-champan hover:text-noche ${className}`}
     >
       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
         <path
@@ -56,7 +56,8 @@ export default function BotonCarrito({ className = "" }: { className?: string })
         <circle cx="10" cy="19.5" r="1.3" fill="currentColor" />
         <circle cx="17" cy="19.5" r="1.3" fill="currentColor" />
       </svg>
-      <span>Carrito</span>
+      {/* En celular solo el ícono: el texto no entra junto al menú. */}
+      <span className="hidden sm:inline">Carrito</span>
       {mostrar && (
         <motion.span
           animate={{ scale: pulso ? 1.35 : 1 }}

@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   categorias,
+  disponibilidad,
   familiasOlfativas,
   generos,
   productos,
@@ -14,6 +15,18 @@ import {
 } from "@/data/productos";
 import { linkWhatsApp } from "@/lib/site";
 import TarjetaProducto from "./TarjetaProducto";
+
+/** "Lancôme" y "lancome" encuentran lo mismo: sin mayúsculas ni tildes. */
+function normalizar(texto: string): string {
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+// Orden por defecto: lo que se puede entregar ya, después lo que se pide,
+// y al final lo que está sin stock.
+const PESO_DISPONIBILIDAD = { stock: 0, pedido: 1, agotado: 2 } as const;
+
+// Tarjetas por tanda: 226 tarjetas animadas de una vez pesan en un celular.
+const TANDA = 24;
 
 /**
  * Invitación a cotizar por WhatsApp: perfume puntual que no está en catálogo.
@@ -43,6 +56,7 @@ function BannerConsultaWhatsApp({ termino }: { termino?: string }) {
         href={linkWhatsApp(mensaje)}
         target="_blank"
         rel="noopener noreferrer"
+        data-wa-origen="catalogo-consulta"
         className="relative mt-8 inline-flex items-center gap-2.5 rounded-full bg-champan px-8 py-4 font-medium text-noche transition-all duration-200 hover:-translate-y-0.5 hover:bg-oro-claro hover:shadow-[0_10px_30px_-10px_var(--color-oro-vivo)]"
       >
         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden>
@@ -86,6 +100,8 @@ type CatalogoProps = {
   categoriaInicial?: Categoria | "todos";
   generoInicial?: Genero | "todos";
   familiaInicial?: FamiliaOlfativa | "todas";
+  /** true = arranca mostrando solo lo que está en stock (?stock=1). */
+  soloEnStockInicial?: boolean;
 };
 
 /** Grilla del catálogo: búsqueda, filtros por familia/marca/concentración y orden. */
@@ -93,6 +109,7 @@ export default function Catalogo({
   categoriaInicial = "todos",
   generoInicial = "todos",
   familiaInicial = "todas",
+  soloEnStockInicial = false,
 }: CatalogoProps = {}) {
   const [filtro, setFiltro] = useState<Categoria | "todos">(categoriaInicial);
   const [marca, setMarca] = useState<string>("todas");
@@ -101,7 +118,7 @@ export default function Catalogo({
   );
   const [orden, setOrden] = useState<Orden>("destacados");
   const [busqueda, setBusqueda] = useState("");
-  const [soloEntregaInmediata, setSoloEntregaInmediata] = useState(false);
+  const [soloEntregaInmediata, setSoloEntregaInmediata] = useState(soloEnStockInicial);
   const [genero, setGenero] = useState<Genero | "todos">(generoInicial);
   const [familia, setFamilia] = useState<FamiliaOlfativa | "todas">(familiaInicial);
 
@@ -115,7 +132,7 @@ export default function Catalogo({
     familia !== "todas";
 
   const visibles = useMemo(() => {
-    const texto = busqueda.trim().toLowerCase();
+    const texto = normalizar(busqueda.trim());
 
     const filtrados = productos.filter((p) => {
       if (filtro !== "todos" && p.categoria !== filtro) return false;
@@ -126,7 +143,7 @@ export default function Catalogo({
       if (genero !== "todos" && p.genero !== genero) return false;
       if (familia !== "todas" && p.familiaOlfativa !== familia) return false;
       if (texto) {
-        const enTexto = `${p.casa} ${p.nombre}`.toLowerCase();
+        const enTexto = normalizar(`${p.casa} ${p.nombre}`);
         if (!enTexto.includes(texto)) return false;
       }
       return true;
@@ -135,8 +152,13 @@ export default function Catalogo({
     return [...filtrados].sort((a, b) => {
       if (orden === "menor-precio") return a.precio_uyu - b.precio_uyu;
       if (orden === "mayor-precio") return b.precio_uyu - a.precio_uyu;
-      // "Destacados": van primero, sin romper el orden del archivo de datos.
-      return Number(b.destacado ?? false) - Number(a.destacado ?? false);
+      // "Destacados": primero lo disponible ya, después los destacados, sin
+      // romper el orden del archivo de datos.
+      return (
+        PESO_DISPONIBILIDAD[disponibilidad(a)] -
+          PESO_DISPONIBILIDAD[disponibilidad(b)] ||
+        Number(b.destacado ?? false) - Number(a.destacado ?? false)
+      );
     });
   }, [
     filtro,
@@ -148,6 +170,12 @@ export default function Catalogo({
     genero,
     familia,
   ]);
+
+  // Cada cambio de filtro u orden vuelve a la primera tanda.
+  const [limite, setLimite] = useState(TANDA);
+  useEffect(() => {
+    setLimite(TANDA);
+  }, [visibles]);
 
   function limpiarFiltros() {
     setFiltro("todos");
@@ -161,17 +189,17 @@ export default function Catalogo({
   }
 
   return (
-    <section id="catalogo" className="scroll-mt-24 py-20 md:py-28">
+    <section id="catalogo" className="scroll-mt-24 pb-20 pt-6 md:pb-28">
       <div className="marco">
         <div className="flex flex-wrap items-end justify-between gap-6 border-b border-borde pb-6">
           <div>
-            <p className="kicker">Catálogo</p>
-            <h2 className="mt-2 font-display text-[length:var(--text-titulo)] font-light leading-tight text-marfil">
-              Perfumes en stock
-            </h2>
-            <p className="mt-2 max-w-[52ch] text-arena">
-              Frascos cerrados, con celofán de fábrica y caja original. Lo que
-              ves acá es stock real: si está publicado, lo tenemos.
+            {/* El título (h1) lo pone la página /catalogo. */}
+            <p className="max-w-[52ch] text-arena">
+              Los marcados <span className="text-champan">En stock</span> ya
+              están en Uruguay, listos para entregar. Los{" "}
+              <span className="text-marfil">A pedido</span> los conseguimos:
+              te confirmamos disponibilidad y plazo por WhatsApp antes de
+              aceptar el pedido.
             </p>
           </div>
 
@@ -210,7 +238,7 @@ export default function Catalogo({
                   : "border-champan/50 text-champan hover:bg-champan/10"
               }`}
             >
-              ⚡ Entrega Inmediata
+              ⚡ Solo en stock
             </button>
           </div>
         </div>
@@ -394,7 +422,7 @@ export default function Catalogo({
           className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           <AnimatePresence mode="popLayout">
-            {visibles.map((p, i) => (
+            {visibles.slice(0, limite).map((p, i) => (
               <motion.div
                 key={p.slug}
                 layout
@@ -408,6 +436,25 @@ export default function Catalogo({
             ))}
           </AnimatePresence>
         </motion.div>
+
+        {visibles.length > limite && (
+          <div className="mt-10 text-center">
+            <button
+              type="button"
+              onClick={() => setLimite((l) => l + TANDA)}
+              className="rounded-full border border-champan/50 px-8 py-3 text-sm text-champan transition-colors hover:bg-champan hover:text-noche"
+            >
+              Ver más perfumes ({visibles.length - limite} restantes)
+            </button>
+          </div>
+        )}
+
+        {familia !== "todas" && (
+          <p className="mt-6 text-center text-micro text-arena">
+            El filtro por familia incluye solo los perfumes con ficha olfativa
+            verificada. ¿Buscás algo puntual? Consultanos por WhatsApp.
+          </p>
+        )}
 
         {visibles.length === 0 ? (
           <div className="mt-16">

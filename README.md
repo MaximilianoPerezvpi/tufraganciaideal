@@ -14,7 +14,16 @@ npm run precios   # lista de precios actuales (consola + precios-actuales.csv)
 
 ## Variables de entorno
 
-Ninguna. El sitio no cobra ni guarda datos: no hay credenciales que cargar.
+Todas opcionales (detalle en `.env.example`). Se cargan en Vercel →
+**Settings → Environment Variables** y después redeploy.
+
+| Variable | Qué es |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Dominio público. Sin definir: `https://tufraganciaideal-self.vercel.app`. |
+| `NEXT_PUBLIC_GA4_ID` | Google Analytics 4 (`G-…`). Vacío = no se carga. |
+| `NEXT_PUBLIC_META_PIXEL_ID` | Meta Pixel. Vacío = no se carga. |
+
+Datos pendientes de confirmar: ver **`REVISION-MANUAL.md`**.
 
 ## Deploy en Vercel
 
@@ -56,8 +65,26 @@ Carrito (Zustand, guarda slug + cantidad) → "Hacer Pedido por WhatsApp"
   `site.whatsapp` en `src/lib/site.ts`.
 - El carrito guarda solo `slug` y `cantidad`: el precio del mensaje siempre
   sale de `productos.ts`, así que un cambio de precio se refleja al instante.
-- La web **no cobra**: stock, forma de pago y envío se confirman en el chat.
-  El stock vive en `productos.ts` y se baja a mano después de cada venta.
+- La web **no cobra**: disponibilidad, forma de pago y envío se confirman
+  en el chat. Medios de pago: transferencia, efectivo cuando corresponda o
+  link de Mercado Pago enviado por WhatsApp (Mercado Pago no está integrado).
+
+### Disponibilidad
+
+`disponibilidad()` en `productos.ts`, a partir de `gen-rows.mjs`:
+
+| Estado | Columna 7 (`entregaInmediata`) | Columna 8 (`stock`) |
+| --- | --- | --- |
+| **En stock** — en Uruguay, listo para entregar | `true` | `1` |
+| **A pedido** — se confirma disponibilidad y plazo | `false` | `1` |
+| **Sin stock** | — | `0` |
+
+### Analítica
+
+GA4 + Meta Pixel (`src/components/Analytics.tsx`, `src/lib/analytics.ts`):
+visitas, `view_item`/`ViewContent` en cada ficha, y `generate_lead`/`Contact`
+en cada clic a WhatsApp (con origen del botón y perfume). Un clic a
+WhatsApp es un **contacto**, nunca una compra.
 
 ## Precios
 

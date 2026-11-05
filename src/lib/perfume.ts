@@ -47,7 +47,9 @@ const OCASIONES_POR_FAMILIA: Record<FamiliaOlfativa, string[]> = {
 export function ocasionesDe(producto: Producto): string[] {
   const set = new Set([
     ...OCASIONES_POR_CONCENTRACION[producto.concentracion],
-    ...OCASIONES_POR_FAMILIA[producto.familiaOlfativa],
+    ...(producto.familiaOlfativa
+      ? OCASIONES_POR_FAMILIA[producto.familiaOlfativa]
+      : []),
   ]);
   return Array.from(set).slice(0, 4);
 }

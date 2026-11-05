@@ -6,8 +6,19 @@ import { linkWhatsApp, site } from "@/lib/site";
 /**
  * Logística: pagos y envíos.
  * ⚠️ TODO: ajustá precios de envío, agencias y horarios a tu operativa real.
- * ⚠️ TODO: confirmá que estas formas de pago son las que realmente aceptás.
+ *
+ * La web no cobra: todos los pagos se coordinan por WhatsApp una vez
+ * confirmado el pedido. Mercado Pago NO está integrado en el sitio: es un
+ * link de pago que se manda por WhatsApp.
  */
+
+const PASOS_COMPRA = [
+  "Elegís tu perfume en el catálogo.",
+  "Nos escribís por WhatsApp con el botón del perfume o del carrito.",
+  "Te confirmamos disponibilidad (y el plazo, si es a pedido).",
+  "Coordinamos la entrega o el envío.",
+  "Te enviamos el medio de pago que elijas.",
+];
 
 const PAGOS = [
   {
@@ -16,7 +27,11 @@ const PAGOS = [
   },
   {
     nombre: "Efectivo",
-    detalle: "Al retirar en el punto de encuentro coordinado en Montevideo.",
+    detalle: "Cuando corresponda, según la forma de entrega que coordinemos.",
+  },
+  {
+    nombre: "Mercado Pago",
+    detalle: "Te enviamos un link de pago por WhatsApp una vez confirmado el pedido.",
   },
 ];
 
@@ -48,10 +63,21 @@ export default function Envios() {
             Cómo pagás y cómo te llega
           </h2>
           <p className="mt-4 max-w-[48ch] text-arena">
-            Hacés el pedido por WhatsApp desde el carrito o la ficha del
-            perfume: te confirmamos stock, coordinamos el pago y despachamos
-            el mismo día que se acredita, con número de seguimiento.
+            Todas las compras se cierran por WhatsApp, con una persona: la web
+            no cobra ni te pide datos de tarjeta.
           </p>
+
+          <h3 className="mt-10 text-sm text-marfil">Cómo comprar</h3>
+          <ol className="mt-4 space-y-3">
+            {PASOS_COMPRA.map((paso, i) => (
+              <li key={paso} className="flex gap-3 text-sm text-arena">
+                <span className="cifras flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-champan/50 text-micro text-champan">
+                  {i + 1}
+                </span>
+                <span className="pt-0.5">{paso}</span>
+              </li>
+            ))}
+          </ol>
 
           <h3 className="mt-10 text-sm text-marfil">Formas de pago</h3>
           <dl className="mt-4 divide-y divide-borde border-y border-borde">
@@ -89,6 +115,10 @@ export default function Envios() {
               </motion.li>
             ))}
           </ul>
+          <p className="mt-4 text-micro text-arena">
+            Plazos para perfumes en stock. Para los perfumes a pedido, el plazo
+            te lo confirmamos por WhatsApp antes de aceptar el pedido.
+          </p>
 
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -101,12 +131,13 @@ export default function Envios() {
             </p>
             <p className="mt-2 text-sm leading-relaxed text-arena">
               Traemos a pedido: decinos cuál querés y te confirmamos precio y
-              plazo de llegada en el día.
+              plazo de llegada.
             </p>
             <a
               href={linkWhatsApp("¡Hola! Estoy buscando un perfume puntual: ")}
               target="_blank"
               rel="noopener noreferrer"
+              data-wa-origen="envios-consulta"
               className="mt-5 inline-block rounded-full bg-champan px-6 py-3 text-sm font-medium text-noche transition-colors hover:bg-oro-claro"
             >
               Consultar un perfume

@@ -78,9 +78,9 @@ export default function Hero() {
             variants={item}
             className="mt-7 max-w-[46ch] text-[1.05rem] leading-relaxed text-arena"
           >
-            Fragancias 100% originales con fijación extrema y estela
-            inolvidable. Recibí tu perfume sellado de origen en cualquier
-            punto del país.
+            Perfumes árabes y de diseñador 100% originales, en stock en
+            Uruguay y a pedido. Elegís acá, nos escribís por WhatsApp y te
+            lo enviamos sellado a todo el país.
           </motion.p>
 
           <motion.div
@@ -97,6 +97,7 @@ export default function Hero() {
               href={linkWhatsApp("Hola! Quiero asesoría para elegir un perfume")}
               target="_blank"
               rel="noopener noreferrer"
+              data-wa-origen="hero"
               className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-8 py-4 text-center text-marfil backdrop-blur-md transition-colors hover:border-champan hover:text-champan"
             >
               <MessageCircle className="h-4 w-4" aria-hidden />

@@ -5,11 +5,12 @@ import { hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
 import { textoLongevidad, textoProyeccion } from "@/lib/perfume";
-import { linkPedidoProducto } from "@/lib/pedidoWhatsApp";
+import { linkConsultaNotas, linkPedidoProducto } from "@/lib/pedidoWhatsApp";
 import Modal from "./Modal";
 import ImagenProducto from "./ImagenProducto";
 import BarraIntensidad from "./BarraIntensidad";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
+import EtiquetaDisponibilidad, { detalleDisponibilidad } from "./EtiquetaDisponibilidad";
 
 /** Vista rápida: pirámide olfativa y métricas sin salir del catálogo. */
 export default function VistaRapidaModal({
@@ -42,6 +43,10 @@ export default function VistaRapidaModal({
             sizes="(max-width: 640px) 100vw, 50vw"
             className="object-cover"
           />
+          <EtiquetaDisponibilidad
+            producto={producto}
+            className="absolute right-3 top-3"
+          />
         </div>
 
         <div className="p-6 sm:p-8">
@@ -55,6 +60,9 @@ export default function VistaRapidaModal({
 
           <p className="cifras mt-4 text-2xl text-champan">
             {precio(producto.precio_uyu)}
+          </p>
+          <p className="mt-1 text-micro text-arena">
+            {detalleDisponibilidad(producto)}
           </p>
 
           <div className="mt-5 flex flex-col gap-3">
@@ -70,24 +78,39 @@ export default function VistaRapidaModal({
             />
           </div>
 
-          <dl className="mt-5 space-y-1.5 text-micro">
-            {(
-              [
-                ["Salida", producto.notas.salida],
-                ["Corazón", producto.notas.corazon],
-                ["Fondo", producto.notas.fondo],
-              ] as const
-            ).map(([nivel, notas]) => (
-              <div key={nivel} className="flex gap-2">
-                <dt className="w-14 shrink-0 text-arena/70">{nivel}</dt>
-                <dd className="text-arena">{notas.join(", ")}</dd>
-              </div>
-            ))}
-          </dl>
+          {producto.notas ? (
+            <dl className="mt-5 space-y-1.5 text-micro">
+              {(
+                [
+                  ["Salida", producto.notas.salida],
+                  ["Corazón", producto.notas.corazon],
+                  ["Fondo", producto.notas.fondo],
+                ] as const
+              ).map(([nivel, notas]) => (
+                <div key={nivel} className="flex gap-2">
+                  <dt className="w-14 shrink-0 text-arena/70">{nivel}</dt>
+                  <dd className="text-arena">{notas.join(", ")}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : (
+            <a
+              href={linkConsultaNotas(producto)}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-wa-origen="vista-rapida-notas"
+              data-wa-slug={producto.slug}
+              className="mt-5 block text-micro text-arena underline-offset-4 hover:text-marfil hover:underline"
+            >
+              ¿Cómo huele? Consultanos por WhatsApp
+            </a>
+          )}
 
           <div className="mt-6 flex flex-col gap-2">
             <BotonPedidoWhatsApp
               href={linkPedidoProducto(producto)}
+              origen="vista-rapida"
+              slug={producto.slug}
               className="w-full py-3 text-sm"
             />
             <button

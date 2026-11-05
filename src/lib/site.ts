@@ -4,16 +4,23 @@
  */
 export const site = {
   nombre: "TuFraganciaIdeal",
-  // TODO: poné el dominio final. Se usa para canonical, sitemap y Open Graph.
-  url: "https://tufraganciaideal.uy",
+  // Dominio público: canonical, sitemap, Open Graph y datos estructurados
+  // salen de acá. Hoy es el de Vercel (tufraganciaideal.uy no está
+  // registrado). Con dominio propio: cargá NEXT_PUBLIC_SITE_URL en Vercel
+  // (sin barra final) y redeploy, sin tocar código.
+  url: (
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tufraganciaideal-self.vercel.app"
+  ).replace(/\/$/, ""),
   descripcion:
-    "Perfumes originales sellados en Uruguay: frascos completos de nicho, diseñador y árabes. Pedí por WhatsApp y recibilo en todo el país.",
+    "Perfumes árabes y de diseñador originales en Uruguay. Stock disponible y catálogo a pedido. Pedí por WhatsApp y recibilo en todo el país.",
 
   // WhatsApp de consultas y pedidos (formato internacional, sin + ni espacios).
   whatsapp: "59897443176",
   instagram: "tufraganciaideal",
   instagramUrl: "https://instagram.com/tufraganciaideal",
-  email: "hola@tufraganciaideal.uy", // TODO
+  // Vacío = no se muestra. TODO: cargá un email real (el de
+  // @tufraganciaideal.uy no existe: el dominio no está registrado).
+  email: "",
 
   ciudad: "Montevideo",
   pais: "Uruguay",

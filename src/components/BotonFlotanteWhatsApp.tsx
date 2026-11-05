@@ -16,6 +16,7 @@ export default function BotonFlotanteWhatsApp() {
       href={linkWhatsApp("Hola! Tengo una consulta sobre un perfume.")}
       target="_blank"
       rel="noopener noreferrer"
+      data-wa-origen="flotante"
       aria-label="Consultar por WhatsApp"
       // bottom-24 en mobile: dejar lugar a la barra fija de compra de la
       // página de producto, que también vive abajo del todo.

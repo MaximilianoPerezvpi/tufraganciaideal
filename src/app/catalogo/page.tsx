@@ -11,7 +11,7 @@ import { site } from "@/lib/site";
 import { catalogoJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
-  title: "Catálogo",
+  title: "Catálogo de perfumes árabes y de diseñador",
   description: site.descripcion,
   alternates: { canonical: "/catalogo" },
 };
@@ -20,6 +20,7 @@ type SearchParams = Promise<{
   categoria?: string;
   genero?: string;
   familia?: string;
+  stock?: string;
 }>;
 
 /**
@@ -44,9 +45,9 @@ export default async function PaginaCatalogo({
       <Header />
       <main id="contenido" className="pt-[104px]">
         <div className="marco pt-10">
-          <p className="kicker">Catálogo completo</p>
+          <p className="kicker">Catálogo</p>
           <h1 className="mt-2 font-display text-[length:var(--text-titulo)] font-light leading-tight text-marfil">
-            Catálogo Oficial de Fragancias
+            Perfumes originales en Uruguay
           </h1>
         </div>
 
@@ -54,6 +55,7 @@ export default async function PaginaCatalogo({
           categoriaInicial={CATEGORIA_DESDE_PARAM[params.categoria ?? ""] ?? "todos"}
           generoInicial={GENERO_DESDE_PARAM[params.genero ?? ""] ?? "todos"}
           familiaInicial={FAMILIA_DESDE_PARAM[params.familia ?? ""] ?? "todas"}
+          soloEnStockInicial={params.stock === "1"}
         />
       </main>
 

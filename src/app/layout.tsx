@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import { site } from "@/lib/site";
 import BotonFlotanteWhatsApp from "@/components/BotonFlotanteWhatsApp";
 import Footer from "@/components/Footer";
+import Analytics from "@/components/Analytics";
 import "./globals.css";
 
 /* Fraunces para títulos: serif de contraste alto con "wonk" activado — da el
@@ -31,13 +32,8 @@ const DESCRIPCION_COMPARTIR =
   "Descubre nuestra selección de perfumes 100% originales. Envíos a todo el país.";
 
 export const metadata: Metadata = {
-  // ⚠️ Apunta al dominio de Vercel, no a `site.url` (tufraganciaideal.uy):
-  // así pedido explícitamente, para que las previsualizaciones de WhatsApp
-  // funcionen ya mismo contra lo que está realmente publicado. El resto de
-  // las URLs absolutas del sitio (JSON-LD, sitemap, canonical de /catalogo,
-  // previsualizaciones) siguen usando `site.url` — cuando el dominio
-  // .uy esté realmente en línea, conviene unificar todo a ese.
-  metadataBase: new URL("https://tufraganciaideal-self.vercel.app"),
+  // Un solo dominio para todo (canonical, OG, sitemap, JSON-LD): `site.url`.
+  metadataBase: new URL(site.url),
   title: {
     default: TITULO_COMPARTIR,
     template: "%s | TuFraganciaIdeal",
@@ -49,7 +45,6 @@ export const metadata: Metadata = {
     "TuFraganciaIdeal",
     "perfumería importada Montevideo",
     "perfumes árabes Uruguay",
-    "perfumes de nicho Uruguay",
     "perfumes 100 ml sellados",
   ],
   alternates: { canonical: "/" },
@@ -95,7 +90,7 @@ const jsonLd = {
   areaServed: { "@type": "Country", name: "Uruguay" },
   priceRange: "$$",
   currenciesAccepted: "UYU",
-  paymentAccepted: "Transferencia bancaria, Efectivo",
+  paymentAccepted: "Transferencia bancaria, Efectivo, Mercado Pago (link de pago)",
 };
 
 export default function RootLayout({
@@ -109,6 +104,7 @@ export default function RootLayout({
         {/* Montados una sola vez acá (antes se repetían en cada página). */}
         <Footer />
         <BotonFlotanteWhatsApp />
+        <Analytics />
 
         {/* Toasts de confirmación (agregar al carrito, etc.), con la paleta del sitio. */}
         <Toaster

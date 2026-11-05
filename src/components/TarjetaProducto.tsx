@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { hayStock, type Producto } from "@/data/productos";
+import { disponibilidad, hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
 import { calificacionDe } from "@/lib/resenas";
 import { linkPedidoProducto } from "@/lib/pedidoWhatsApp";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
+import EtiquetaDisponibilidad, { detalleDisponibilidad } from "./EtiquetaDisponibilidad";
 import Estrellas from "./Estrellas";
 import ImagenProducto from "./ImagenProducto";
 import VistaRapidaModal from "./VistaRapidaModal";
@@ -87,11 +88,10 @@ export default function TarjetaProducto({
             100% original sellado
           </span>
 
-          {producto.entregaInmediata && (
-            <span className="absolute right-3 top-3 rounded-full bg-champan px-3 py-1 text-micro font-medium text-noche">
-              ⚡ Stock Inmediato
-            </span>
-          )}
+          <EtiquetaDisponibilidad
+            producto={producto}
+            className="absolute right-3 top-3"
+          />
 
           {/* Badge de familia: Árabe o Diseñador. */}
           <span className="absolute bottom-3 left-3 rounded-full border border-marfil/25 bg-noche/70 px-3 py-1 text-micro text-marfil backdrop-blur-sm">
@@ -137,33 +137,38 @@ export default function TarjetaProducto({
           {producto.concentracion} · {producto.volumen_ml} ml
         </p>
 
-        <p className="mt-3 text-sm leading-relaxed text-arena">
-          {producto.descripcion}
-        </p>
+        {/* Descripción y pirámide solo con ficha verificada: sin ella, la
+            descripción repetiría lo que ya dice la línea de arriba. */}
+        {producto.notas && (
+          <>
+            <p className="mt-3 text-sm leading-relaxed text-arena">
+              {producto.descripcion}
+            </p>
 
-        {/* Pirámide olfativa */}
-        <dl className="mt-4 space-y-1.5 text-micro">
-          {(
-            [
-              ["Salida", producto.notas.salida],
-              ["Corazón", producto.notas.corazon],
-              ["Fondo", producto.notas.fondo],
-            ] as const
-          ).map(([nivel, notas]) => (
-            <div key={nivel} className="flex gap-2">
-              <dt className="w-14 shrink-0 text-arena/70">{nivel}</dt>
-              <dd className="text-arena">{notas.join(", ")}</dd>
-            </div>
-          ))}
-        </dl>
+            <dl className="mt-4 space-y-1.5 text-micro">
+              {(
+                [
+                  ["Salida", producto.notas.salida],
+                  ["Corazón", producto.notas.corazon],
+                  ["Fondo", producto.notas.fondo],
+                ] as const
+              ).map(([nivel, notas]) => (
+                <div key={nivel} className="flex gap-2">
+                  <dt className="w-14 shrink-0 text-arena/70">{nivel}</dt>
+                  <dd className="text-arena">{notas.join(", ")}</dd>
+                </div>
+              ))}
+            </dl>
+          </>
+        )}
 
         <div className="mt-auto pt-6">
-          <div className="flex items-baseline justify-between gap-3">
-            <p className="cifras text-2xl text-champan">
-              {precio(producto.precio_uyu)}
-            </p>
-            <span className="text-micro text-arena">Envío a todo Uruguay</span>
-          </div>
+          <p className="cifras text-2xl text-champan">
+            {precio(producto.precio_uyu)}
+          </p>
+          <p className="mt-1 text-micro text-arena">
+            {detalleDisponibilidad(producto)}
+          </p>
 
           <motion.button
             type="button"
@@ -219,9 +224,13 @@ export default function TarjetaProducto({
 
           <BotonPedidoWhatsApp
             href={linkPedidoProducto(producto)}
+            origen="tarjeta"
+            slug={producto.slug}
             className="mt-2 w-full py-3 text-sm"
           >
-            Pedir por WhatsApp
+            {disponibilidad(producto) === "stock"
+              ? "Pedir por WhatsApp"
+              : "Consultar por WhatsApp"}
           </BotonPedidoWhatsApp>
         </div>
       </div>

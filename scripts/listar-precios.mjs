@@ -9,7 +9,7 @@
 //
 // Requiere Node 22.18+ (importa el .ts directo, sin compilar).
 import { writeFileSync } from "node:fs";
-import { productos } from "../src/data/productos.ts";
+import { disponibilidad, productos } from "../src/data/productos.ts";
 
 const invalidos = productos.filter(
   (p) => !Number.isInteger(p.precio_uyu) || p.precio_uyu <= 0,
@@ -21,21 +21,31 @@ console.table(
     nombre: p.nombre,
     presentacion: `${p.concentracion} ${p.volumen_ml} ml`,
     precio_uyu: p.precio_uyu,
-    stock: p.stock > 0 ? "sí" : "NO",
+    disponibilidad: disponibilidad(p),
   })),
 );
 
 const csv = [
-  "slug;casa;nombre;concentracion;volumen_ml;precio_uyu;stock;precio_nuevo_uyu",
+  "slug;casa;nombre;concentracion;volumen_ml;precio_uyu;disponibilidad;ficha_verificada;precio_nuevo_uyu",
   ...productos.map((p) =>
-    [p.slug, p.casa, p.nombre, p.concentracion, p.volumen_ml, p.precio_uyu, p.stock, ""]
+    [
+      p.slug,
+      p.casa,
+      p.nombre,
+      p.concentracion,
+      p.volumen_ml,
+      p.precio_uyu,
+      disponibilidad(p),
+      p.notas ? "sí" : "no",
+      "",
+    ]
       .map((v) => (String(v).includes(";") ? `"${v}"` : v))
       .join(";"),
   ),
 ].join("\r\n");
 
 // BOM para que Excel respete las tildes.
-writeFileSync(new URL("../precios-actuales.csv", import.meta.url), "﻿" + csv, "utf8");
+writeFileSync(new URL("../precios-actuales.csv", import.meta.url), String.fromCharCode(0xfeff) + csv, "utf8");
 
 console.log(`\n${productos.length} productos · moneda: UYU · guardado en precios-actuales.csv`);
 if (invalidos.length > 0) {

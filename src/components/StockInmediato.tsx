@@ -1,9 +1,10 @@
-import { productos } from "@/data/productos";
+import Link from "next/link";
+import { disponibilidad, productos } from "@/data/productos";
 import TarjetaProducto from "./TarjetaProducto";
 
-/** Los 8 productos con stock físico en el local: se entregan en el momento. */
+/** Perfumes con stock físico en Uruguay (`entregaInmediata` en el catálogo). */
 export default function StockInmediato() {
-  const disponibles = productos.filter((p) => p.entregaInmediata);
+  const disponibles = productos.filter((p) => disponibilidad(p) === "stock");
   if (disponibles.length === 0) return null;
 
   return (
@@ -11,15 +12,21 @@ export default function StockInmediato() {
       <div className="marco">
         <div className="flex flex-wrap items-end justify-between gap-6 border-b border-borde pb-6">
           <div>
-            <p className="kicker">Entrega inmediata</p>
+            <p className="kicker">En stock</p>
             <h2 className="mt-2 font-display text-[length:var(--text-titulo)] font-light leading-tight text-marfil">
-              ⚡ Stock físico, ya
+              ⚡ Disponibles ahora
             </h2>
             <p className="mt-2 max-w-[52ch] text-arena">
-              Estos frascos están en el local: los retirás hoy o te los
-              despachamos en el día, sin esperar importación.
+              Estos frascos ya están en Uruguay: los preparamos apenas
+              confirmás el pedido por WhatsApp, sin esperar importación.
             </p>
           </div>
+          <Link
+            href="/catalogo?stock=1"
+            className="rounded-full border border-champan/50 px-5 py-2.5 text-sm text-champan transition-colors hover:bg-champan hover:text-noche"
+          >
+            Ver todo lo que está en stock
+          </Link>
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

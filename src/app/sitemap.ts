@@ -1,10 +1,9 @@
 import type { MetadataRoute } from "next";
 import { productos } from "@/data/productos";
+import { site } from "@/lib/site";
 
-// Mismo dominio que `metadataBase` en layout.tsx: el de Vercel, porque es lo
-// que está realmente publicado hoy. Cuando el dominio .uy esté en línea,
-// conviene unificar ambos a `site.url`.
-export const BASE_URL = "https://tufraganciaideal-self.vercel.app";
+// Mismo dominio que todo el sitio (`site.url`, ver src/lib/site.ts).
+export const BASE_URL = site.url;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const hoy = new Date();

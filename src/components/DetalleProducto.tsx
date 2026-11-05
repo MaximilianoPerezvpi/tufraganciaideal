@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { hayStock, type Producto } from "@/data/productos";
+import { disponibilidad, hayStock, type Producto } from "@/data/productos";
 import { useCarrito } from "@/lib/cartStore";
 import { precio } from "@/lib/format";
 import { calificacionDe } from "@/lib/resenas";
-import { linkPedidoProducto } from "@/lib/pedidoWhatsApp";
+import { linkConsultaNotas, linkPedidoProducto } from "@/lib/pedidoWhatsApp";
+import { trackVistaProducto } from "@/lib/analytics";
 import {
   ocasionesDe,
   textoLongevidad,
@@ -19,6 +20,7 @@ import BarraIntensidad from "./BarraIntensidad";
 import Estrellas from "./Estrellas";
 import ResenasProducto from "./ResenasProducto";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
+import EtiquetaDisponibilidad, { detalleDisponibilidad } from "./EtiquetaDisponibilidad";
 
 const CONFIANZA = [
   "100% Original Sellado",
@@ -44,6 +46,12 @@ export default function DetalleProducto({
 
   const [cantidad, setCantidad] = useState(1);
   const calificacion = calificacionDe(producto);
+  const estado = disponibilidad(producto);
+
+  // Analítica: vista de producto (no hace nada si no hay GA4/Pixel configurado).
+  useEffect(() => {
+    trackVistaProducto(producto);
+  }, [producto]);
 
   // Si ya tenés casi todo el stock en el carrito, el selector no puede pedir
   // más de lo que queda: se recorta solo cuando `restante` cambia.
@@ -105,11 +113,10 @@ export default function DetalleProducto({
           <span className="absolute left-4 top-4 rounded-full bg-noche/80 px-3 py-1 text-micro text-vetiver backdrop-blur-sm">
             100% original sellado
           </span>
-          {producto.entregaInmediata && (
-            <span className="absolute right-4 top-4 rounded-full bg-champan px-3 py-1 text-micro font-medium text-noche">
-              ⚡ Stock Inmediato
-            </span>
-          )}
+          <EtiquetaDisponibilidad
+            producto={producto}
+            className="absolute right-4 top-4"
+          />
           {!disponible && (
             <span className="absolute inset-x-0 bottom-0 bg-noche/85 py-2 text-center text-micro text-marfil">
               Sin stock por ahora
@@ -148,6 +155,18 @@ export default function DetalleProducto({
           <p className="cifras mt-6 text-3xl text-champan">
             {precio(producto.precio_uyu)}
           </p>
+          <p className="mt-1.5 text-sm text-arena">
+            {detalleDisponibilidad(producto)}
+          </p>
+
+          {estado === "pedido" && (
+            <p className="mt-4 max-w-[52ch] rounded-xl border border-borde bg-carbon px-4 py-3 text-sm leading-relaxed text-arena">
+              <span className="text-marfil">Este perfume es a pedido:</span> no
+              lo tenemos físicamente en Uruguay ahora. Antes de aceptar el
+              pedido te confirmamos por WhatsApp si lo podemos conseguir y en
+              qué plazo. No pagás nada hasta que lo confirmemos.
+            </p>
+          )}
 
           {/* Indicadores técnicos */}
           <div className="mt-5 grid grid-cols-2 gap-4 rounded-xl border border-borde bg-carbon p-4">
@@ -167,8 +186,14 @@ export default function DetalleProducto({
           <div ref={botonPrincipalRef} className="mt-6">
             <BotonPedidoWhatsApp
               href={linkPedidoProducto(producto)}
+              origen="ficha"
+              slug={producto.slug}
               className="h-14 w-full px-8 text-base"
-            />
+            >
+              {estado === "stock"
+                ? "Hacer Pedido por WhatsApp"
+                : "Consultar disponibilidad por WhatsApp"}
+            </BotonPedidoWhatsApp>
 
             <div className="mt-4 flex flex-wrap items-center gap-4">
               <div className="flex items-center rounded-full border border-borde">
@@ -233,40 +258,78 @@ export default function DetalleProducto({
             ))}
           </dl>
 
-          {/* Notas olfativas */}
-          <div className="mt-10">
-            <h2 className="font-display text-[1.3rem] font-light text-marfil">
-              Pirámide olfativa
-            </h2>
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-              {(
-                [
-                  ["Notas de Salida", producto.notas.salida],
-                  ["Notas de Corazón", producto.notas.corazon],
-                  ["Notas de Fondo", producto.notas.fondo],
-                ] as const
-              ).map(([titulo, notas]) => (
-                <div
-                  key={titulo}
-                  className="rounded-xl border border-borde bg-carbon p-4"
-                >
-                  <h3 className="text-micro text-arena">{titulo}</h3>
-                  <ul className="mt-3 flex flex-wrap gap-1.5">
-                    {notas.map((nota) => (
-                      <motion.li
-                        key={nota}
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="nota-shimmer cursor-default rounded-full border border-champan/30 px-2.5 py-1 text-micro text-champan hover:animate-[barrido-oro_0.9s_ease_forwards] hover:border-oro-vivo/60"
-                      >
-                        {nota}
-                      </motion.li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+          {/* Cómo se compra: la web no cobra, todo se cierra por WhatsApp. */}
+          <div className="mt-6 rounded-xl border border-borde bg-carbon p-5 text-sm leading-relaxed text-arena">
+            <h2 className="text-marfil">Cómo se compra</h2>
+            <p className="mt-2">
+              Nos escribís por WhatsApp, te confirmamos disponibilidad y
+              coordinamos la entrega. Pagás por transferencia bancaria, en
+              efectivo cuando corresponda o con un link de Mercado Pago que te
+              enviamos por WhatsApp. Envíos a todo Uruguay.{" "}
+              <Link href="/#envios" className="text-champan underline-offset-4 hover:underline">
+                Envíos y pagos
+              </Link>
+            </p>
           </div>
+
+          {/* Notas olfativas: solo con ficha verificada. Sin ella no se
+              inventan notas: se invita a consultar. */}
+          {producto.notas ? (
+            <div className="mt-10">
+              <h2 className="font-display text-[1.3rem] font-light text-marfil">
+                Pirámide olfativa
+              </h2>
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {(
+                  [
+                    ["Notas de Salida", producto.notas.salida],
+                    ["Notas de Corazón", producto.notas.corazon],
+                    ["Notas de Fondo", producto.notas.fondo],
+                  ] as const
+                ).map(([titulo, notas]) => (
+                  <div
+                    key={titulo}
+                    className="rounded-xl border border-borde bg-carbon p-4"
+                  >
+                    <h3 className="text-micro text-arena">{titulo}</h3>
+                    <ul className="mt-3 flex flex-wrap gap-1.5">
+                      {notas.map((nota) => (
+                        <motion.li
+                          key={nota}
+                          whileHover={{ scale: 1.05, y: -2 }}
+                          transition={{ duration: 0.2, ease: "easeOut" }}
+                          className="nota-shimmer cursor-default rounded-full border border-champan/30 px-2.5 py-1 text-micro text-champan hover:animate-[barrido-oro_0.9s_ease_forwards] hover:border-oro-vivo/60"
+                        >
+                          {nota}
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="mt-10 rounded-xl border border-borde bg-carbon p-5">
+              <h2 className="font-display text-[1.3rem] font-light text-marfil">
+                ¿Cómo huele?
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-arena">
+                Estamos completando la ficha olfativa de este perfume.
+                Escribinos y te contamos sus notas, duración y para qué
+                ocasión conviene.
+              </p>
+              <a
+                href={linkConsultaNotas(producto)}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-wa-origen="ficha-notas"
+                data-wa-slug={producto.slug}
+                className="mt-4 inline-flex rounded-full border border-vetiver/60 px-5 py-2.5 text-sm text-vetiver transition-colors hover:bg-vetiver/10"
+              >
+                Consultar notas por WhatsApp
+              </a>
+            </div>
+          )}
         </div>
       </section>
 
@@ -305,9 +368,11 @@ export default function DetalleProducto({
             </div>
             <BotonPedidoWhatsApp
               href={linkPedidoProducto(producto)}
+              origen="ficha-barra-movil"
+              slug={producto.slug}
               className="shrink-0 px-5 py-3 text-sm"
             >
-              Pedir por WhatsApp
+              {estado === "stock" ? "Pedir por WhatsApp" : "Consultar"}
             </BotonPedidoWhatsApp>
           </motion.div>
         )}

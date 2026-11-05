@@ -1,13 +1,14 @@
-import type { Producto } from "@/data/productos";
+import { disponibilidad, type Producto } from "@/data/productos";
 import { linkWhatsApp } from "@/lib/site";
 
 /**
  * PEDIDOS POR WHATSAPP
  *
  * La web no cobra: cada pedido sale como un mensaje pre-armado al WhatsApp
- * de la tienda (`site.whatsapp`), y el pago y el envío se coordinan ahí.
- * Los precios salen de `productos.ts`, así que el mensaje siempre muestra
- * el precio vigente del catálogo.
+ * de la tienda (`site.whatsapp`). Ahí se confirma disponibilidad, se
+ * coordina la entrega y se envía el medio de pago (transferencia, efectivo
+ * cuando corresponda, o link de Mercado Pago). Los precios salen de
+ * `productos.ts`, así que el mensaje siempre muestra el precio vigente.
  */
 
 /** 3200 -> "3.200" (separador de miles uruguayo, sin decimales). */
@@ -16,14 +17,37 @@ function monto(valor: number): string {
 }
 
 /** "Lattafa Khamrah" — la casa ayuda a identificar el frasco sin ambigüedad. */
-function nombreCompleto(p: Producto): string {
+export function nombreCompleto(p: Producto): string {
   return `${p.casa} ${p.nombre}`;
 }
 
-/** Compra directa desde la ficha o la vista rápida de un perfume. */
+/**
+ * Compra directa desde la tarjeta, la ficha o la vista rápida. El texto
+ * cambia según la disponibilidad: a un perfume a pedido no se le pregunta
+ * "¿tienen stock?" como si estuviera en la vidriera.
+ */
 export function linkPedidoProducto(p: Producto): string {
+  const perfume = `${nombreCompleto(p)} - $${monto(p.precio_uyu)} UYU`;
+  switch (disponibilidad(p)) {
+    case "stock":
+      return linkWhatsApp(
+        `Hola! Quiero hacer el pedido del perfume: ${perfume}. ¿Tienen stock disponible?`,
+      );
+    case "pedido":
+      return linkWhatsApp(
+        `Hola! Me interesa el perfume ${perfume}, que vi a pedido en TuFragancia Ideal. ¿Me confirmás disponibilidad, plazo y medios de pago?`,
+      );
+    case "agotado":
+      return linkWhatsApp(
+        `Hola! Vi que el perfume ${nombreCompleto(p)} está sin stock en TuFragancia Ideal. ¿Saben si vuelve a entrar?`,
+      );
+  }
+}
+
+/** Para perfumes sin ficha olfativa verificada: "¿cómo huele?". */
+export function linkConsultaNotas(p: Producto): string {
   return linkWhatsApp(
-    `Hola! Quiero hacer el pedido del perfume: ${nombreCompleto(p)} - $${monto(p.precio_uyu)} UYU. ¿Tienen stock disponible?`,
+    `Hola! ¿Me contás cómo huele el ${nombreCompleto(p)} (notas, duración, para qué ocasión)?`,
   );
 }
 
@@ -35,7 +59,8 @@ export function linkPedidoCarrito(
   const detalle = lineas
     .map((l) => {
       const cantidad = l.cantidad > 1 ? `${l.cantidad}x ` : "";
-      return `- ${cantidad}${nombreCompleto(l.producto)} ($${monto(l.subtotal)})`;
+      const aPedido = disponibilidad(l.producto) === "pedido" ? " (a pedido)" : "";
+      return `- ${cantidad}${nombreCompleto(l.producto)} ($${monto(l.subtotal)})${aPedido}`;
     })
     .join("\n");
   return linkWhatsApp(

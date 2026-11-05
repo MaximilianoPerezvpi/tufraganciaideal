@@ -4,7 +4,7 @@ import { linkWhatsApp, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contacto",
-  description: `Escribinos a ${site.nombre} por WhatsApp, email o Instagram.`,
+  description: `Escribinos a ${site.nombre} por WhatsApp o Instagram.`,
   alternates: { canonical: "/contacto" },
 };
 
@@ -48,7 +48,7 @@ export default function PaginaContacto() {
           </p>
 
           <div className="mt-10 flex flex-col gap-4">
-            {CANALES.map((c) => (
+            {CANALES.filter((c) => c.href !== "mailto:").map((c) => (
               <a
                 key={c.titulo}
                 href={c.href}

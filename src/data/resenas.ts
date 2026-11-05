@@ -22,7 +22,7 @@
  * entrega), reemplazando <slug>:
  *
  *   ¡Hola! ¿Cómo te fue con el perfume? Si tenés un minuto, nos ayuda
- *   muchísimo que dejes tu opinión acá: https://tufraganciaideal.uy/opinar?p=<slug>
+ *   muchísimo que dejes tu opinión acá: https://tufraganciaideal-self.vercel.app/opinar?p=<slug>
  */
 
 export type Resena = {

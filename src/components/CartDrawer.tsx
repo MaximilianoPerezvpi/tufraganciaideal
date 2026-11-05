@@ -235,12 +235,15 @@ export default function CartDrawer() {
 
                 <BotonPedidoWhatsApp
                   href={linkPedidoCarrito(lineas, total)}
+                  origen="carrito"
                   className="mt-4 w-full py-4"
                 />
 
                 <p className="mt-3 text-center text-micro text-arena">
-                  Te respondemos por WhatsApp para confirmar stock, forma de
-                  pago y envío. Enviamos a todo {site.pais}.
+                  No se cobra nada en la web: te confirmamos disponibilidad
+                  por WhatsApp y coordinamos el pago (transferencia, efectivo
+                  cuando corresponda o link de Mercado Pago) y el envío a todo{" "}
+                  {site.pais}.
                 </p>
               </footer>
             )}

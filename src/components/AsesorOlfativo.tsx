@@ -7,6 +7,7 @@ import {
   type FamiliaOlfativa,
   type Genero,
 } from "@/data/productos";
+import { linkWhatsApp } from "@/lib/site";
 import TarjetaProducto from "./TarjetaProducto";
 
 const OPCIONES_GENERO: { id: Genero; etiqueta: string }[] = [
@@ -38,7 +39,12 @@ export default function AsesorOlfativo() {
           (p.genero === genero || p.genero === "unisex") &&
           p.familiaOlfativa === familia,
       )
-      .sort((a, b) => Number(b.destacado ?? false) - Number(a.destacado ?? false))
+      // Primero lo que se puede entregar ya, después los destacados.
+      .sort(
+        (a, b) =>
+          Number(b.entregaInmediata ?? false) - Number(a.entregaInmediata ?? false) ||
+          Number(b.destacado ?? false) - Number(a.destacado ?? false),
+      )
       .slice(0, 4);
   }, [genero, familia]);
 
@@ -164,10 +170,24 @@ export default function AsesorOlfativo() {
                     </a>
                   </>
                 ) : (
-                  <p className="mt-6 text-arena">
-                    Por ahora no tenemos ninguno con esta combinación exacta —
-                    probá otra familia o mirá el catálogo completo.
-                  </p>
+                  <div className="mt-6 max-w-[52ch]">
+                    <p className="text-arena">
+                      Todavía no tenemos fichas verificadas con esta
+                      combinación exacta. Contanos qué buscás y te
+                      recomendamos opciones del catálogo.
+                    </p>
+                    <a
+                      href={linkWhatsApp(
+                        `Hola! Busco un perfume ${genero} de la familia ${familia}. ¿Qué me recomendás?`,
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-wa-origen="asesor"
+                      className="mt-4 inline-flex rounded-full bg-vetiver px-6 py-3 text-sm font-medium text-noche transition-colors hover:bg-vetiver/85"
+                    >
+                      Pedir recomendación por WhatsApp
+                    </a>
+                  </div>
                 )}
               </motion.div>
             )}

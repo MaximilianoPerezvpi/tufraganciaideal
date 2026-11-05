@@ -5,11 +5,13 @@ import CartDrawer from "@/components/CartDrawer";
 import DetalleProducto from "@/components/DetalleProducto";
 import {
   buscarProducto,
+  disponibilidad,
   imagenUrl,
   productos,
   type Producto,
 } from "@/data/productos";
 import { productoJsonLd } from "@/lib/jsonld";
+import { precio } from "@/lib/format";
 
 type Parametros = { params: Promise<{ slug: string }> };
 
@@ -31,20 +33,30 @@ export async function generateMetadata({
     ? { url: producto.imagen, width: 1000, height: 1000, alt: titulo }
     : { url: imagenUrl(producto), width: 1200, height: 630, alt: titulo };
 
+  // Descripción para Google / redes: precio y disponibilidad reales, en una línea.
+  const estado = disponibilidad(producto);
+  const descripcion = `${producto.descripcion} ${precio(producto.precio_uyu)}. ${
+    estado === "stock"
+      ? "En stock en Uruguay."
+      : estado === "pedido"
+        ? "Disponible a pedido."
+        : "Sin stock por ahora."
+  } Pedilo por WhatsApp, envíos a todo Uruguay.`;
+
   return {
     title: titulo,
-    description: producto.descripcion,
+    description: descripcion,
     alternates: { canonical: `/producto/${producto.slug}` },
     openGraph: {
       type: "website",
       title: titulo,
-      description: producto.descripcion,
+      description: descripcion,
       images: [imagen],
     },
     twitter: {
       card: "summary_large_image",
       title: titulo,
-      description: producto.descripcion,
+      description: descripcion,
       images: [imagen.url],
     },
   };

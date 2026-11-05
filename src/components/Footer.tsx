@@ -10,8 +10,7 @@ const GARANTIAS = [
   "Devolución total si no es original",
 ];
 
-// TODO: confirmá los medios de pago que realmente aceptás (ver también Envios.tsx).
-const MEDIOS_PAGO = ["Transferencia bancaria", "Efectivo"];
+const MEDIOS_PAGO = ["Transferencia bancaria", "Efectivo", "Mercado Pago (link de pago)"];
 const AGENCIAS_ENVIO = ["DAC", "UES"];
 
 const ENLACES_LEGALES = [
@@ -32,6 +31,11 @@ const FAQ = [
       "Sí, tenés 7 días para devolverlo sin abrir. Y devolución total, sin condiciones, si alguna vez recibís algo que no sea original.",
   },
   {
+    pregunta: "¿Qué diferencia hay entre «En stock» y «A pedido»?",
+    respuesta:
+      "Los perfumes «En stock» ya están en Uruguay y los preparamos apenas confirmás el pedido. Los «A pedido» los conseguimos para vos: antes de aceptar el pedido te confirmamos por WhatsApp si están disponibles y en qué plazo. No pagás nada hasta que lo confirmemos.",
+  },
+  {
     pregunta: "¿Cuánto tarda en llegar?",
     respuesta:
       "En Montevideo, 24 h por delivery o retiro coordinado. En el interior, entre 24 y 72 h por DAC o Correo Uruguayo, a la agencia que te quede más cómoda.",
@@ -39,7 +43,7 @@ const FAQ = [
   {
     pregunta: "¿Qué medios de pago aceptan?",
     respuesta:
-      "Los pedidos se hacen por WhatsApp: ahí te confirmamos stock y coordinamos el pago por transferencia bancaria, o en efectivo al retirar en Montevideo.",
+      "Transferencia bancaria, efectivo cuando corresponda, o Mercado Pago con un link de pago que te enviamos por WhatsApp. La web no cobra: primero te confirmamos disponibilidad y después coordinamos el pago.",
   },
 ];
 
@@ -141,6 +145,7 @@ export default function Footer() {
               href={linkWhatsApp("Hola! Tengo una consulta.")}
               target="_blank"
               rel="noopener noreferrer"
+              data-wa-origen="footer"
               aria-label="Escribinos por WhatsApp"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-borde text-arena transition-colors hover:border-vetiver hover:text-vetiver"
             >
