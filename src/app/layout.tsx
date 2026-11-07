@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Archivo } from "next/font/google";
+import { Toaster } from "sonner";
 import { site } from "@/lib/site";
 import BotonFlotanteWhatsApp from "@/components/BotonFlotanteWhatsApp";
 import Footer from "@/components/Footer";
 import Analytics from "@/components/Analytics";
+import CartDrawer from "@/components/CartDrawer";
 import "./globals.css";
 
 /* Fraunces para títulos: serif de contraste alto con "wonk" activado — da el
@@ -104,6 +106,26 @@ export default function RootLayout({
         <Footer />
         <BotonFlotanteWhatsApp />
         <Analytics />
+
+        {/* Carrito de consulta: una sola instancia para todo el sitio. */}
+        <CartDrawer />
+
+        {/* Avisos al agregar al carrito, con la paleta del sitio. */}
+        <Toaster
+          // Arriba al centro: abajo a la derecha tapaba el botón flotante de WhatsApp.
+          position="top-center"
+          offset={{ top: 116 }}
+          mobileOffset={{ top: 116 }}
+          toastOptions={{
+            style: {
+              background: "var(--color-carbon)",
+              color: "var(--color-marfil)",
+              border: "1px solid var(--color-borde)",
+            },
+            descriptionClassName: "!text-arena",
+          }}
+          icons={{ success: "✓" }}
+        />
 
 
         <script

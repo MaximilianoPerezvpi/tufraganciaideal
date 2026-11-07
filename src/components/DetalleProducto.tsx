@@ -19,6 +19,7 @@ import BarraIntensidad from "./BarraIntensidad";
 import Estrellas from "./Estrellas";
 import ResenasProducto from "./ResenasProducto";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
+import BotonAgregarCarrito from "./BotonAgregarCarrito";
 
 const CONFIANZA = [
   "100% Original Sellado",
@@ -167,6 +168,8 @@ export default function DetalleProducto({
             >
               Consultar por WhatsApp
             </BotonPedidoWhatsApp>
+            {/* Secundario: para consultar varios perfumes en un solo mensaje. */}
+            <BotonAgregarCarrito slug={producto.slug} className="mt-3 h-12 w-full" />
           </div>
 
           {/* Ocasiones recomendadas: calculadas, no son dato del catálogo. */}

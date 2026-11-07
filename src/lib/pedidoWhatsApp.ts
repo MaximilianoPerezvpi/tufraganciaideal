@@ -45,3 +45,19 @@ export function linkPerfumeFueraDeCatalogo(termino?: string): string {
       : "¡Hola! Estoy buscando un perfume que no encontré en su catálogo. ¿Podrían ayudarme a conseguirlo?",
   );
 }
+
+/** Consulta por todo lo que hay en el carrito, en un solo mensaje. */
+export function linkPedidoCarrito(
+  lineas: { producto: Producto; cantidad: number; subtotal: number }[],
+  total: number,
+): string {
+  const detalle = lineas
+    .map((l) => {
+      const cantidad = l.cantidad > 1 ? `${l.cantidad}x ` : "";
+      return `- ${cantidad}${nombreCompleto(l.producto)} ($${monto(l.subtotal)})`;
+    })
+    .join("\n");
+  return linkWhatsApp(
+    `¡Hola! Quiero consultar por estos perfumes que vi en la web:\n${detalle}\n\nTotal: $${monto(total)} UYU. ¿Me podrían confirmar disponibilidad y tiempo de entrega?`,
+  );
+}

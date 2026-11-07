@@ -14,7 +14,7 @@ import { linkPerfumeFueraDeCatalogo } from "@/lib/pedidoWhatsApp";
 
 const PASOS_COMPRA = [
   "Elegís tu perfume en el catálogo.",
-  "Nos escribís por WhatsApp con el botón del perfume.",
+  "Nos escribís por WhatsApp con el botón del perfume (o sumás varios al carrito y los consultás en un solo mensaje).",
   "Te confirmamos disponibilidad, precio y tiempo de entrega.",
   "Coordinamos la entrega o el envío.",
   "Te enviamos el medio de pago que elijas.",

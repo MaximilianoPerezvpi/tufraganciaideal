@@ -9,6 +9,7 @@ import Modal from "./Modal";
 import ImagenProducto from "./ImagenProducto";
 import BarraIntensidad from "./BarraIntensidad";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
+import BotonAgregarCarrito from "./BotonAgregarCarrito";
 
 /** Vista rápida: pirámide olfativa y métricas sin salir del catálogo. */
 export default function VistaRapidaModal({
@@ -100,6 +101,7 @@ export default function VistaRapidaModal({
             >
               Consultar por WhatsApp
             </BotonPedidoWhatsApp>
+            <BotonAgregarCarrito slug={producto.slug} className="w-full py-3" />
             <Link
               href={`/producto/${producto.slug}`}
               className="text-center text-sm text-arena underline-offset-4 transition-colors hover:text-marfil hover:underline"

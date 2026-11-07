@@ -12,6 +12,8 @@ import type { Producto } from "@/data/productos";
  * Eventos:
  *   - Visitas y fuentes de tráfico: automáticos (page_view / PageView).
  *   - Vista de producto: GA4 `view_item` / Meta `ViewContent`.
+ *   - Agregar al carrito de consulta: GA4 `add_to_cart` / Meta `AddToCart`
+ *     (interés, no venta: el carrito solo arma un mensaje de WhatsApp).
  *   - Búsqueda (catálogo y buscador del header): GA4 `search` / Meta `Search`,
  *     con el término y cuántos resultados dio (0 = perfume que buscan y no está).
  *   - Consultas mayoristas y por perfumes no publicados: además, eventos
@@ -99,6 +101,21 @@ export function trackContactoWhatsApp(origen: string, slug?: string) {
   fbq("track", "Contact", {
     content_category: origen,
     ...(slug ? { content_ids: [slug] } : {}),
+  });
+}
+
+export function trackAgregarCarrito(p: Producto, cantidad: number) {
+  gtag("event", "add_to_cart", {
+    currency: "UYU",
+    value: p.precio_uyu * cantidad,
+    items: [{ ...itemGa4(p), quantity: cantidad }],
+  });
+  fbq("track", "AddToCart", {
+    content_ids: [p.slug],
+    content_name: `${p.casa} ${p.nombre}`,
+    content_type: "product",
+    currency: "UYU",
+    value: p.precio_uyu * cantidad,
   });
 }
 

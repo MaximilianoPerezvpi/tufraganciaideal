@@ -21,7 +21,7 @@ const SECCIONES = [
   {
     titulo: "3. Compra y pago",
     texto:
-      "Los pedidos se realizan por WhatsApp: el botón \"Consultar por WhatsApp\" de cada perfume envía su nombre y el precio publicado. La compra se confirma recién cuando te respondemos con la disponibilidad y el tiempo de entrega, y coordinamos la forma de pago: transferencia bancaria, efectivo cuando corresponda, o Mercado Pago mediante un link de pago que enviamos por WhatsApp. Esta web no procesa pagos ni guarda datos de tarjetas.",
+      "Los pedidos se realizan por WhatsApp: el botón \"Consultar por WhatsApp\" de cada perfume (o del carrito, para varios perfumes a la vez) envía el nombre y el precio publicado de cada uno. El carrito no es una compra: solo arma el mensaje. La compra se confirma recién cuando te respondemos con la disponibilidad y el tiempo de entrega, y coordinamos la forma de pago: transferencia bancaria, efectivo cuando corresponda, o Mercado Pago mediante un link de pago que enviamos por WhatsApp. Esta web no procesa pagos ni guarda datos de tarjetas.",
   },
   {
     titulo: "4. Envíos",

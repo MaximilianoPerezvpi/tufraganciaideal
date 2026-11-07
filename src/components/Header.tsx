@@ -4,14 +4,15 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { linkWhatsApp, navegacion } from "@/lib/site";
+import BotonCarrito from "./BotonCarrito";
 import SearchBar from "./SearchBar";
 
 /**
  * Header fijo, siempre con fondo oscuro y vidrio esmerilado (antes solo
  * arriba del todo era transparente y se ponía "vidrio" recién al scrollear;
  * ahora es legible desde el primer frame, sobre cualquier hero). En
- * escritorio cierra con un acceso directo a WhatsApp; en mobile ese rol lo
- * cumple el botón flotante.
+ * escritorio cierra con WhatsApp y el carrito de consulta; en mobile queda
+ * el carrito (WhatsApp lo cubre el botón flotante).
  */
 export default function Header() {
   const [menuAbierto, setMenuAbierto] = useState(false);
@@ -39,18 +40,20 @@ export default function Header() {
 
       <div className="vidrio">
         <div className="marco flex h-[72px] items-center justify-between gap-2 sm:gap-4">
-          <Link href="/" className="flex items-baseline gap-2">
-            <span className="font-display text-[1.35rem] leading-none text-marfil">
+          <Link href="/" className="flex shrink-0 items-baseline gap-1.5 sm:gap-2">
+            <span className="font-display text-[1.2rem] leading-none text-marfil sm:text-[1.35rem]">
               TuFragancia
             </span>
-            <span className="font-display text-[1.35rem] italic leading-none text-champan">
+            <span className="font-display text-[1.2rem] italic leading-none text-champan sm:text-[1.35rem]">
               Ideal
             </span>
           </Link>
 
           <SearchBar />
 
-          <nav aria-label="Principal" className="hidden items-center gap-8 md:flex">
+          {/* Menú completo solo desde xl: entre 768 y 1280 px no entraba
+              (WhatsApp y Carrito quedaban fuera de pantalla). */}
+          <nav aria-label="Principal" className="hidden items-center gap-6 whitespace-nowrap xl:flex">
             {navegacion.map((item) => (
               <Link
                 key={item.href}
@@ -69,9 +72,11 @@ export default function Header() {
             >
               WhatsApp
             </a>
+            <BotonCarrito />
           </nav>
 
-          <div className="flex shrink-0 items-center gap-1 md:hidden">
+          <div className="flex shrink-0 items-center gap-1 xl:hidden">
+            <BotonCarrito />
             <button
               type="button"
               onClick={() => setMenuAbierto((v) => !v)}
@@ -105,7 +110,7 @@ export default function Header() {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="overflow-hidden md:hidden"
+              className="overflow-hidden xl:hidden"
             >
               <div className="marco flex flex-col gap-1 pb-6">
                 {navegacion.map((item) => (

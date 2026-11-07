@@ -8,6 +8,7 @@ import { precio } from "@/lib/format";
 import { calificacionDe } from "@/lib/resenas";
 import { linkPedidoProducto } from "@/lib/pedidoWhatsApp";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
+import BotonAgregarCarrito from "./BotonAgregarCarrito";
 import Estrellas from "./Estrellas";
 import ImagenProducto from "./ImagenProducto";
 import VistaRapidaModal from "./VistaRapidaModal";
@@ -15,7 +16,8 @@ import VistaRapidaModal from "./VistaRapidaModal";
 /**
  * Tarjeta de producto: un frasco original sellado.
  *
- * Un solo botón y una sola decisión: consultar por WhatsApp. Todos los
+ * Acción principal: consultar por WhatsApp. Secundaria: sumarlo al carrito
+ * para consultar varios perfumes en un solo mensaje. Todos los
  * perfumes se presentan igual: la disponibilidad nunca se muestra, se
  * confirma en el chat.
  */
@@ -139,6 +141,7 @@ export default function TarjetaProducto({
           >
             Consultar por WhatsApp
           </BotonPedidoWhatsApp>
+          <BotonAgregarCarrito slug={producto.slug} className="mt-2 w-full py-2.5" />
         </div>
       </div>
     </motion.article>

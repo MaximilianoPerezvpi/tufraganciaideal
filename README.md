@@ -54,12 +54,16 @@ Buscá `TODO` en el proyecto: marqué cada dato que es placeholder.
 ## Cómo funciona la compra
 
 ```
-Tarjeta / ficha / vista rápida → "Consultar por WhatsApp"
+Tarjeta / ficha / vista rápida → "Consultar por WhatsApp" (acción principal)
         → wa.me/59897443176 con el perfume exacto y su precio
+"Agregar al carrito" (secundario) → carrito → "Consultar por WhatsApp"
+        → UN mensaje con todos los perfumes, cantidades, subtotales y total
 /mayoristas → formulario → WhatsApp con la solicitud ordenada
 ```
 
-- No hay carrito ni checkout: cada consulta es un mensaje de WhatsApp.
+- No hay checkout: el carrito (`src/lib/cartStore.ts`, Zustand + localStorage)
+  solo arma el mensaje de WhatsApp. Tope fijo de 10 unidades por perfume:
+  nunca depende del inventario (no revela qué hay en stock).
   Los mensajes se arman en `src/lib/pedidoWhatsApp.ts`; el número sale de
   `site.whatsapp` en `src/lib/site.ts`.
 - La web **no cobra**: disponibilidad, precio final, tiempo de entrega y
@@ -151,6 +155,8 @@ src/
 │  ├─ Frasco.tsx              el frasco animado del hero (SVG, ~3 KB)
 │  ├─ Catalogo.tsx            grilla + filtro por familia
 │  ├─ TarjetaProducto.tsx     ficha del frasco + consulta por WhatsApp
+│  ├─ BotonAgregarCarrito.tsx "Agregar al carrito" (secundario)
+│  ├─ CartDrawer.tsx          carrito lateral → un mensaje de WhatsApp
 │  ├─ FormularioMayorista.tsx solicitud mayorista → WhatsApp
 │  ├─ BotonPedidoWhatsApp.tsx botón "Hacer Pedido por WhatsApp"
 │  ├─ Originales.tsx          garantía de autenticidad
