@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Archivo } from "next/font/google";
-import { Toaster } from "sonner";
 import { site } from "@/lib/site";
 import BotonFlotanteWhatsApp from "@/components/BotonFlotanteWhatsApp";
 import Footer from "@/components/Footer";
@@ -29,23 +28,23 @@ const archivo = Archivo({
 const TITULO_COMPARTIR =
   "TuFragancia Ideal | Perfumes Árabes y de Diseñador en Uruguay";
 const DESCRIPCION_COMPARTIR =
-  "Descubre nuestra selección de perfumes 100% originales. Envíos a todo el país.";
+  "Comprá perfumes originales en Uruguay: árabes y de diseñador, sellados. Consultá por WhatsApp y recibilo en Montevideo o en todo el país.";
 
 export const metadata: Metadata = {
   // Un solo dominio para todo (canonical, OG, sitemap, JSON-LD): `site.url`.
   metadataBase: new URL(site.url),
   title: {
     default: TITULO_COMPARTIR,
-    template: "%s | TuFraganciaIdeal",
+    template: "%s | TuFragancia Ideal",
   },
   description: DESCRIPCION_COMPARTIR,
   keywords: [
-    "perfumes originales Uruguay",
-    "comprar perfumes online Uruguay",
-    "TuFraganciaIdeal",
-    "perfumería importada Montevideo",
+    "comprar perfumes originales Uruguay",
     "perfumes árabes Uruguay",
-    "perfumes 100 ml sellados",
+    "perfumes de diseñador Uruguay",
+    "perfumería online Uruguay",
+    "perfumes originales Montevideo",
+    "TuFragancia Ideal",
   ],
   alternates: { canonical: "/" },
   openGraph: {
@@ -106,19 +105,6 @@ export default function RootLayout({
         <BotonFlotanteWhatsApp />
         <Analytics />
 
-        {/* Toasts de confirmación (agregar al carrito, etc.), con la paleta del sitio. */}
-        <Toaster
-          position="bottom-right"
-          toastOptions={{
-            style: {
-              background: "var(--color-carbon)",
-              color: "var(--color-marfil)",
-              border: "1px solid var(--color-borde)",
-            },
-            descriptionClassName: "!text-arena",
-          }}
-          icons={{ success: "✓" }}
-        />
 
         <script
           type="application/ld+json"

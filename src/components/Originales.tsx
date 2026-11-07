@@ -6,27 +6,28 @@ import { motion } from "framer-motion";
 /**
  * Propuesta de valor: por qué comprar acá y no en cualquier lado.
  *
- * Es un proceso real de tres pasos (de dónde viene el frasco hasta que llega
- * a tu casa), por eso acá sí van numerados. El verde vetiver se usa SOLO en
+ * Tres pasos que la tienda puede sostener con sus propias políticas (ver
+ * /terminos-y-condiciones y /politica-de-envios): nada de certificaciones ni
+ * procesos que no estén confirmados. El verde vetiver se usa SOLO en
  * esta sección y en el badge de las tarjetas: el ojo aprende que
  * "verde = original verificado".
  */
 
 const PASOS = [
   {
-    titulo: "Importación directa",
+    titulo: "Original y sellado",
     texto:
-      "Compramos a distribuidores autorizados. Cada frasco llega con su celofán de fábrica, código de lote y caja intacta.",
+      "Vendemos perfumes originales, en su caja y con el celofán de fábrica. Nada de réplicas, testers ni frascos abiertos.",
   },
   {
-    titulo: "Control antes de publicarlo",
+    titulo: "Lo confirmás antes de pagar",
     texto:
-      "Revisamos lote, serie y terminación del frasco contra la referencia de la casa. Si algo no cierra, no se vende.",
+      "Por WhatsApp te confirmamos el perfume exacto, el precio y el tiempo de entrega. Preguntanos lo que quieras: pagás recién cuando está todo claro.",
   },
   {
     titulo: "Te llega sellado",
     texto:
-      "Lo recibís sin abrir, como salió de fábrica. Si al abrirlo no es lo que decimos, te devolvemos la plata.",
+      "Lo recibís sin abrir, como salió de fábrica. Si alguna vez recibís un producto que no sea 100% original, te devolvemos el dinero.",
   },
 ];
 
@@ -40,7 +41,7 @@ export default function Originales() {
         <div className="max-w-[52ch]">
           <p className="kicker">Garantía</p>
           <h2 className="mt-2 font-display text-[length:var(--text-titulo)] font-light leading-tight text-marfil">
-            Sellado, con lote y con garantía.
+            Original, sellado y con garantía.
           </h2>
           <p className="mt-4 text-arena">
             En perfumería el problema no es el precio, es saber qué estás
@@ -84,7 +85,7 @@ export default function Originales() {
             href="/catalogo"
             className="shrink-0 rounded-full border border-vetiver px-6 py-3 text-sm text-vetiver transition-colors hover:bg-vetiver hover:text-noche"
           >
-            Ver perfumes en stock
+            Ver el catálogo
           </Link>
         </div>
       </div>

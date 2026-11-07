@@ -17,6 +17,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${BASE_URL}/perfumes-arabes`,
+      lastModified: hoy,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/perfumes-de-disenador`,
+      lastModified: hoy,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/mayoristas`,
+      lastModified: hoy,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: `${BASE_URL}/terminos-y-condiciones`,
       lastModified: hoy,
       changeFrequency: "yearly",

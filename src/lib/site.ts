@@ -3,21 +3,23 @@
  * ⚠️ REVISAR ANTES DE DEPLOYEAR: los valores marcados con TODO son placeholders.
  */
 export const site = {
-  nombre: "TuFraganciaIdeal",
+  nombre: "TuFragancia Ideal",
   // Dominio público: canonical, sitemap, Open Graph y datos estructurados
   // salen de acá. Hoy es el de Vercel (tufraganciaideal.uy no está
-  // registrado). Con dominio propio: cargá NEXT_PUBLIC_SITE_URL en Vercel
+  // registrado). Con dominio propio: cargá NEXT_PUBLIC_DOMINIO en Vercel
   // (sin barra final) y redeploy, sin tocar código.
+  // ⚠️ NO usar NEXT_PUBLIC_SITE_URL: en Vercel quedó cargada de la época de
+  // Mercado Pago apuntando a un dominio que da 404.
   url: (
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tufraganciaideal-self.vercel.app"
+    process.env.NEXT_PUBLIC_DOMINIO || "https://tufraganciaideal-self.vercel.app"
   ).replace(/\/$/, ""),
   descripcion:
-    "Perfumes árabes y de diseñador originales en Uruguay. Stock disponible y catálogo a pedido. Pedí por WhatsApp y recibilo en todo el país.",
+    "Perfumes árabes y de diseñador originales en Uruguay. Consultá por WhatsApp, te asesoramos personalmente y te lo enviamos a todo el país.",
 
   // WhatsApp de consultas y pedidos (formato internacional, sin + ni espacios).
   whatsapp: "59897443176",
-  instagram: "tufraganciaideal",
-  instagramUrl: "https://instagram.com/tufraganciaideal",
+  instagram: "tufraganciaidealuy",
+  instagramUrl: "https://www.instagram.com/tufraganciaidealuy/",
   // Vacío = no se muestra. TODO: cargá un email real (el de
   // @tufraganciaideal.uy no existe: el dominio no está registrado).
   email: "",
@@ -32,9 +34,10 @@ export function linkWhatsApp(mensaje: string): string {
 }
 
 /** Navegación principal: una sola fuente de verdad para header y footer. */
+// "Inicio" no va: el logo ya lleva al home, y así entra "Mayoristas".
 export const navegacion = [
-  { href: "/", etiqueta: "Inicio" },
   { href: "/catalogo", etiqueta: "Catálogo" },
+  { href: "/mayoristas", etiqueta: "Mayoristas" },
   { href: "/#originales", etiqueta: "Originales" },
   { href: "/#envios", etiqueta: "Envíos y pagos" },
 ] as const;

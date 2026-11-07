@@ -68,7 +68,7 @@ export default function FormularioResena({ slug }: { slug?: string }) {
         <button
           type="button"
           onClick={() => setEnviado(false)}
-          className="mt-4 text-micro text-champan underline-offset-4 hover:underline"
+          className="mt-4 text-micro text-champan underline underline-offset-4 hover:text-oro-claro"
         >
           ¿No se abrió? Volver a intentar
         </button>
@@ -164,7 +164,7 @@ export default function FormularioResena({ slug }: { slug?: string }) {
       >
         Enviar reseña por WhatsApp
       </button>
-      <p className="text-center text-micro text-arena/70">
+      <p className="text-center text-micro text-arena">
         Revisamos cada reseña antes de publicarla. Publicamos todas las
         opiniones reales, buenas o malas.
       </p>

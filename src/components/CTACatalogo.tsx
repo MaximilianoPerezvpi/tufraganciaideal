@@ -18,7 +18,7 @@ export default function CTACatalogo() {
             Todo el catálogo, en un solo lugar
           </h2>
           <p className="relative mx-auto mt-4 max-w-[46ch] text-arena">
-            Árabes y de diseñador, en stock o a pedido:
+            Árabes y de diseñador, más de 200 fragancias:
             filtrá por género, familia olfativa, marca y precio.
           </p>
           <Link

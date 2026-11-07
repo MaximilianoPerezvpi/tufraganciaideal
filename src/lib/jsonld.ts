@@ -1,5 +1,4 @@
 import {
-  disponibilidad,
   productos,
   imagenUrl,
   type Producto,
@@ -10,24 +9,18 @@ import { calificacionDe, resenasDe } from "@/lib/resenas";
 /**
  * Datos estructurados del catálogo (schema.org/ItemList + Product).
  *
- * Es lo que le permite a Google mostrar precio y disponibilidad directo en el
+ * Es lo que le permite a Google mostrar el precio directo en el
  * resultado de búsqueda. Se genera solo a partir de `productos.ts`: si agregás
  * un perfume, acá aparece sin tocar nada.
  */
 
-// "A pedido" es BackOrder: se puede pedir, pero no está en stock físico.
-const DISPONIBILIDAD_SCHEMA = {
-  stock: "https://schema.org/InStock",
-  pedido: "https://schema.org/BackOrder",
-  agotado: "https://schema.org/OutOfStock",
-} as const;
-
+// Sin `availability`: la web no publica el estado del inventario (ni a
+// clientes ni a Google). Afirmar InStock sin confirmarlo sería falso.
 function oferta(p: Producto, url = `${site.url}/catalogo`) {
   return {
     "@type": "Offer",
     priceCurrency: "UYU",
     price: p.precio_uyu,
-    availability: DISPONIBILIDAD_SCHEMA[disponibilidad(p)],
     itemCondition: "https://schema.org/NewCondition",
     url,
     areaServed: { "@type": "Country", name: "Uruguay" },

@@ -1,4 +1,5 @@
-import { linkWhatsApp } from "@/lib/site";
+import Link from "next/link";
+import { linkWhatsApp, site } from "@/lib/site";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
 
 /**
@@ -25,6 +26,21 @@ export default function CTAWhatsApp() {
           >
             Escribinos por WhatsApp
           </BotonPedidoWhatsApp>
+          <p className="mt-6 text-sm text-arena">
+            ¿Querés revender perfumes?{" "}
+            <Link href="/mayoristas" className="text-champan underline underline-offset-4 hover:text-oro-claro">
+              Conocé nuestra propuesta mayorista
+            </Link>{" "}
+            · Seguinos en{" "}
+            <a
+              href={site.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-champan underline underline-offset-4 hover:text-oro-claro"
+            >
+              @{site.instagram}
+            </a>
+          </p>
         </div>
       </div>
     </section>

@@ -3,9 +3,11 @@
 Datos que la web necesita y que no se pueden verificar desde el código.
 Nada de esto se completó inventando: cada punto espera tu confirmación.
 
-## 1. Stock físico (prioridad alta)
+## 1. Stock físico (prioridad alta, uso interno)
 
-Hoy hay **8 perfumes marcados "En stock"** (`true` en la 7ª columna de
+La web ya no muestra stock, pero el dato se usa por dentro para ordenar el
+catálogo y armar la "Selección" del home. Hoy hay **8 perfumes marcados**
+(`true` en la 7ª columna de
 `scripts/gen-rows.mjs`). Me comentaste que tenés unos 10:
 
 Versace Eau Fraiche · Lattafa Asad Bourbon · Lattafa Khamrah · Armani
@@ -18,7 +20,8 @@ YSL MYSLF L'Absolu · Paco Rabanne Black XS
 Sin stock (`0`) hoy: Club de Nuit Untold, Bharara King, King Double Bleu,
 King Double Bleu Cofre, Al Haramain Amber Oud Gold Edition, Rasasi Hawas
 Ice, Rasasi Hawas Fire, French Avenue Liquid Brun, Valentino Born in Roma
-Uomo Intense. ¿Siguen sin poder conseguirse, o pasan a "a pedido" (`1`)?
+Uomo Intense. Aparecen al final del catálogo, con la misma presentación que
+el resto. ¿Siguen sin poder conseguirse, o pasan a "por encargo" (`1`)?
 
 ## 2. Fichas olfativas sin verificar (188 de 226)
 
@@ -70,6 +73,9 @@ en `public/productos/` con el slug nuevo.
   registrado), así que se ocultó. Cargá uno real en `src/lib/site.ts`.
 - **Destacados**: ningún perfume tiene `destacado: true`. Si querés
   destacar 2 o 3, se agrega en `BESPOKE`/generador.
+- **Vercel**: podés borrar `NEXT_PUBLIC_SITE_URL` y `MP_ACCESS_TOKEN`; el
+  sitio ya no las lee. El dominio propio, cuando exista, va en
+  `NEXT_PUBLIC_DOMINIO`.
 
 ## 6. Analítica
 

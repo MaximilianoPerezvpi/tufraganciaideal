@@ -27,13 +27,13 @@ export default function LuxuryBanner() {
         </span>
 
         <h2 className="mt-6 max-w-[24ch] font-display text-[length:var(--text-medio)] font-light leading-tight text-marfil">
-          Garantía de origen en cada fragancia
+          Originales, sellados y con garantía
         </h2>
 
         <p className="mt-5 max-w-[52ch] leading-relaxed text-arena">
-          Trabajamos únicamente con distribuidores oficiales e importaciones
-          directas. Cada caja llega con su celofán y código de lote
-          verificado.
+          Cada perfume llega en su caja, con el celofán de fábrica. Si alguna
+          vez recibís un producto que no sea 100% original, te devolvemos el
+          dinero.
         </p>
       </div>
     </section>

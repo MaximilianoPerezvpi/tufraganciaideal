@@ -12,6 +12,10 @@ import type { Producto } from "@/data/productos";
  * Eventos:
  *   - Visitas y fuentes de tráfico: automáticos (page_view / PageView).
  *   - Vista de producto: GA4 `view_item` / Meta `ViewContent`.
+ *   - Búsqueda (catálogo y buscador del header): GA4 `search` / Meta `Search`,
+ *     con el término y cuántos resultados dio (0 = perfume que buscan y no está).
+ *   - Consultas mayoristas y por perfumes no publicados: además, eventos
+ *     propios `consulta_mayorista` / `consulta_fuera_de_catalogo`.
  *   - Clic en WhatsApp: GA4 `generate_lead` / Meta `Contact`. Es un CONTACTO
  *     (inicio de consulta), nunca una compra: la venta se cierra en el chat
  *     y la web no se entera.
@@ -71,8 +75,21 @@ export function trackVistaProducto(p: Producto) {
   });
 }
 
+// Consultas que conviene ver por separado en GA4/Meta sin configurar
+// dimensiones personalizadas: además de `generate_lead`, llevan su evento.
+const EVENTO_POR_ORIGEN: Record<string, string> = {
+  mayoristas: "consulta_mayorista",
+  "catalogo-consulta": "consulta_fuera_de_catalogo",
+  "envios-consulta": "consulta_fuera_de_catalogo",
+};
+
 /** Clic en cualquier link a wa.me. `origen` = dónde estaba el botón. */
 export function trackContactoWhatsApp(origen: string, slug?: string) {
+  const especifico = EVENTO_POR_ORIGEN[origen];
+  if (especifico) {
+    gtag("event", especifico, { origen });
+    fbq("trackCustom", especifico, { origen });
+  }
   gtag("event", "generate_lead", {
     method: "whatsapp",
     origen,
@@ -82,6 +99,28 @@ export function trackContactoWhatsApp(origen: string, slug?: string) {
     content_category: origen,
     ...(slug ? { content_ids: [slug] } : {}),
   });
+}
+
+/** Búsqueda terminada (se llama con debounce, no por cada tecla). */
+export function trackBusqueda(termino: string, resultados: number, origen: string) {
+  gtag("event", "search", { search_term: termino, resultados, origen });
+  fbq("track", "Search", { search_string: termino, content_category: origen });
+}
+
+/**
+ * Llama a `trackBusqueda` cuando el usuario deja de escribir (1,2 s) y el
+ * término tiene al menos 3 letras. Devuelve la función de limpieza para un
+ * useEffect.
+ */
+export function programarBusqueda(
+  termino: string,
+  resultados: number,
+  origen: string,
+): (() => void) | undefined {
+  const t = termino.trim();
+  if (t.length < 3) return;
+  const id = setTimeout(() => trackBusqueda(t, resultados, origen), 1200);
+  return () => clearTimeout(id);
 }
 
 export function trackPageViewMeta() {

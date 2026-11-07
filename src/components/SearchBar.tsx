@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { productos } from "@/data/productos";
-import { precio } from "@/lib/format";
+import { normalizar, precio } from "@/lib/format";
+import { programarBusqueda } from "@/lib/analytics";
 import ImagenProducto from "./ImagenProducto";
 
 const MAX_RESULTADOS = 6;
@@ -18,18 +19,24 @@ export default function SearchBar() {
   const [abiertoMobile, setAbiertoMobile] = useState(false);
   const contenedorRef = useRef<HTMLDivElement>(null);
 
-  const q = query.trim().toLowerCase();
+  const q = normalizar(query.trim());
   const resultados = useMemo(() => {
     if (q.length < 2) return [];
     return productos
       .filter(
         (p) =>
-          p.nombre.toLowerCase().includes(q) || p.casa.toLowerCase().includes(q),
+          normalizar(p.nombre).includes(q) || normalizar(p.casa).includes(q),
       )
       .slice(0, MAX_RESULTADOS);
   }, [q]);
 
   const mostrarResultados = q.length >= 2;
+
+  // Analítica: búsquedas desde el header (con debounce, no por tecla).
+  useEffect(
+    () => programarBusqueda(query, resultados.length, "header"),
+    [query, resultados.length],
+  );
 
   // Cierra al clickear afuera o con Escape.
   useEffect(() => {

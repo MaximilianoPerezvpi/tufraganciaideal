@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import { linkWhatsApp } from "@/lib/site";
 
@@ -10,6 +11,9 @@ import { linkWhatsApp } from "@/lib/site";
  */
 export default function BotonFlotanteWhatsApp() {
   const sinMovimiento = useReducedMotion();
+  // En la ficha de producto (mobile) ya está la barra fija "Consultar por
+  // WhatsApp": el flotante duplicaba la acción y tapaba la descripción.
+  const enFicha = usePathname().startsWith("/producto/");
 
   return (
     <a
@@ -20,7 +24,7 @@ export default function BotonFlotanteWhatsApp() {
       aria-label="Consultar por WhatsApp"
       // bottom-24 en mobile: dejar lugar a la barra fija de compra de la
       // página de producto, que también vive abajo del todo.
-      className="fixed bottom-24 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-vetiver text-noche shadow-[0_8px_24px_-6px_rgba(0,0,0,0.5)] transition-transform hover:scale-105 md:bottom-6"
+      className={`fixed bottom-24 right-6 z-40 h-14 w-14 ${enFicha ? "hidden md:flex" : "flex"} items-center justify-center rounded-full bg-vetiver text-noche shadow-[0_8px_24px_-6px_rgba(0,0,0,0.5)] transition-transform hover:scale-105 md:bottom-6`}
     >
       {!sinMovimiento && (
         <motion.span

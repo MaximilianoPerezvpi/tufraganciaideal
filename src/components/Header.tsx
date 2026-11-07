@@ -3,16 +3,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { navegacion } from "@/lib/site";
-import BotonCarrito from "./BotonCarrito";
+import { linkWhatsApp, navegacion } from "@/lib/site";
 import SearchBar from "./SearchBar";
 
 /**
  * Header fijo, siempre con fondo oscuro y vidrio esmerilado (antes solo
  * arriba del todo era transparente y se ponía "vidrio" recién al scrollear;
- * ahora es legible desde el primer frame, sobre cualquier hero). El carrito
- * está siempre visible, también en mobile: es el botón que tiene que estar
- * a mano.
+ * ahora es legible desde el primer frame, sobre cualquier hero). En
+ * escritorio cierra con un acceso directo a WhatsApp; en mobile ese rol lo
+ * cumple el botón flotante.
  */
 export default function Header() {
   const [menuAbierto, setMenuAbierto] = useState(false);
@@ -61,11 +60,18 @@ export default function Header() {
                 {item.etiqueta}
               </Link>
             ))}
-            <BotonCarrito />
+            <a
+              href={linkWhatsApp("¡Hola! Tengo una consulta sobre un perfume.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-wa-origen="header"
+              className="flex h-11 items-center rounded-full border border-vetiver/60 px-5 text-sm text-vetiver transition-colors hover:bg-vetiver hover:text-noche"
+            >
+              WhatsApp
+            </a>
           </nav>
 
           <div className="flex shrink-0 items-center gap-1 md:hidden">
-            <BotonCarrito />
             <button
               type="button"
               onClick={() => setMenuAbierto((v) => !v)}

@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { hayStock, type Producto } from "@/data/productos";
-import { useCarrito } from "@/lib/cartStore";
+import type { Producto } from "@/data/productos";
 import { precio } from "@/lib/format";
 import { textoLongevidad, textoProyeccion } from "@/lib/perfume";
 import { linkConsultaNotas, linkPedidoProducto } from "@/lib/pedidoWhatsApp";
@@ -10,7 +9,6 @@ import Modal from "./Modal";
 import ImagenProducto from "./ImagenProducto";
 import BarraIntensidad from "./BarraIntensidad";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
-import EtiquetaDisponibilidad, { detalleDisponibilidad } from "./EtiquetaDisponibilidad";
 
 /** Vista rápida: pirámide olfativa y métricas sin salir del catálogo. */
 export default function VistaRapidaModal({
@@ -22,12 +20,6 @@ export default function VistaRapidaModal({
   abierto: boolean;
   onCerrar: () => void;
 }) {
-  const agregar = useCarrito((e) => e.agregar);
-  const enCarrito = useCarrito(
-    (e) => e.items.find((i) => i.slug === producto.slug)?.cantidad ?? 0,
-  );
-  const disponible = hayStock(producto);
-  const sinMasStock = enCarrito >= producto.stock;
 
   return (
     <Modal
@@ -43,10 +35,6 @@ export default function VistaRapidaModal({
             sizes="(max-width: 640px) 100vw, 50vw"
             className="object-cover"
           />
-          <EtiquetaDisponibilidad
-            producto={producto}
-            className="absolute right-3 top-3"
-          />
         </div>
 
         <div className="p-6 sm:p-8">
@@ -60,9 +48,6 @@ export default function VistaRapidaModal({
 
           <p className="cifras mt-4 text-2xl text-champan">
             {precio(producto.precio_uyu)}
-          </p>
-          <p className="mt-1 text-micro text-arena">
-            {detalleDisponibilidad(producto)}
           </p>
 
           <div className="mt-5 flex flex-col gap-3">
@@ -88,7 +73,7 @@ export default function VistaRapidaModal({
                 ] as const
               ).map(([nivel, notas]) => (
                 <div key={nivel} className="flex gap-2">
-                  <dt className="w-14 shrink-0 text-arena/70">{nivel}</dt>
+                  <dt className="w-14 shrink-0 text-arena">{nivel}</dt>
                   <dd className="text-arena">{notas.join(", ")}</dd>
                 </div>
               ))}
@@ -112,19 +97,9 @@ export default function VistaRapidaModal({
               origen="vista-rapida"
               slug={producto.slug}
               className="w-full py-3 text-sm"
-            />
-            <button
-              type="button"
-              disabled={!disponible || sinMasStock}
-              onClick={() => agregar(producto.slug)}
-              className="w-full rounded-full border border-champan py-3 text-sm font-medium text-champan transition-colors hover:bg-champan hover:text-noche disabled:cursor-not-allowed disabled:border-borde disabled:bg-transparent disabled:text-arena"
             >
-              {!disponible
-                ? "Sin stock"
-                : sinMasStock
-                  ? `Ya tenés ${enCarrito} en el carrito`
-                  : "Agregar al carrito"}
-            </button>
+              Consultar por WhatsApp
+            </BotonPedidoWhatsApp>
             <Link
               href={`/producto/${producto.slug}`}
               className="text-center text-sm text-arena underline-offset-4 transition-colors hover:text-marfil hover:underline"

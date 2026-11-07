@@ -6,3 +6,8 @@ export function precio(monto: number): string {
     maximumFractionDigits: 0,
   }).format(monto);
 }
+
+/** "Lancôme" y "lancome" encuentran lo mismo: sin mayúsculas ni tildes. */
+export function normalizar(texto: string): string {
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}

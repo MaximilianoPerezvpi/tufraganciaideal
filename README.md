@@ -1,7 +1,7 @@
 # TuFraganciaIdeal
 
 E-commerce de perfumes originales sellados. Next.js 15 (App Router) +
-Tailwind v4 + Framer Motion + Zustand. Los pedidos se hacen por WhatsApp
+Tailwind v4 + Framer Motion. Los pedidos se hacen por WhatsApp
 (sin pasarela de pago). Pensado para deployear en Vercel.
 
 ## Arrancar
@@ -19,7 +19,7 @@ Todas opcionales (detalle en `.env.example`). Se cargan en Vercel →
 
 | Variable | Qué es |
 | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Dominio público. Sin definir: `https://tufraganciaideal-self.vercel.app`. |
+| `NEXT_PUBLIC_DOMINIO` | Dominio público. Sin definir: `https://tufraganciaideal-self.vercel.app`. |
 | `NEXT_PUBLIC_GA4_ID` | Google Analytics 4 (`G-…`). Vacío = no se carga. |
 | `NEXT_PUBLIC_META_PIXEL_ID` | Meta Pixel. Vacío = no se carga. |
 
@@ -54,30 +54,30 @@ Buscá `TODO` en el proyecto: marqué cada dato que es placeholder.
 ## Cómo funciona la compra
 
 ```
-Ficha / vista rápida / tarjeta → "Hacer Pedido por WhatsApp"
-        → wa.me/59897443176 con el perfume y su precio ya escritos
-
-Carrito (Zustand, guarda slug + cantidad) → "Hacer Pedido por WhatsApp"
-        → wa.me/59897443176 con cada línea, subtotales y total en UYU
+Tarjeta / ficha / vista rápida → "Consultar por WhatsApp"
+        → wa.me/59897443176 con el perfume exacto y su precio
+/mayoristas → formulario → WhatsApp con la solicitud ordenada
 ```
 
-- Los mensajes se arman en `src/lib/pedidoWhatsApp.ts`; el número sale de
+- No hay carrito ni checkout: cada consulta es un mensaje de WhatsApp.
+  Los mensajes se arman en `src/lib/pedidoWhatsApp.ts`; el número sale de
   `site.whatsapp` en `src/lib/site.ts`.
-- El carrito guarda solo `slug` y `cantidad`: el precio del mensaje siempre
-  sale de `productos.ts`, así que un cambio de precio se refleja al instante.
-- La web **no cobra**: disponibilidad, forma de pago y envío se confirman
-  en el chat. Medios de pago: transferencia, efectivo cuando corresponda o
-  link de Mercado Pago enviado por WhatsApp (Mercado Pago no está integrado).
+- La web **no cobra**: disponibilidad, precio final, tiempo de entrega y
+  forma de pago se confirman en el chat. Medios de pago: transferencia,
+  efectivo cuando corresponda o link de Mercado Pago enviado por WhatsApp.
 
-### Disponibilidad
+### Inventario (interno)
 
-`disponibilidad()` en `productos.ts`, a partir de `gen-rows.mjs`:
+La web **nunca muestra** qué está en stock y qué se consigue por encargo:
+todos los perfumes se ven iguales. El dato vive en `gen-rows.mjs` y solo se
+usa por dentro (`disponibilidad()` en `productos.ts`): ordena el catálogo
+(primero lo que hay) y elige la "Selección" del home.
 
-| Estado | Columna 7 (`entregaInmediata`) | Columna 8 (`stock`) |
+| Estado interno | Columna 7 (`entregaInmediata`) | Columna 8 (`stock`) |
 | --- | --- | --- |
-| **En stock** — en Uruguay, listo para entregar | `true` | `1` |
-| **A pedido** — se confirma disponibilidad y plazo | `false` | `1` |
-| **Sin stock** | — | `0` |
+| stock físico | `true` | `1` |
+| por encargo | `false` | `1` |
+| sin stock (va al final del catálogo) | — | `0` |
 
 ### Analítica
 
@@ -146,20 +146,18 @@ src/
 │  ├─ robots.ts               /robots.txt automático
 │  └─ icon.svg                favicon
 ├─ components/
-│  ├─ Header.tsx              nav fija, vidrio al scrollear, botón de carrito
+│  ├─ Header.tsx              nav fija, vidrio al scrollear, acceso a WhatsApp
 │  ├─ Hero.tsx                titular + CTA
 │  ├─ Frasco.tsx              el frasco animado del hero (SVG, ~3 KB)
 │  ├─ Catalogo.tsx            grilla + filtro por familia
-│  ├─ TarjetaProducto.tsx     ficha del frasco + agregar al carrito
-│  ├─ BotonCarrito.tsx        botón con contador de unidades
-│  ├─ CartDrawer.tsx          carrito lateral + pedido por WhatsApp
+│  ├─ TarjetaProducto.tsx     ficha del frasco + consulta por WhatsApp
+│  ├─ FormularioMayorista.tsx solicitud mayorista → WhatsApp
 │  ├─ BotonPedidoWhatsApp.tsx botón "Hacer Pedido por WhatsApp"
 │  ├─ Originales.tsx          garantía de autenticidad
 │  ├─ Envios.tsx              pagos y envíos
 │  └─ Footer.tsx
 ├─ data/productos.ts          el catálogo entero
 └─ lib/
-   ├─ cartStore.ts            carrito (Zustand + localStorage)
    ├─ pedidoWhatsApp.ts       mensajes de pedido para WhatsApp
    ├─ site.ts                 config: dominio, contacto, navegación
    ├─ format.ts               formato de pesos uruguayos
@@ -186,5 +184,5 @@ src/
   y en el badge de las tarjetas, para que el ojo aprenda que verde = original
   verificado.
 - **Una sola animación automática:** el frasco del hero al cargar. Todo lo demás
-  se mueve cuando vos hacés algo (filtrar, agregar al carrito, abrir el panel).
+  se mueve cuando vos hacés algo (filtrar, abrir la vista rápida).
   Si el sistema tiene "reducir movimiento" activado, nada se mueve.

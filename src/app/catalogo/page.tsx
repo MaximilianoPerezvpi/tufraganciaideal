@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
-import CartDrawer from "@/components/CartDrawer";
 import Catalogo from "@/components/Catalogo";
 import {
   CATEGORIA_DESDE_PARAM,
@@ -20,7 +19,6 @@ type SearchParams = Promise<{
   categoria?: string;
   genero?: string;
   familia?: string;
-  stock?: string;
 }>;
 
 /**
@@ -55,11 +53,9 @@ export default async function PaginaCatalogo({
           categoriaInicial={CATEGORIA_DESDE_PARAM[params.categoria ?? ""] ?? "todos"}
           generoInicial={GENERO_DESDE_PARAM[params.genero ?? ""] ?? "todos"}
           familiaInicial={FAMILIA_DESDE_PARAM[params.familia ?? ""] ?? "todas"}
-          soloEnStockInicial={params.stock === "1"}
         />
       </main>
 
-      <CartDrawer />
 
       <script
         type="application/ld+json"

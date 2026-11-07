@@ -95,7 +95,7 @@ function FallbackFrasco({ className = "" }: { className?: string }) {
           opacity="0.35"
         />
       </svg>
-      <span className="text-micro text-arena/70">Foto próximamente</span>
+      <span className="text-micro text-arena">Foto próximamente</span>
     </div>
   );
 }

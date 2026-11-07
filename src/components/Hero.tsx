@@ -9,6 +9,8 @@ import { linkWhatsApp } from "@/lib/site";
 /**
  * Hero. Entrada escalonada con Framer Motion: badge, título, subtítulo,
  * botones y puntos de confianza aparecen uno tras otro, no todos de golpe.
+ * Solo se desplazan: arrancan visibles (sin opacity 0) para que el texto
+ * —el elemento más grande en celular (LCP)— se pinte sin esperar al JS.
  */
 const contenedor: Variants = {
   oculto: {},
@@ -16,9 +18,8 @@ const contenedor: Variants = {
 };
 
 const item: Variants = {
-  oculto: { opacity: 0, y: 16 },
+  oculto: { y: 16 },
   visible: {
-    opacity: 1,
     y: 0,
     transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
   },
@@ -78,9 +79,9 @@ export default function Hero() {
             variants={item}
             className="mt-7 max-w-[46ch] text-[1.05rem] leading-relaxed text-arena"
           >
-            Perfumes árabes y de diseñador 100% originales, en stock en
-            Uruguay y a pedido. Elegís acá, nos escribís por WhatsApp y te
-            lo enviamos sellado a todo el país.
+            Perfumes árabes y de diseñador 100% originales. Elegís acá, nos
+            escribís por WhatsApp y te asesoramos personalmente. Envíos
+            sellados a todo el país.
           </motion.p>
 
           <motion.div

@@ -1,15 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { disponibilidad, hayStock, type Producto } from "@/data/productos";
-import { useCarrito } from "@/lib/cartStore";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import type { Producto } from "@/data/productos";
 import { precio } from "@/lib/format";
 import { calificacionDe } from "@/lib/resenas";
 import { linkPedidoProducto } from "@/lib/pedidoWhatsApp";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
-import EtiquetaDisponibilidad, { detalleDisponibilidad } from "./EtiquetaDisponibilidad";
 import Estrellas from "./Estrellas";
 import ImagenProducto from "./ImagenProducto";
 import VistaRapidaModal from "./VistaRapidaModal";
@@ -17,9 +15,9 @@ import VistaRapidaModal from "./VistaRapidaModal";
 /**
  * Tarjeta de producto: un frasco original sellado.
  *
- * Un solo botón y una sola decisión: agregar al carrito. Los badges responden
- * las dos objeciones que frenan una compra online de perfumería en Uruguay
- * ("¿será original?" y "¿me llega a mi departamento?").
+ * Un solo botón y una sola decisión: consultar por WhatsApp. Todos los
+ * perfumes se presentan igual: la disponibilidad nunca se muestra, se
+ * confirma en el chat.
  */
 export default function TarjetaProducto({
   producto,
@@ -30,35 +28,14 @@ export default function TarjetaProducto({
   prioridad?: boolean;
 }) {
   const calificacion = calificacionDe(producto);
-  const agregar = useCarrito((e) => e.agregar);
-  const enCarrito = useCarrito(
-    (e) => e.items.find((i) => i.slug === producto.slug)?.cantidad ?? 0,
-  );
-
-  const disponible = hayStock(producto);
-  const sinMasStock = enCarrito >= producto.stock;
-
-  // "¡Agregado!" en el botón por un instante, antes de que aparezca el
-  // toast: la confirmación se ve en el mismo lugar donde hiciste clic.
-  const [agregado, setAgregado] = useState(false);
-
-  useEffect(() => {
-    if (!agregado) return;
-    const t = setTimeout(() => setAgregado(false), 1200);
-    return () => clearTimeout(t);
-  }, [agregado]);
-
-  function manejarAgregar() {
-    agregar(producto.slug);
-    setAgregado(true);
-  }
 
   const [vistaRapidaAbierta, setVistaRapidaAbierta] = useState(false);
 
   return (
     <>
+    {/* Sin `layout`: medir 24 tarjetas en cada render bloqueaba el hilo
+        principal en celulares; el reacomodo lo anima el contenedor. */}
     <motion.article
-      layout
       className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-carbon transition-all duration-300 hover:-translate-y-1 hover:glow-oro ${
         producto.destacado
           ? "border border-champan/35"
@@ -78,9 +55,7 @@ export default function TarjetaProducto({
             producto={producto}
             prioridad={prioridad}
             sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 300px"
-            className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
-              disponible ? "" : "opacity-40 grayscale"
-            }`}
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
 
           {/* Badge de autenticidad: verde verificado, el mismo en todo el sitio. */}
@@ -88,21 +63,10 @@ export default function TarjetaProducto({
             100% original sellado
           </span>
 
-          <EtiquetaDisponibilidad
-            producto={producto}
-            className="absolute right-3 top-3"
-          />
-
           {/* Badge de familia: Árabe o Diseñador. */}
           <span className="absolute bottom-3 left-3 rounded-full border border-marfil/25 bg-noche/70 px-3 py-1 text-micro text-marfil backdrop-blur-sm">
             {producto.categoria === "árabes" ? "Árabe" : "Diseñador"}
           </span>
-
-          {!disponible && (
-            <span className="absolute inset-x-0 bottom-0 bg-noche/85 py-2 text-center text-micro text-marfil">
-              Sin stock por ahora
-            </span>
-          )}
         </Link>
 
         {/* Vista Rápida: hermano del Link, no anidado en el <a>. Centrado
@@ -154,7 +118,7 @@ export default function TarjetaProducto({
                 ] as const
               ).map(([nivel, notas]) => (
                 <div key={nivel} className="flex gap-2">
-                  <dt className="w-14 shrink-0 text-arena/70">{nivel}</dt>
+                  <dt className="w-14 shrink-0 text-arena">{nivel}</dt>
                   <dd className="text-arena">{notas.join(", ")}</dd>
                 </div>
               ))}
@@ -166,71 +130,14 @@ export default function TarjetaProducto({
           <p className="cifras text-2xl text-champan">
             {precio(producto.precio_uyu)}
           </p>
-          <p className="mt-1 text-micro text-arena">
-            {detalleDisponibilidad(producto)}
-          </p>
-
-          <motion.button
-            type="button"
-            disabled={!disponible || sinMasStock}
-            onClick={manejarAgregar}
-            whileTap={disponible && !sinMasStock ? { scale: 0.95 } : undefined}
-            className={`mt-4 w-full overflow-hidden rounded-full border py-3 text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_var(--color-oro-vivo)] disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-borde disabled:bg-transparent disabled:text-arena disabled:shadow-none ${
-              agregado
-                ? "border-vetiver bg-vetiver text-noche"
-                : "border-transparent bg-[#D4AF37] font-semibold text-black hover:bg-[#b5952f]"
-            }`}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              {agregado ? (
-                <motion.span
-                  key="ok"
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.15 }}
-                  className="flex items-center justify-center gap-1.5"
-                >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden>
-                    <path
-                      d="M5 13l4 4L19 7"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  ¡Agregado!
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="label"
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.15 }}
-                  className="block"
-                >
-                  {!disponible
-                    ? "Sin stock"
-                    : sinMasStock
-                      ? `Ya tenés ${enCarrito} en el carrito`
-                      : "Agregar al carrito"}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
 
           <BotonPedidoWhatsApp
             href={linkPedidoProducto(producto)}
             origen="tarjeta"
             slug={producto.slug}
-            className="mt-2 w-full py-3 text-sm"
+            className="mt-4 w-full py-3 text-sm"
           >
-            {disponibilidad(producto) === "stock"
-              ? "Pedir por WhatsApp"
-              : "Consultar por WhatsApp"}
+            Consultar por WhatsApp
           </BotonPedidoWhatsApp>
         </div>
       </div>

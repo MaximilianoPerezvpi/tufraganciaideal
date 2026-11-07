@@ -41,8 +41,10 @@
  *
  * 📦 STOCK
  * `stock` es binario en esta carga: 1 = se puede pedir, 0 = sin stock. No
- * indica cantidad de unidades. La disponibilidad que ve el cliente sale de
- * `disponibilidad()` (al final del archivo):
+ * indica cantidad de unidades. `disponibilidad()` (al final del archivo) es
+ * SOLO de uso interno — ordena el catálogo y elige la selección del home —
+ * y NUNCA se muestra: el cliente ve todos los perfumes iguales y confirma
+ * disponibilidad por WhatsApp (decisión comercial, 2026-11):
  *   - "stock"   → `entregaInmediata`: frasco físico en Uruguay, listo para entregar.
  *   - "pedido"  → se consigue a pedido; disponibilidad y plazo se confirman
  *                 por WhatsApp antes de aceptar el pedido.
@@ -3642,7 +3644,7 @@ export function hayStock(p: Producto): boolean {
 }
 
 /**
- * Cómo lo puede conseguir el cliente:
+ * Estado de inventario — USO INTERNO, nunca se muestra en la web:
  * - "stock":   frasco físico en Uruguay, listo para entregar.
  * - "pedido":  se consigue a pedido; disponibilidad y plazo se confirman
  *              por WhatsApp antes de aceptar el pedido.
@@ -3654,9 +3656,3 @@ export function disponibilidad(p: Producto): Disponibilidad {
   if (p.stock <= 0) return "agotado";
   return p.entregaInmediata ? "stock" : "pedido";
 }
-
-export const ETIQUETA_DISPONIBILIDAD: Record<Disponibilidad, string> = {
-  stock: "En stock",
-  pedido: "A pedido",
-  agotado: "Sin stock por ahora",
-};

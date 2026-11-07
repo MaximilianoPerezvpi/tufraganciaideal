@@ -27,9 +27,9 @@ export default function TarjetaResena({
       <div className="mt-4 flex flex-wrap items-baseline justify-between gap-2">
         <p className="text-sm text-marfil">
           {resena.nombre}
-          {resena.ciudad && <span className="text-arena/70"> · {resena.ciudad}</span>}
+          {resena.ciudad && <span className="text-arena"> · {resena.ciudad}</span>}
         </p>
-        <p className="text-micro text-arena/70">{fechaResena(resena.fecha)}</p>
+        <p className="text-micro text-arena">{fechaResena(resena.fecha)}</p>
       </div>
       {resena.compraVerificada && (
         <p className="mt-2 text-micro text-vetiver">✓ Compra verificada</p>

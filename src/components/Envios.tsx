@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { linkWhatsApp, site } from "@/lib/site";
+import { linkPerfumeFueraDeCatalogo } from "@/lib/pedidoWhatsApp";
 
 /**
  * Logística: pagos y envíos.
@@ -14,8 +14,8 @@ import { linkWhatsApp, site } from "@/lib/site";
 
 const PASOS_COMPRA = [
   "Elegís tu perfume en el catálogo.",
-  "Nos escribís por WhatsApp con el botón del perfume o del carrito.",
-  "Te confirmamos disponibilidad (y el plazo, si es a pedido).",
+  "Nos escribís por WhatsApp con el botón del perfume.",
+  "Te confirmamos disponibilidad, precio y tiempo de entrega.",
   "Coordinamos la entrega o el envío.",
   "Te enviamos el medio de pago que elijas.",
 ];
@@ -38,13 +38,13 @@ const PAGOS = [
 const ENVIOS = [
   {
     nombre: "Montevideo",
-    detalle: "Envío en el día por delivery, o retiro coordinado sin costo.",
-    plazo: "24 h",
+    detalle: "Delivery, o retiro coordinado sin costo.",
+    plazo: "~24 h",
   },
   {
     nombre: "Interior del país",
-    detalle: "DAC y Correo Uruguayo a la agencia que te quede más cómoda.",
-    plazo: "24 a 72 h",
+    detalle: "Por agencia (DAC u otra, según tu localidad).",
+    plazo: "24 a 72 h hábiles",
   },
   {
     nombre: "Retiro sin costo",
@@ -116,8 +116,9 @@ export default function Envios() {
             ))}
           </ul>
           <p className="mt-4 text-micro text-arena">
-            Plazos para perfumes en stock. Para los perfumes a pedido, el plazo
-            te lo confirmamos por WhatsApp antes de aceptar el pedido.
+            Plazos de envío una vez despachado el pedido. El tiempo de entrega
+            de cada perfume te lo confirmamos por WhatsApp antes de cerrar la
+            compra.
           </p>
 
           <motion.div
@@ -127,21 +128,24 @@ export default function Envios() {
             transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
             className="mt-8 rounded-2xl border border-champan/30 bg-champan/[0.06] p-6">
             <p className="text-marfil">
-              ¿No encontrás el perfume que buscás?
+              ¿No encontraste el perfume que buscabas?
             </p>
             <p className="mt-2 text-sm leading-relaxed text-arena">
-              Traemos a pedido: decinos cuál querés y te confirmamos precio y
-              plazo de llegada.
+              Contamos con una variedad de fragancias mucho más amplia.
+              Escribinos y haremos lo posible por conseguirlo.
             </p>
             <a
-              href={linkWhatsApp("¡Hola! Estoy buscando un perfume puntual: ")}
+              href={linkPerfumeFueraDeCatalogo()}
               target="_blank"
               rel="noopener noreferrer"
               data-wa-origen="envios-consulta"
               className="mt-5 inline-block rounded-full bg-champan px-6 py-3 text-sm font-medium text-noche transition-colors hover:bg-oro-claro"
             >
-              Consultar un perfume
+              Consultar por WhatsApp
             </a>
+            <p className="mt-3 text-micro text-arena">
+              Disponibilidad, precio y plazo sujetos a confirmación.
+            </p>
           </motion.div>
         </div>
       </div>

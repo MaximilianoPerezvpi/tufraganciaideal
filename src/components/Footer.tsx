@@ -5,13 +5,15 @@ import { motion } from "framer-motion";
 import { linkWhatsApp, navegacion, site } from "@/lib/site";
 
 const GARANTIAS = [
-  "Celofán de fábrica intacto",
-  "Control de lote antes de publicar",
+  "Perfumes originales y sellados",
+  "Confirmás todo antes de pagar",
   "Devolución total si no es original",
 ];
 
 const MEDIOS_PAGO = ["Transferencia bancaria", "Efectivo", "Mercado Pago (link de pago)"];
-const AGENCIAS_ENVIO = ["DAC", "UES"];
+// TODO: confirmar agencias (ver REVISION-MANUAL.md). DAC es la única que
+// aparecía en todas las versiones del sitio.
+const AGENCIAS_ENVIO = ["DAC (interior)", "Delivery en Montevideo", "Retiro coordinado"];
 
 const ENLACES_LEGALES = [
   { href: "/terminos-y-condiciones", etiqueta: "Términos y Condiciones" },
@@ -23,7 +25,7 @@ const FAQ = [
   {
     pregunta: "¿Cómo sé que el perfume es original?",
     respuesta:
-      "Cada frasco llega con celofán de fábrica y código de lote. Revisamos la referencia contra la casa antes de publicarlo: si algo no cierra, no se vende. Si al abrirlo no es lo que decimos, te devolvemos la plata.",
+      "Vendemos perfumes originales, en su caja y con el celofán de fábrica. Antes de pagar podés preguntarnos todo lo que necesites por WhatsApp. Y si alguna vez recibís un producto que no sea 100% original, te devolvemos el dinero.",
   },
   {
     pregunta: "¿Puedo devolver un frasco si me arrepentí?",
@@ -31,14 +33,19 @@ const FAQ = [
       "Sí, tenés 7 días para devolverlo sin abrir. Y devolución total, sin condiciones, si alguna vez recibís algo que no sea original.",
   },
   {
-    pregunta: "¿Qué diferencia hay entre «En stock» y «A pedido»?",
+    pregunta: "¿Cómo sé si un perfume está disponible?",
     respuesta:
-      "Los perfumes «En stock» ya están en Uruguay y los preparamos apenas confirmás el pedido. Los «A pedido» los conseguimos para vos: antes de aceptar el pedido te confirmamos por WhatsApp si están disponibles y en qué plazo. No pagás nada hasta que lo confirmemos.",
+      "Escribinos por WhatsApp desde el botón del perfume: te confirmamos disponibilidad, precio y tiempo de entrega antes de cerrar el pedido. No pagás nada hasta que lo confirmemos.",
   },
   {
     pregunta: "¿Cuánto tarda en llegar?",
     respuesta:
-      "En Montevideo, 24 h por delivery o retiro coordinado. En el interior, entre 24 y 72 h por DAC o Correo Uruguayo, a la agencia que te quede más cómoda.",
+      "Primero te confirmamos por WhatsApp el tiempo de entrega de tu perfume. Una vez despachado: en Montevideo, alrededor de 24 h por delivery (o retiro coordinado); en el interior, entre 24 y 72 h hábiles por agencia (DAC u otra, según tu localidad).",
+  },
+  {
+    pregunta: "¿Qué pasa si mi pedido llega dañado o con un problema?",
+    respuesta:
+      "Escribinos por WhatsApp contándonos qué pasó (si podés, con fotos). Si el producto no llega en condiciones o no es 100% original, la devolución, incluido el envío, corre por nuestra cuenta.",
   },
   {
     pregunta: "¿Qué medios de pago aceptan?",
@@ -186,7 +193,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="kicker">Agencias de envío</p>
+            <p className="kicker">Envíos a todo Uruguay</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {AGENCIAS_ENVIO.map((agencia) => (
                 <span
@@ -209,7 +216,7 @@ export default function Footer() {
       </div>
 
       <div className="marco border-t border-borde py-6">
-        <p className="text-micro text-arena/70">
+        <p className="text-micro text-arena">
           © {new Date().getFullYear()} {site.nombre}. Vendemos frascos
           originales sellados; no somos distribuidores oficiales de las marcas
           mencionadas. Precios en pesos uruguayos, IVA incluido.

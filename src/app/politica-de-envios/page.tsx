@@ -12,12 +12,12 @@ const SECCIONES = [
   {
     titulo: "Agencias de envío",
     texto:
-      "Enviamos por DAC y UES, las dos agencias más confiables y con más cobertura del país. Elegís la que te quede más cómoda al finalizar la compra.",
+      "Enviamos a todo el país por agencia (DAC u otra, según tu localidad). En Montevideo también podés recibirlo por delivery o coordinar un retiro sin costo. Lo acordamos por WhatsApp al confirmar el pedido.",
   },
   {
     titulo: "Tiempos de entrega",
     texto:
-      "En Montevideo: 24 horas por delivery o retiro coordinado. En el interior: entre 24 y 72 horas hábiles, según la localidad y la agencia elegida.",
+      "El tiempo de entrega de cada perfume te lo confirmamos por WhatsApp antes de cerrar el pedido. Una vez despachado: en Montevideo, alrededor de 24 horas por delivery; en el interior, entre 24 y 72 horas hábiles, según la localidad y la agencia.",
   },
   {
     titulo: "Costo de envío",
@@ -27,7 +27,7 @@ const SECCIONES = [
   {
     titulo: "Seguimiento del pedido",
     texto:
-      "Apenas despachamos tu pedido te mandamos el número de seguimiento por WhatsApp o email, para que puedas rastrearlo directamente con la agencia.",
+      "Apenas despachamos tu pedido te mandamos el número de seguimiento por WhatsApp, para que puedas rastrearlo directamente con la agencia.",
   },
   {
     titulo: "Devoluciones",

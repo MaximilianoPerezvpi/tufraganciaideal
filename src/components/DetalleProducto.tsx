@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { disponibilidad, hayStock, type Producto } from "@/data/productos";
-import { useCarrito } from "@/lib/cartStore";
+import type { Producto } from "@/data/productos";
 import { precio } from "@/lib/format";
 import { calificacionDe } from "@/lib/resenas";
 import { linkConsultaNotas, linkPedidoProducto } from "@/lib/pedidoWhatsApp";
@@ -20,7 +19,6 @@ import BarraIntensidad from "./BarraIntensidad";
 import Estrellas from "./Estrellas";
 import ResenasProducto from "./ResenasProducto";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
-import EtiquetaDisponibilidad, { detalleDisponibilidad } from "./EtiquetaDisponibilidad";
 
 const CONFIANZA = [
   "100% Original Sellado",
@@ -28,7 +26,7 @@ const CONFIANZA = [
   "Envío a todo Uruguay",
 ] as const;
 
-/** Página de un perfume: imagen grande, ficha completa y selector de cantidad. */
+/** Página de un perfume: imagen grande, ficha completa y consulta por WhatsApp. */
 export default function DetalleProducto({
   producto,
   relacionados,
@@ -36,31 +34,16 @@ export default function DetalleProducto({
   producto: Producto;
   relacionados: Producto[];
 }) {
-  const agregar = useCarrito((e) => e.agregar);
-  const enCarrito = useCarrito(
-    (e) => e.items.find((i) => i.slug === producto.slug)?.cantidad ?? 0,
-  );
-
-  const disponible = hayStock(producto);
-  const restante = Math.max(0, producto.stock - enCarrito);
-
-  const [cantidad, setCantidad] = useState(1);
   const calificacion = calificacionDe(producto);
-  const estado = disponibilidad(producto);
 
   // Analítica: vista de producto (no hace nada si no hay GA4/Pixel configurado).
   useEffect(() => {
     trackVistaProducto(producto);
   }, [producto]);
 
-  // Si ya tenés casi todo el stock en el carrito, el selector no puede pedir
-  // más de lo que queda: se recorta solo cuando `restante` cambia.
-  useEffect(() => {
-    setCantidad((c) => Math.min(Math.max(c, 1), Math.max(restante, 1)));
-  }, [restante]);
 
-  // Barra fija de compra (solo mobile): aparece cuando el bloque de compra
-  // principal sale de la pantalla al scrollear.
+  // Barra fija de consulta (solo mobile): aparece cuando el botón principal
+  // sale de la pantalla al scrollear.
   const botonPrincipalRef = useRef<HTMLDivElement>(null);
   const [mostrarBarraFija, setMostrarBarraFija] = useState(false);
 
@@ -75,10 +58,6 @@ export default function DetalleProducto({
     return () => observer.disconnect();
   }, []);
 
-  function agregarAlCarrito() {
-    agregar(producto.slug, cantidad);
-    setCantidad(1);
-  }
 
   return (
     <>
@@ -108,20 +87,11 @@ export default function DetalleProducto({
             producto={producto}
             prioridad
             sizes="(max-width: 1024px) 92vw, 46vw"
-            className={`object-cover ${disponible ? "" : "opacity-40 grayscale"}`}
+            className="object-cover"
           />
           <span className="absolute left-4 top-4 rounded-full bg-noche/80 px-3 py-1 text-micro text-vetiver backdrop-blur-sm">
             100% original sellado
           </span>
-          <EtiquetaDisponibilidad
-            producto={producto}
-            className="absolute right-4 top-4"
-          />
-          {!disponible && (
-            <span className="absolute inset-x-0 bottom-0 bg-noche/85 py-2 text-center text-micro text-marfil">
-              Sin stock por ahora
-            </span>
-          )}
         </div>
 
         {/* Ficha */}
@@ -155,18 +125,15 @@ export default function DetalleProducto({
           <p className="cifras mt-6 text-3xl text-champan">
             {precio(producto.precio_uyu)}
           </p>
-          <p className="mt-1.5 text-sm text-arena">
-            {detalleDisponibilidad(producto)}
-          </p>
 
-          {estado === "pedido" && (
-            <p className="mt-4 max-w-[52ch] rounded-xl border border-borde bg-carbon px-4 py-3 text-sm leading-relaxed text-arena">
-              <span className="text-marfil">Este perfume es a pedido:</span> no
-              lo tenemos físicamente en Uruguay ahora. Antes de aceptar el
-              pedido te confirmamos por WhatsApp si lo podemos conseguir y en
-              qué plazo. No pagás nada hasta que lo confirmemos.
-            </p>
-          )}
+          {/* Mismo mensaje para todo el catálogo: la disponibilidad, el
+              precio final y el plazo se confirman por WhatsApp. */}
+          <p className="mt-4 max-w-[52ch] rounded-xl border border-borde bg-carbon px-4 py-3 text-sm leading-relaxed text-arena">
+            <span className="text-marfil">¿Te interesa este perfume?</span>{" "}
+            Escribinos por WhatsApp para confirmar disponibilidad, precio y
+            tiempo de entrega. Te asesoramos personalmente para realizar tu
+            pedido.
+          </p>
 
           {/* Indicadores técnicos */}
           <div className="mt-5 grid grid-cols-2 gap-4 rounded-xl border border-borde bg-carbon p-4">
@@ -180,9 +147,13 @@ export default function DetalleProducto({
               valor={producto.proyeccion}
               detalle={textoProyeccion(producto.proyeccion)}
             />
+            <p className="col-span-2 text-micro text-arena">
+              Estimado según la concentración ({producto.concentracion}); varía
+              con la piel y el clima.
+            </p>
           </div>
 
-          {/* Pedido por WhatsApp (acción principal) + carrito */}
+          {/* Consulta por WhatsApp: la única acción de compra. */}
           <div ref={botonPrincipalRef} className="mt-6">
             <BotonPedidoWhatsApp
               href={linkPedidoProducto(producto)}
@@ -190,50 +161,8 @@ export default function DetalleProducto({
               slug={producto.slug}
               className="h-14 w-full px-8 text-base"
             >
-              {estado === "stock"
-                ? "Hacer Pedido por WhatsApp"
-                : "Consultar disponibilidad por WhatsApp"}
+              Consultar por WhatsApp
             </BotonPedidoWhatsApp>
-
-            <div className="mt-4 flex flex-wrap items-center gap-4">
-              <div className="flex items-center rounded-full border border-borde">
-                <button
-                  type="button"
-                  onClick={() => setCantidad((c) => Math.max(1, c - 1))}
-                  disabled={cantidad <= 1}
-                  aria-label="Restar una unidad"
-                  className="h-12 w-12 text-lg text-arena transition-colors hover:text-marfil disabled:opacity-30 disabled:hover:text-arena"
-                >
-                  −
-                </button>
-                <span className="cifras w-8 text-center text-marfil">
-                  {cantidad}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setCantidad((c) => Math.min(restante, c + 1))}
-                  disabled={cantidad >= restante}
-                  aria-label="Sumar una unidad"
-                  className="h-12 w-12 text-lg text-arena transition-colors hover:text-marfil disabled:opacity-30 disabled:hover:text-arena"
-                >
-                  +
-                </button>
-              </div>
-
-              <motion.button
-                type="button"
-                disabled={!disponible || restante <= 0}
-                onClick={agregarAlCarrito}
-                whileTap={disponible && restante > 0 ? { scale: 0.97 } : undefined}
-                className="h-12 flex-1 min-w-[12rem] rounded-full border border-champan px-8 font-medium text-champan transition-colors hover:bg-champan hover:text-noche disabled:cursor-not-allowed disabled:border-borde disabled:bg-transparent disabled:text-arena"
-              >
-                {!disponible
-                  ? "Sin stock"
-                  : restante <= 0
-                    ? `Ya tenés ${enCarrito} en el carrito`
-                    : "Añadir al carrito"}
-              </motion.button>
-            </div>
           </div>
 
           {/* Ocasiones recomendadas: calculadas, no son dato del catálogo. */}
@@ -266,7 +195,7 @@ export default function DetalleProducto({
               coordinamos la entrega. Pagás por transferencia bancaria, en
               efectivo cuando corresponda o con un link de Mercado Pago que te
               enviamos por WhatsApp. Envíos a todo Uruguay.{" "}
-              <Link href="/#envios" className="text-champan underline-offset-4 hover:underline">
+              <Link href="/#envios" className="text-champan underline underline-offset-4 hover:text-oro-claro">
                 Envíos y pagos
               </Link>
             </p>
@@ -372,7 +301,7 @@ export default function DetalleProducto({
               slug={producto.slug}
               className="shrink-0 px-5 py-3 text-sm"
             >
-              {estado === "stock" ? "Pedir por WhatsApp" : "Consultar"}
+              Consultar por WhatsApp
             </BotonPedidoWhatsApp>
           </motion.div>
         )}

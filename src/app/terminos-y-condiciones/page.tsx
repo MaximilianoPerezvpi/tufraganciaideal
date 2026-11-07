@@ -16,17 +16,17 @@ const SECCIONES = [
   {
     titulo: "2. Precios y disponibilidad",
     texto:
-      "Todos los precios están expresados en pesos uruguayos (UYU) e incluyen IVA. El stock que ves en cada ficha de producto se actualiza a medida que se procesan los pedidos; antes de cobrar te confirmamos por WhatsApp que el perfume sigue disponible.",
+      "Todos los precios están expresados en pesos uruguayos (UYU) e incluyen IVA. Que un perfume esté publicado en el catálogo no garantiza su disponibilidad inmediata: antes de cerrar cada pedido te confirmamos por WhatsApp la disponibilidad, el precio final y el tiempo de entrega.",
   },
   {
     titulo: "3. Compra y pago",
     texto:
-      "Los pedidos se realizan por WhatsApp: el botón \"Hacer Pedido por WhatsApp\" envía el detalle del perfume o del carrito con los precios vigentes. La compra se confirma recién cuando te respondemos con la disponibilidad (y el plazo, en los perfumes a pedido) y coordinamos la forma de pago: transferencia bancaria, efectivo cuando corresponda, o Mercado Pago mediante un link de pago que enviamos por WhatsApp. Esta web no procesa pagos ni guarda datos de tarjetas.",
+      "Los pedidos se realizan por WhatsApp: el botón \"Consultar por WhatsApp\" de cada perfume envía su nombre y el precio publicado. La compra se confirma recién cuando te respondemos con la disponibilidad y el tiempo de entrega, y coordinamos la forma de pago: transferencia bancaria, efectivo cuando corresponda, o Mercado Pago mediante un link de pago que enviamos por WhatsApp. Esta web no procesa pagos ni guarda datos de tarjetas.",
   },
   {
     titulo: "4. Envíos",
     texto:
-      "Envíos a todo el país vía DAC y UES. Los tiempos y costos de envío se detallan en la Política de Envíos. El costo se calcula según tu departamento y te lo confirmamos por WhatsApp antes de que pagues.",
+      "Envíos a todo el país por agencia (DAC u otra, según tu localidad), delivery en Montevideo o retiro coordinado. Los tiempos y costos de envío se detallan en la Política de Envíos. El costo se calcula según tu departamento y te lo confirmamos por WhatsApp antes de que pagues.",
   },
   {
     titulo: "5. Devoluciones y garantía",

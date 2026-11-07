@@ -25,7 +25,7 @@ const CANALES = [
   },
   {
     titulo: "Instagram",
-    texto: "Novedades, lanzamientos y stock disponible.",
+    texto: "Novedades, lanzamientos y recomendaciones.",
     href: site.instagramUrl,
     etiqueta: `@${site.instagram}`,
     externo: true,

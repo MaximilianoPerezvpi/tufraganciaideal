@@ -3,13 +3,13 @@ import { productos } from "@/data/productos";
 
 const CATEGORIAS = [
   {
-    href: "/catalogo?categoria=arabes",
+    href: "/perfumes-arabes",
     etiqueta: "Perfumes Árabes",
     detalle: "Oud, gourmand y oriental: Lattafa, Armaf, Rasasi y más.",
     filtro: "árabes" as const,
   },
   {
-    href: "/catalogo?categoria=disenador",
+    href: "/perfumes-de-disenador",
     etiqueta: "Perfumería de Diseñador",
     detalle: "Las casas de siempre: Dior, Versace, YSL, Chanel y más.",
     filtro: "diseñador" as const,
