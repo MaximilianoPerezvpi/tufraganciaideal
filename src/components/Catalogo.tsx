@@ -202,7 +202,8 @@ export default function Catalogo({
             <p className="max-w-[52ch] text-arena">
               Perfumes árabes y de diseñador 100% originales. Consultá por
               WhatsApp la disponibilidad, el precio y el tiempo de entrega de
-              cualquier fragancia: te asesoramos personalmente.
+              cualquier fragancia: te asesoramos personalmente. Los precios
+              pueden variar.
             </p>
           </div>
 

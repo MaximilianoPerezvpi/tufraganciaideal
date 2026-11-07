@@ -125,6 +125,10 @@ export default function DetalleProducto({
           <p className="cifras mt-6 text-3xl text-champan">
             {precio(producto.precio_uyu)}
           </p>
+          <p className="mt-1 text-micro text-arena">
+            Precio en pesos uruguayos. Los precios pueden variar: te lo
+            confirmamos por WhatsApp antes de cerrar el pedido.
+          </p>
 
           {/* Mismo mensaje para todo el catálogo: la disponibilidad, el
               precio final y el plazo se confirman por WhatsApp. */}

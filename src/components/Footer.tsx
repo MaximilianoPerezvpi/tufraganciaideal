@@ -219,7 +219,9 @@ export default function Footer() {
         <p className="text-micro text-arena">
           © {new Date().getFullYear()} {site.nombre}. Vendemos frascos
           originales sellados; no somos distribuidores oficiales de las marcas
-          mencionadas. Precios en pesos uruguayos, IVA incluido.
+          mencionadas. Precios en pesos uruguayos, IVA incluido. Los precios
+          pueden variar sin previo aviso: el precio final se confirma por
+          WhatsApp antes de cerrar cada pedido.
         </p>
       </div>
     </footer>

@@ -16,7 +16,7 @@ const SECCIONES = [
   {
     titulo: "2. Precios y disponibilidad",
     texto:
-      "Todos los precios están expresados en pesos uruguayos (UYU) e incluyen IVA. Que un perfume esté publicado en el catálogo no garantiza su disponibilidad inmediata: antes de cerrar cada pedido te confirmamos por WhatsApp la disponibilidad, el precio final y el tiempo de entrega.",
+      "Todos los precios están expresados en pesos uruguayos (UYU) e incluyen IVA, y pueden variar sin previo aviso: el precio válido es el que te confirmamos por WhatsApp al cerrar el pedido. Que un perfume esté publicado en el catálogo no garantiza su disponibilidad inmediata: antes de cerrar cada pedido te confirmamos por WhatsApp la disponibilidad, el precio final y el tiempo de entrega.",
   },
   {
     titulo: "3. Compra y pago",
