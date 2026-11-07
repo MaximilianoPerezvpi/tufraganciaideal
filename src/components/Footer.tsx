@@ -7,7 +7,7 @@ import { linkWhatsApp, navegacion, site } from "@/lib/site";
 const GARANTIAS = [
   "Perfumes originales y sellados",
   "Confirmás todo antes de pagar",
-  "Devolución total si no es original",
+  "Atención personalizada por WhatsApp",
 ];
 
 const MEDIOS_PAGO = ["Transferencia bancaria", "Efectivo", "Mercado Pago (link de pago)"];
@@ -25,12 +25,12 @@ const FAQ = [
   {
     pregunta: "¿Cómo sé que el perfume es original?",
     respuesta:
-      "Vendemos perfumes originales, en su caja y con el celofán de fábrica. Antes de pagar podés preguntarnos todo lo que necesites por WhatsApp. Y si alguna vez recibís un producto que no sea 100% original, te devolvemos el dinero.",
+      "En TuFragancia Ideal comercializamos exclusivamente perfumes 100% originales, en su caja y con el celofán de fábrica. Y antes de pagar podés preguntarnos por WhatsApp todo lo que necesites sobre tu perfume.",
   },
   {
     pregunta: "¿Puedo devolver un frasco si me arrepentí?",
     respuesta:
-      "Sí, tenés 7 días para devolverlo sin abrir. Y devolución total, sin condiciones, si alguna vez recibís algo que no sea original.",
+      "Sí, tenés 7 días desde que lo recibís para devolverlo sin abrir.",
   },
   {
     pregunta: "¿Cómo sé si un perfume está disponible?",
@@ -45,7 +45,7 @@ const FAQ = [
   {
     pregunta: "¿Qué pasa si mi pedido llega dañado o con un problema?",
     respuesta:
-      "Escribinos por WhatsApp contándonos qué pasó (si podés, con fotos). Si el producto no llega en condiciones o no es 100% original, la devolución, incluido el envío, corre por nuestra cuenta.",
+      "Escribinos por WhatsApp contándonos qué pasó (si podés, con fotos). Si el producto no llega en condiciones, la devolución, incluido el envío, corre por nuestra cuenta.",
   },
   {
     pregunta: "¿Qué medios de pago aceptan?",
@@ -181,7 +181,7 @@ export default function Footer() {
       <div className="marco grid gap-10 border-t border-borde py-12 md:grid-cols-3 md:gap-8">
         <div className="flex flex-col gap-8">
           <div>
-            <p className="kicker">Garantías de autenticidad</p>
+            <p className="kicker">100% perfumes originales</p>
             <ul className="mt-3 flex flex-col gap-2">
               {GARANTIAS.map((texto) => (
                 <li key={texto} className="flex items-start gap-2 text-sm text-arena">

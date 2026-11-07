@@ -31,7 +31,7 @@ const SECCIONES = [
   {
     titulo: "5. Devoluciones y garantía",
     texto:
-      "Tenés 7 días desde que recibís el pedido para devolver un frasco sin abrir. Si en algún momento recibís un producto que no sea 100% original, te lo cambiamos o te devolvemos el dinero, sin condiciones.",
+      "Comercializamos exclusivamente perfumes 100% originales. Tenés 7 días desde que recibís el pedido para devolver un frasco sin abrir. Si el producto no llega en condiciones, la devolución, incluido el envío, corre por nuestra cuenta.",
   },
   {
     titulo: "6. Marcas registradas",

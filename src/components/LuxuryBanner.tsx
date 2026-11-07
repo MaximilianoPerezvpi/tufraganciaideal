@@ -27,13 +27,13 @@ export default function LuxuryBanner() {
         </span>
 
         <h2 className="mt-6 max-w-[24ch] font-display text-[length:var(--text-medio)] font-light leading-tight text-marfil">
-          Originales, sellados y con garantía
+          100% perfumes originales
         </h2>
 
         <p className="mt-5 max-w-[52ch] leading-relaxed text-arena">
-          Cada perfume llega en su caja, con el celofán de fábrica. Si alguna
-          vez recibís un producto que no sea 100% original, te devolvemos el
-          dinero.
+          Comercializamos exclusivamente fragancias auténticas: cada perfume
+          llega en su caja, con el celofán de fábrica, para que compres con
+          total confianza.
         </p>
       </div>
     </section>

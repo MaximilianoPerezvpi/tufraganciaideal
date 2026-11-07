@@ -58,7 +58,7 @@ export default function TarjetaProducto({
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
 
-          {/* Badge de autenticidad: verde verificado, el mismo en todo el sitio. */}
+          {/* Badge de originalidad: verde, el mismo en todo el sitio. */}
           <span className="absolute left-3 top-3 rounded-full bg-noche/80 px-3 py-1 text-micro text-vetiver backdrop-blur-sm">
             100% original sellado
           </span>

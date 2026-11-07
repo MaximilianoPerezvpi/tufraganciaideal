@@ -32,7 +32,7 @@ const SECCIONES = [
   {
     titulo: "Devoluciones",
     texto:
-      "Tenés 7 días desde que recibís el pedido para devolver un frasco sin abrir, corriendo el costo de envío de vuelta por tu cuenta. Si el producto no llega en condiciones o no es 100% original, la devolución (incluido el envío) corre por nuestra cuenta.",
+      "Tenés 7 días desde que recibís el pedido para devolver un frasco sin abrir, corriendo el costo de envío de vuelta por tu cuenta. Si el producto no llega en condiciones, la devolución (incluido el envío) corre por nuestra cuenta.",
   },
 ] as const;
 

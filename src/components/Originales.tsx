@@ -15,9 +15,9 @@ import { motion } from "framer-motion";
 
 const PASOS = [
   {
-    titulo: "Original y sellado",
+    titulo: "100% perfumes originales",
     texto:
-      "Vendemos perfumes originales, en su caja y con el celofán de fábrica. Nada de réplicas, testers ni frascos abiertos.",
+      "En TuFragancia Ideal comercializamos exclusivamente perfumes 100% originales, en su caja y con el celofán de fábrica.",
   },
   {
     titulo: "Lo confirmás antes de pagar",
@@ -27,7 +27,7 @@ const PASOS = [
   {
     titulo: "Te llega sellado",
     texto:
-      "Lo recibís sin abrir, como salió de fábrica. Si alguna vez recibís un producto que no sea 100% original, te devolvemos el dinero.",
+      "Lo recibís sin abrir, tal como salió de fábrica, con la tranquilidad de saber que estás comprando una fragancia auténtica.",
   },
 ];
 
@@ -39,14 +39,14 @@ export default function Originales() {
     >
       <div className="marco">
         <div className="max-w-[52ch]">
-          <p className="kicker">Garantía</p>
+          <p className="kicker">Originalidad</p>
           <h2 className="mt-2 font-display text-[length:var(--text-titulo)] font-light leading-tight text-marfil">
-            Original, sellado y con garantía.
+            100% perfumes originales.
           </h2>
           <p className="mt-4 text-arena">
-            En perfumería el problema no es el precio, es saber qué estás
-            comprando. Todo lo que está en el catálogo es frasco original
-            cerrado: ni réplicas, ni testers, ni frascos abiertos.
+            En TuFragancia Ideal comercializamos exclusivamente perfumes 100%
+            originales. Queremos que tengas la tranquilidad y la confianza de
+            saber que estás comprando fragancias auténticas.
           </p>
         </div>
 
@@ -78,8 +78,8 @@ export default function Originales() {
           <p className="max-w-[52ch] text-marfil">
             {/* TODO: ajustá el plazo de devolución al que realmente vayas a sostener. */}
             Tenés <span className="cifras text-vetiver">7 días</span> para
-            devolver el frasco sin abrir si te arrepentiste, y devolución total
-            si alguna vez recibís algo que no sea original.
+            devolver el frasco sin abrir si te arrepentiste. Y si no llega en
+            condiciones, la devolución corre por nuestra cuenta.
           </p>
           <Link
             href="/catalogo"

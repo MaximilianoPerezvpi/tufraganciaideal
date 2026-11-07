@@ -22,7 +22,7 @@ import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
 
 const CONFIANZA = [
   "100% Original Sellado",
-  "Garantía de Autenticidad",
+  "Atención Personalizada",
   "Envío a todo Uruguay",
 ] as const;
 
