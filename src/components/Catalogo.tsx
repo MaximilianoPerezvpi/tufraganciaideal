@@ -205,6 +205,21 @@ export default function Catalogo({
               cualquier fragancia: te asesoramos personalmente. Los precios
               pueden variar.
             </p>
+            {/* Aviso arriba: el banner completo de "¿No encontraste…?" queda
+                al final de la grilla, muy lejos en un celular. */}
+            <p className="mt-3 max-w-[52ch] text-sm text-arena">
+              ¿No está el perfume que buscás?{" "}
+              <a
+                href={linkPerfumeFueraDeCatalogo()}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-wa-origen="catalogo-aviso"
+                className="text-vetiver underline underline-offset-4 hover:text-marfil"
+              >
+                Consultanos por WhatsApp
+              </a>{" "}
+              y hacemos lo posible por conseguirlo.
+            </p>
           </div>
 
           <div
