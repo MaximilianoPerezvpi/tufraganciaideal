@@ -21,7 +21,8 @@ export const site = {
   instagram: "tufraganciaidealuy",
   instagramUrl: "https://www.instagram.com/tufraganciaidealuy/",
   // Canal de WhatsApp "Novedades y Ofertas" (solo publica la tienda; los
-  // seguidores no se ven entre sí). Se muestra en /mayoristas.
+  // seguidores no se ven entre sí). Se muestra en /mayoristas, en el cierre
+  // del home y en el footer.
   canalWhatsApp: "https://whatsapp.com/channel/0029VbEceQFKgsNkSsI6og2f",
   // Vacío = no se muestra. TODO: cargá un email real (el de
   // @tufraganciaideal.uy no existe: el dominio no está registrado).

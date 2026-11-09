@@ -160,6 +160,15 @@ export default function Footer() {
             </a>
           </div>
           <p className="mt-3 text-sm text-arena">@{site.instagram}</p>
+          <a
+            href={site.canalWhatsApp}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-wa-origen="footer"
+            className="mt-2 inline-block text-sm text-champan underline underline-offset-4 hover:text-oro-claro"
+          >
+            Canal de ofertas en WhatsApp
+          </a>
         </div>
 
         <div>

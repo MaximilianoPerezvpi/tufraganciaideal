@@ -27,6 +27,18 @@ export default function CTAWhatsApp() {
             Escribinos por WhatsApp
           </BotonPedidoWhatsApp>
           <p className="mt-6 text-sm text-arena">
+            ¿Querés enterarte primero de las ofertas?{" "}
+            <a
+              href={site.canalWhatsApp}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-wa-origen="home-cta-final"
+              className="text-champan underline underline-offset-4 hover:text-oro-claro"
+            >
+              Seguí nuestro canal de WhatsApp
+            </a>
+          </p>
+          <p className="mt-3 text-sm text-arena">
             ¿Querés revender perfumes?{" "}
             <Link href="/mayoristas" className="text-champan underline underline-offset-4 hover:text-oro-claro">
               Conocé nuestra propuesta mayorista
