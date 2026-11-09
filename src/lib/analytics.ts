@@ -18,6 +18,8 @@ import type { Producto } from "@/data/productos";
  *     con el término y cuántos resultados dio (0 = perfume que buscan y no está).
  *   - Consultas mayoristas y por perfumes no publicados: además, eventos
  *     propios `consulta_mayorista` / `consulta_fuera_de_catalogo`.
+ *   - Clic en "Seguir el canal" de WhatsApp: evento propio `seguir_canal`
+ *     (no cuenta como contacto: es suscribirse a las ofertas).
  *   - Clic en WhatsApp: GA4 `generate_lead` / Meta `Contact`. Es un CONTACTO
  *     (inicio de consulta), nunca una compra: la venta se cierra en el chat
  *     y la web no se entera.
@@ -102,6 +104,12 @@ export function trackContactoWhatsApp(origen: string, slug?: string) {
     content_category: origen,
     ...(slug ? { content_ids: [slug] } : {}),
   });
+}
+
+/** Clic en el link del canal de WhatsApp de novedades y ofertas. */
+export function trackSeguirCanal(origen: string) {
+  gtag("event", "seguir_canal", { origen });
+  fbq("trackCustom", "seguir_canal", { origen });
 }
 
 export function trackAgregarCarrito(p: Producto, cantidad: number) {

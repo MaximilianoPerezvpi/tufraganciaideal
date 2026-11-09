@@ -68,12 +68,23 @@ export default function PaginaMayoristas() {
               para compras mayoristas. Consultanos por disponibilidad,
               cantidades y precios especiales.
             </p>
-            <a
-              href="#cotizacion"
-              className="mt-9 inline-flex rounded-full bg-champan px-8 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-noche transition-transform duration-200 hover:scale-[1.02] hover:bg-oro-claro"
-            >
-              Solicitar cotización
-            </a>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <a
+                href="#cotizacion"
+                className="inline-flex rounded-full bg-champan px-8 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-noche transition-transform duration-200 hover:scale-[1.02] hover:bg-oro-claro"
+              >
+                Solicitar cotización
+              </a>
+              <a
+                href={site.canalWhatsApp}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-wa-origen="mayoristas-portada"
+                className="inline-flex rounded-full border border-champan/50 px-8 py-4 text-sm uppercase tracking-[0.12em] text-champan transition-colors hover:bg-champan hover:text-noche"
+              >
+                Seguir el canal de ofertas
+              </a>
+            </div>
           </div>
         </section>
 
@@ -86,6 +97,32 @@ export default function PaginaMayoristas() {
                 <p className="mt-2 text-sm leading-relaxed text-arena">{texto}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Canal de WhatsApp: ofertas sin tener que pedir cotización */}
+        <section className="marco pb-16 md:pb-20">
+          <div className="flex flex-col gap-6 rounded-2xl border border-champan/30 bg-carbon p-6 md:flex-row md:items-center md:justify-between md:p-8">
+            <div className="max-w-[56ch]">
+              <p className="kicker">Canal de WhatsApp</p>
+              <h2 className="mt-2 font-display text-2xl font-light text-marfil">
+                Novedades y Ofertas de TuFragancia Ideal
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-arena">
+                Seguí nuestro canal y enterate primero de ingresos, promociones
+                y ofertas. Solo publicamos nosotros: nadie ve tu número ni
+                quiénes más lo siguen.
+              </p>
+            </div>
+            <a
+              href={site.canalWhatsApp}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-wa-origen="mayoristas-canal"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-champan px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] text-noche transition-transform duration-200 hover:scale-[1.02] hover:bg-oro-claro"
+            >
+              Seguir el canal
+            </a>
           </div>
         </section>
 

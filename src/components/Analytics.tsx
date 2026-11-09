@@ -8,6 +8,7 @@ import {
   META_PIXEL_ID,
   trackContactoWhatsApp,
   trackPageViewMeta,
+  trackSeguirCanal,
 } from "@/lib/analytics";
 
 /**
@@ -34,9 +35,12 @@ export default function Analytics() {
   useEffect(() => {
     if (!GA4_ID && !META_PIXEL_ID) return;
     const alClic = (e: MouseEvent) => {
-      const link = (e.target as Element | null)?.closest?.<HTMLAnchorElement>(
-        'a[href^="https://wa.me/"]',
+      const objetivo = e.target as Element | null;
+      const canal = objetivo?.closest?.<HTMLAnchorElement>(
+        'a[href^="https://whatsapp.com/channel/"]',
       );
+      if (canal) return trackSeguirCanal(canal.dataset.waOrigen ?? "otro");
+      const link = objetivo?.closest?.<HTMLAnchorElement>('a[href^="https://wa.me/"]');
       if (!link) return;
       trackContactoWhatsApp(
         link.dataset.waOrigen ?? "otro",
