@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/Header";
 import FormularioMayorista from "@/components/FormularioMayorista";
+import OfertasMayoristas from "@/components/OfertasMayoristas";
 import { productos } from "@/data/productos";
 import { site } from "@/lib/site";
 
@@ -12,8 +13,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/mayoristas" },
 };
 
-// Solo lo que la tienda ya ofrece hoy: sin precios, mínimos, descuentos ni
-// márgenes (cada solicitud se evalúa por separado).
+// Solo lo que la tienda ya ofrece hoy. Los precios mayoristas publicados
+// están en OfertasMayoristas; el resto se cotiza por separado.
 const BENEFICIOS = [
   {
     titulo: "Catálogo amplio",
@@ -70,23 +71,22 @@ export default function PaginaMayoristas() {
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <a
-                href="#cotizacion"
+                href="#ofertas"
                 className="inline-flex rounded-full bg-champan px-8 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-noche transition-transform duration-200 hover:scale-[1.02] hover:bg-oro-claro"
               >
-                Solicitar cotización
+                Ver ofertas por caja
               </a>
               <a
-                href={site.canalWhatsApp}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-wa-origen="mayoristas-portada"
+                href="#cotizacion"
                 className="inline-flex rounded-full border border-champan/50 px-8 py-4 text-sm uppercase tracking-[0.12em] text-champan transition-colors hover:bg-champan hover:text-noche"
               >
-                Seguir el canal de ofertas
+                Solicitar cotización
               </a>
             </div>
           </div>
         </section>
+
+        <OfertasMayoristas />
 
         {/* Para quién */}
         <section className="marco py-16 md:py-20">
@@ -159,9 +159,9 @@ export default function PaginaMayoristas() {
               </ol>
 
               <p className="mt-10 max-w-[52ch] text-micro leading-relaxed text-arena">
-                No publicamos precios mayoristas: cada solicitud se evalúa de
-                forma individual según los perfumes, las cantidades y la
-                disponibilidad del momento.
+                Además de las ofertas por caja publicadas, cotizamos otros
+                perfumes y cantidades: cada solicitud se evalúa según los
+                perfumes, las cantidades y la disponibilidad del momento.
               </p>
               <p className="mt-4 text-sm text-arena">
                 Mirá novedades en Instagram:{" "}

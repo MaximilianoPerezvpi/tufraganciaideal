@@ -83,6 +83,7 @@ export function trackVistaProducto(p: Producto) {
 // dimensiones personalizadas: además de `generate_lead`, llevan su evento.
 const EVENTO_POR_ORIGEN: Record<string, string> = {
   mayoristas: "consulta_mayorista",
+  "mayoristas-oferta": "consulta_mayorista",
   "catalogo-consulta": "consulta_fuera_de_catalogo",
   "catalogo-aviso": "consulta_fuera_de_catalogo",
   "envios-consulta": "consulta_fuera_de_catalogo",

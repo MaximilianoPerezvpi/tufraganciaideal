@@ -158,6 +158,7 @@ src/
 │  ├─ BotonAgregarCarrito.tsx "Agregar al carrito" (secundario)
 │  ├─ CartDrawer.tsx          carrito lateral → un mensaje de WhatsApp
 │  ├─ FormularioMayorista.tsx solicitud mayorista → WhatsApp
+│  ├─ OfertasMayoristas.tsx  ofertas por caja con precios (editar OFERTAS)
 │  ├─ BotonPedidoWhatsApp.tsx botón "Hacer Pedido por WhatsApp"
 │  ├─ Originales.tsx          garantía de autenticidad
 │  ├─ Envios.tsx              pagos y envíos
