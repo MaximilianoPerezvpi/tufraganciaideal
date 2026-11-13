@@ -184,7 +184,7 @@ export default function OfertasMayoristas() {
 
         <h3 className="mt-14 font-display text-2xl font-light text-marfil">Cajas cerradas</h3>
 
-        <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-6 grid gap-5 md:grid-cols-2">
           {OFERTAS.map((o) => {
             const publico = precioPublico(o);
             const mejor = Math.min(...o.escalas.map((e) => e.precioUnitario));
@@ -203,7 +203,7 @@ export default function OfertasMayoristas() {
                       src={o.imagen.src}
                       alt={o.imagen.alt}
                       fill
-                      sizes="(min-width: 1280px) 400px, (min-width: 768px) 50vw, 100vw"
+                      sizes="(min-width: 1280px) 560px, (min-width: 768px) 50vw, 100vw"
                       className={o.imagen.encuadre === "contain" ? "object-contain p-3" : "object-cover"}
                     />
                   </div>
