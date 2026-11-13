@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { productos } from "@/data/productos";
 import { linkWhatsApp } from "@/lib/site";
 import ArmadorCajaSurtida, { CAJA, MINIMO, type LineaSurtida } from "./ArmadorCajaSurtida";
@@ -13,7 +14,13 @@ import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
  * queda sincronizado con la lista de precios).
  *
  * Cajas surtidas: LINEAS_SURTIDAS (una caja por línea, no se mezclan).
+ *
+ * Fotos: public/mayoristas/. `imagen.encuadre` = "cover" para fotos de
+ * ambiente (llenan el recuadro) o "contain" para fotos con fondo blanco.
+ * Algunas fueron generadas con IA: por eso el aviso AVISO_IA de la sección.
  */
+
+type Imagen = { src: string; alt: string; encuadre: "cover" | "contain" };
 
 type Escala = { unidades: number; precioUnitario: number; etiqueta: string; caja: boolean };
 
@@ -25,6 +32,7 @@ type Oferta = {
   nota?: string;
   escalas: Escala[];
   referencia?: string[];
+  imagen?: Imagen;
 };
 
 const OFERTAS: Oferta[] = [
@@ -34,6 +42,7 @@ const OFERTAS: Oferta[] = [
     nombre: "Hawas Ice",
     escalas: [{ unidades: 12, precioUnitario: 2200, etiqueta: "Caja cerrada x 12", caja: true }],
     referencia: ["rasasi-hawas-ice"],
+    imagen: { src: "/mayoristas/rasasi-hawas-ice-caja.webp", alt: "Caja de 12 Rasasi Hawas Ice", encuadre: "cover" },
   },
   {
     id: "supremacy-collectors",
@@ -44,6 +53,7 @@ const OFERTAS: Oferta[] = [
       { unidades: 12, precioUnitario: 2590, etiqueta: "Caja cerrada x 12", caja: true },
       { unidades: 3, precioUnitario: 2690, etiqueta: "Desde 3 unidades", caja: false },
     ],
+    imagen: { src: "/mayoristas/afnan-supremacy-collectors-caja.webp", alt: "Caja de Afnan Supremacy Collector's Edition", encuadre: "cover" },
   },
   {
     id: "club-de-nuit-intense-man",
@@ -51,30 +61,35 @@ const OFERTAS: Oferta[] = [
     nombre: "Club de Nuit Intense Man",
     escalas: [{ unidades: 12, precioUnitario: 1650, etiqueta: "Caja cerrada x 12", caja: true }],
     referencia: ["armaf-club-de-nuit-intense-men"],
+    imagen: { src: "/mayoristas/armaf-club-de-nuit-intense-man.webp", alt: "Armaf Club de Nuit Intense Man con su caja", encuadre: "contain" },
   },
 ];
 
-type ModeloBase = { nombre: string; precio: number; referencia?: string };
+type ModeloBase = { nombre: string; precio: number; referencia?: string; imagen?: string };
 
-const LINEAS_SURTIDAS: { id: string; titulo: string; casa: string; modelos: ModeloBase[] }[] = [
+const LINEAS_SURTIDAS: (Omit<LineaSurtida, "modelos"> & { modelos: ModeloBase[] })[] = [
   {
     id: "afnan-turathi",
     titulo: "Afnan y Turathi",
     casa: "Afnan",
     modelos: [
-      { nombre: "9PM", precio: 2250, referencia: "afnan-9pm" },
-      { nombre: "9PM Night Out", precio: 2800 },
-      { nombre: "9AM Dive", precio: 2350 },
-      { nombre: "9PM Rebel", precio: 2500 },
-      { nombre: "9PM Pour Femme", precio: 2500 },
-      { nombre: "Turathi Blue", precio: 2450 },
-      { nombre: "Turathi Electric", precio: 2450 },
+      { nombre: "9PM", precio: 2250, referencia: "afnan-9pm", imagen: "/mayoristas/afnan-9pm.webp" },
+      { nombre: "9PM Night Out", precio: 2800, imagen: "/mayoristas/afnan-9pm-night-out.webp" },
+      { nombre: "9AM Dive", precio: 2350, imagen: "/mayoristas/afnan-9am-dive.webp" },
+      { nombre: "9PM Rebel", precio: 2500, imagen: "/mayoristas/afnan-9pm-rebel.webp" },
+      { nombre: "9PM Pour Femme", precio: 2500, imagen: "/mayoristas/afnan-9pm-pour-femme.webp" },
+      { nombre: "Turathi Blue", precio: 2450, imagen: "/mayoristas/afnan-turathi-blue.webp" },
+      { nombre: "Turathi Electric", precio: 2450, imagen: "/mayoristas/afnan-turathi-electric.webp" },
     ],
   },
   {
     id: "odyssey",
     titulo: "Armaf Odyssey",
     casa: "Armaf",
+    imagen: {
+      src: "/mayoristas/armaf-odyssey-lineup.webp",
+      alt: "Armaf Odyssey Mandarin Sky, Aqua, Mega y Nexus juntos",
+    },
     modelos: [
       { nombre: "Odyssey Mandarin Sky", precio: 1700, referencia: "armaf-odyssey-mandarinsky" },
       { nombre: "Odyssey Aqua", precio: 1700, referencia: "armaf-odyssey-aqua" },
@@ -94,6 +109,9 @@ function lineasConReferencia(): LineaSurtida[] {
     })),
   }));
 }
+
+const AVISO_IA =
+  "Algunas de las imágenes de esta sección fueron generadas con inteligencia artificial (IA), por lo que pueden presentar pequeños detalles o variaciones menores respecto al producto físico real.";
 
 function monto(valor: number): string {
   return `$${new Intl.NumberFormat("es-UY", { maximumFractionDigits: 0 }).format(valor)}`;
@@ -145,6 +163,11 @@ export default function OfertasMayoristas() {
           .
         </p>
 
+        <p className="mt-3 flex max-w-[64ch] gap-2 text-micro leading-relaxed text-arena">
+          <span aria-hidden className="text-champan">✦</span>
+          <span>{AVISO_IA}</span>
+        </p>
+
         <div className="mt-10">
           <ArmadorCajaSurtida lineas={lineasConReferencia()} />
         </div>
@@ -158,8 +181,23 @@ export default function OfertasMayoristas() {
             return (
               <article
                 key={o.id}
-                className="flex flex-col rounded-2xl border border-borde bg-carbon p-6 transition-colors hover:border-champan/40 md:p-7"
+                className="flex flex-col overflow-hidden rounded-2xl border border-borde bg-carbon p-6 transition-colors hover:border-champan/40 md:p-7"
               >
+                {o.imagen && (
+                  <div
+                    className={`relative -mx-6 -mt-6 mb-6 aspect-[16/9] md:-mx-7 md:-mt-7 ${
+                      o.imagen.encuadre === "contain" ? "bg-white" : "bg-humo"
+                    }`}
+                  >
+                    <Image
+                      src={o.imagen.src}
+                      alt={o.imagen.alt}
+                      fill
+                      sizes="(min-width: 1280px) 400px, (min-width: 768px) 50vw, 100vw"
+                      className={o.imagen.encuadre === "contain" ? "object-contain p-3" : "object-cover"}
+                    />
+                  </div>
+                )}
                 <p className="text-micro uppercase tracking-[0.18em] text-champan">{o.casa}</p>
                 <h3 className="mt-1 font-display text-2xl font-light text-marfil">{o.nombre}</h3>
                 {o.modelos && (

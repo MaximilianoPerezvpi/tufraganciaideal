@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { linkWhatsApp } from "@/lib/site";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
@@ -21,8 +22,15 @@ export const MINIMO = 6;
 export const CAJA = 12;
 const MAXIMO_POR_MODELO = 48;
 
-export type ModeloSurtido = { nombre: string; precio: number; precioTienda?: number };
-export type LineaSurtida = { id: string; titulo: string; casa: string; modelos: ModeloSurtido[] };
+export type ModeloSurtido = { nombre: string; precio: number; precioTienda?: number; imagen?: string };
+export type LineaSurtida = {
+  id: string;
+  titulo: string;
+  casa: string;
+  /** Foto grupal de la línea (se muestra arriba de la lista). */
+  imagen?: { src: string; alt: string };
+  modelos: ModeloSurtido[];
+};
 
 function monto(valor: number): string {
   return `$${new Intl.NumberFormat("es-UY", { maximumFractionDigits: 0 }).format(valor)}`;
@@ -119,12 +127,35 @@ export default function ArmadorCajaSurtida({ lineas }: { lineas: LineaSurtida[] 
         </div>
       </div>
 
+      {linea.imagen && (
+        <div className="relative mt-6 aspect-[16/9] overflow-hidden rounded-xl border border-borde/70 bg-humo md:aspect-[21/9]">
+          <Image
+            src={linea.imagen.src}
+            alt={linea.imagen.alt}
+            fill
+            sizes="(min-width: 1280px) 1100px, 100vw"
+            className="object-cover"
+          />
+        </div>
+      )}
+
       <ul className="mt-6 divide-y divide-borde/70 rounded-xl border border-borde/70 bg-noche/40">
         {linea.modelos.map((m) => {
           const n = cantidades[clave(m)] ?? 0;
           return (
             <li key={m.nombre} className="flex items-center justify-between gap-3 px-4 py-3">
-              <div className="min-w-0">
+              {m.imagen && (
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-white md:h-16 md:w-16">
+                  <Image
+                    src={m.imagen}
+                    alt={`${linea.casa} ${m.nombre}`}
+                    fill
+                    sizes="64px"
+                    className="object-contain p-1"
+                  />
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
                 <p className="text-sm text-marfil">
                   <span className="text-arena">{linea.casa}</span> {m.nombre}
                 </p>
