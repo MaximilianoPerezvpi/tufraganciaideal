@@ -52,10 +52,11 @@ const OFERTAS: Oferta[] = [
     referencia: ["armaf-odyssey-mandarinsky", "armaf-odyssey-aqua", "armaf-odyssey-mega"],
   },
   {
-    id: "interesse-man",
-    casa: "Lattafa",
-    nombre: "Interesse Man",
+    id: "club-de-nuit-intense-man",
+    casa: "Armaf",
+    nombre: "Club de Nuit Intense Man",
     escalas: [{ unidades: 12, precioUnitario: 1650, etiqueta: "Caja cerrada x 12", caja: true }],
+    referencia: ["armaf-club-de-nuit-intense-men"],
   },
 ];
 
