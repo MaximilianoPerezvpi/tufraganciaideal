@@ -56,6 +56,16 @@ const OFERTAS: Oferta[] = [
     imagen: { src: "/mayoristas/afnan-supremacy-collectors-caja.webp", alt: "Caja de Afnan Supremacy Collector's Edition", encuadre: "cover" },
   },
   {
+    id: "odyssey",
+    casa: "Armaf",
+    nombre: "Odyssey",
+    modelos: ["Mandarin Sky", "Aqua", "Mega", "Nexus"],
+    nota: "Caja surtida: podés combinar los modelos, no hace falta que sean los 12 iguales. También podés armarla arriba, modelo por modelo.",
+    escalas: [{ unidades: 12, precioUnitario: 1700, etiqueta: "Caja x 12 (surtida)", caja: true }],
+    referencia: ["armaf-odyssey-mandarinsky", "armaf-odyssey-aqua", "armaf-odyssey-mega"],
+    imagen: { src: "/mayoristas/armaf-odyssey-lineup.webp", alt: "Armaf Odyssey Mandarin Sky, Aqua, Mega y Nexus juntos", encuadre: "cover" },
+  },
+  {
     id: "club-de-nuit-intense-man",
     casa: "Armaf",
     nombre: "Club de Nuit Intense Man",
