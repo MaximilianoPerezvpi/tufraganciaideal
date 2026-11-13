@@ -53,8 +53,12 @@ export default function ArmadorCajaSurtida({ lineas }: { lineas: LineaSurtida[] 
   const unidades = elegidos.reduce((s, [, n]) => s + n, 0);
   const total = elegidos.reduce((s, [m, n]) => s + m.precio * n, 0);
 
-  const ajustar = (m: ModeloSurtido, n: number) =>
-    setCantidades((c) => ({ ...c, [clave(m)]: Math.max(0, Math.min(MAXIMO_POR_MODELO, n)) }));
+  // Suma sobre el estado anterior: clics rápidos no se pierden.
+  const ajustar = (m: ModeloSurtido, delta: number) =>
+    setCantidades((c) => {
+      const k = clave(m);
+      return { ...c, [k]: Math.max(0, Math.min(MAXIMO_POR_MODELO, (c[k] ?? 0) + delta)) };
+    });
 
   // Completa hasta la caja de 12 repartiendo de a una unidad entre modelos.
   const completarCaja = () => {
@@ -134,7 +138,7 @@ export default function ArmadorCajaSurtida({ lineas }: { lineas: LineaSurtida[] 
               <div className="flex shrink-0 items-center rounded-full border border-borde">
                 <button
                   type="button"
-                  onClick={() => ajustar(m, n - 1)}
+                  onClick={() => ajustar(m, -1)}
                   disabled={n === 0}
                   aria-label={`Quitar una unidad de ${m.nombre}`}
                   className="h-9 w-9 text-arena transition-colors hover:text-marfil disabled:opacity-30 disabled:hover:text-arena"
@@ -146,7 +150,7 @@ export default function ArmadorCajaSurtida({ lineas }: { lineas: LineaSurtida[] 
                 </span>
                 <button
                   type="button"
-                  onClick={() => ajustar(m, n + 1)}
+                  onClick={() => ajustar(m, 1)}
                   disabled={n >= MAXIMO_POR_MODELO}
                   aria-label={`Agregar una unidad de ${m.nombre}`}
                   className="h-9 w-9 text-arena transition-colors hover:text-marfil disabled:opacity-30 disabled:hover:text-arena"
