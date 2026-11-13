@@ -84,6 +84,7 @@ export function trackVistaProducto(p: Producto) {
 const EVENTO_POR_ORIGEN: Record<string, string> = {
   mayoristas: "consulta_mayorista",
   "mayoristas-oferta": "consulta_mayorista",
+  "mayoristas-caja": "consulta_mayorista",
   "catalogo-consulta": "consulta_fuera_de_catalogo",
   "catalogo-aviso": "consulta_fuera_de_catalogo",
   "envios-consulta": "consulta_fuera_de_catalogo",

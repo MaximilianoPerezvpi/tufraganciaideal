@@ -1,5 +1,6 @@
 import { productos } from "@/data/productos";
 import { linkWhatsApp } from "@/lib/site";
+import ArmadorCajaSurtida, { CAJA, MINIMO, type LineaSurtida } from "./ArmadorCajaSurtida";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
 
 /**
@@ -10,6 +11,8 @@ import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
  * `referencia` = slugs del catálogo minorista: si existen, se muestra su
  * precio al público como referencia de margen (sale de productos.ts, así
  * queda sincronizado con la lista de precios).
+ *
+ * Cajas surtidas: LINEAS_SURTIDAS (una caja por línea, no se mezclan).
  */
 
 type Escala = { unidades: number; precioUnitario: number; etiqueta: string; caja: boolean };
@@ -43,15 +46,6 @@ const OFERTAS: Oferta[] = [
     ],
   },
   {
-    id: "odyssey",
-    casa: "Armaf",
-    nombre: "Odyssey",
-    modelos: ["Mandarin Sky", "Aqua", "Mega", "Nexus"],
-    nota: "Caja surtida: podés combinar los modelos, no hace falta que sean los 12 iguales.",
-    escalas: [{ unidades: 12, precioUnitario: 1700, etiqueta: "Caja x 12 (surtida)", caja: true }],
-    referencia: ["armaf-odyssey-mandarinsky", "armaf-odyssey-aqua", "armaf-odyssey-mega"],
-  },
-  {
     id: "club-de-nuit-intense-man",
     casa: "Armaf",
     nombre: "Club de Nuit Intense Man",
@@ -59,6 +53,47 @@ const OFERTAS: Oferta[] = [
     referencia: ["armaf-club-de-nuit-intense-men"],
   },
 ];
+
+type ModeloBase = { nombre: string; precio: number; referencia?: string };
+
+const LINEAS_SURTIDAS: { id: string; titulo: string; casa: string; modelos: ModeloBase[] }[] = [
+  {
+    id: "afnan-turathi",
+    titulo: "Afnan y Turathi",
+    casa: "Afnan",
+    modelos: [
+      { nombre: "9PM", precio: 2250, referencia: "afnan-9pm" },
+      { nombre: "9PM Night Out", precio: 2800 },
+      { nombre: "9AM Dive", precio: 2350 },
+      { nombre: "9PM Rebel", precio: 2500 },
+      { nombre: "9PM Pour Femme", precio: 2500 },
+      { nombre: "Turathi Blue", precio: 2450 },
+      { nombre: "Turathi Electric", precio: 2450 },
+    ],
+  },
+  {
+    id: "odyssey",
+    titulo: "Armaf Odyssey",
+    casa: "Armaf",
+    modelos: [
+      { nombre: "Odyssey Mandarin Sky", precio: 1700, referencia: "armaf-odyssey-mandarinsky" },
+      { nombre: "Odyssey Aqua", precio: 1700, referencia: "armaf-odyssey-aqua" },
+      { nombre: "Odyssey Mega", precio: 1700, referencia: "armaf-odyssey-mega" },
+      { nombre: "Odyssey Nexus", precio: 1700 },
+    ],
+  },
+];
+
+/** Suma el precio de tienda (si el perfume está en el catálogo). */
+function lineasConReferencia(): LineaSurtida[] {
+  return LINEAS_SURTIDAS.map((l) => ({
+    ...l,
+    modelos: l.modelos.map(({ referencia, ...m }) => ({
+      ...m,
+      precioTienda: productos.find((p) => p.slug === referencia)?.precio_uyu,
+    })),
+  }));
+}
 
 function monto(valor: number): string {
   return `$${new Intl.NumberFormat("es-UY", { maximumFractionDigits: 0 }).format(valor)}`;
@@ -94,8 +129,29 @@ export default function OfertasMayoristas() {
           Elegí la oferta, escribinos por WhatsApp con el mensaje ya armado y
           te confirmamos disponibilidad.
         </p>
+        <p className="mt-4 max-w-[64ch] rounded-xl border border-champan/30 bg-champan/[0.06] px-4 py-3 text-sm leading-relaxed text-marfil">
+          <strong className="font-semibold text-champan">No todos los productos requieren {CAJA} unidades.</strong>{" "}
+          El mínimo mayorista es de {MINIMO} unidades: si querés otra cantidad o
+          formato,{" "}
+          <a
+            href={linkWhatsApp(`¡Hola! Quiero consultar por una compra mayorista con otra cantidad o formato (mínimo ${MINIMO} unidades).`)}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-wa-origen="mayoristas-oferta"
+            className="text-champan underline underline-offset-4 hover:text-oro-claro"
+          >
+            consultanos por WhatsApp
+          </a>
+          .
+        </p>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-2">
+        <div className="mt-10">
+          <ArmadorCajaSurtida lineas={lineasConReferencia()} />
+        </div>
+
+        <h3 className="mt-14 font-display text-2xl font-light text-marfil">Cajas cerradas</h3>
+
+        <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {OFERTAS.map((o) => {
             const publico = precioPublico(o);
             const mejor = Math.min(...o.escalas.map((e) => e.precioUnitario));
