@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { linkWhatsApp } from "@/lib/site";
+import { CAJA, MINIMO, precioSugerido } from "@/lib/mayoristas";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
 
 /**
@@ -18,11 +19,10 @@ import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
  * el precio de tienda cuando el perfume está en el catálogo.
  */
 
-export const MINIMO = 6;
-export const CAJA = 12;
 const MAXIMO_POR_MODELO = 48;
 
-export type ModeloSurtido = { nombre: string; precio: number; precioTienda?: number; imagen?: string };
+
+export type ModeloSurtido = { nombre: string; precio: number; imagen?: string };
 export type LineaSurtida = {
   id: string;
   titulo: string;
@@ -60,6 +60,7 @@ export default function ArmadorCajaSurtida({ lineas }: { lineas: LineaSurtida[] 
     .filter(([, n]) => n > 0);
   const unidades = elegidos.reduce((s, [, n]) => s + n, 0);
   const total = elegidos.reduce((s, [m, n]) => s + m.precio * n, 0);
+  const ventaSugerida = elegidos.reduce((s, [m, n]) => s + precioSugerido(m.precio) * n, 0);
 
   // Suma sobre el estado anterior: clics rápidos no se pierden.
   const ajustar = (m: ModeloSurtido, delta: number) =>
@@ -160,10 +161,8 @@ export default function ArmadorCajaSurtida({ lineas }: { lineas: LineaSurtida[] 
                   <span className="text-arena">{linea.casa}</span> {m.nombre}
                 </p>
                 <p className="cifras mt-0.5 text-micro text-arena">
-                  <span className="text-champan">{monto(m.precio)}</span> c/u
-                  {m.precioTienda && m.precioTienda > m.precio && (
-                    <> · en tienda {monto(m.precioTienda)}</>
-                  )}
+                  <span className="text-champan">{monto(m.precio)}</span> c/u · venta
+                  sugerida {monto(precioSugerido(m.precio))}
                 </p>
               </div>
               <div className="flex shrink-0 items-center rounded-full border border-borde">
@@ -200,6 +199,12 @@ export default function ArmadorCajaSurtida({ lineas }: { lineas: LineaSurtida[] 
             <span className="font-display text-3xl text-champan">{monto(total)}</span>{" "}
             <span className="text-sm text-arena">· {unidades} {unidades === 1 ? "unidad" : "unidades"}</span>
           </p>
+          {unidades > 0 && (
+            <p className="cifras mt-1 text-sm text-arena">
+              Venta sugerida: {monto(ventaSugerida)} · ganancia estimada{" "}
+              <span className="text-vetiver">{monto(ventaSugerida - total)}</span>*
+            </p>
+          )}
           <p className={`mt-1 max-w-[52ch] text-sm leading-relaxed ${estado.tono}`} aria-live="polite">
             {estado.texto}
           </p>

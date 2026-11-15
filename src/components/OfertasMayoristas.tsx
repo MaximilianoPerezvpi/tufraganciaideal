@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { productos } from "@/data/productos";
 import { linkWhatsApp } from "@/lib/site";
-import ArmadorCajaSurtida, { CAJA, MINIMO, type LineaSurtida } from "./ArmadorCajaSurtida";
+import { CAJA, MINIMO, precioSugerido } from "@/lib/mayoristas";
+import ArmadorCajaSurtida, { type LineaSurtida, type ModeloSurtido } from "./ArmadorCajaSurtida";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
 
 /**
@@ -9,9 +9,8 @@ import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
  * Para cambiar un precio o sumar una oferta, editá OFERTAS: el total de la
  * caja se calcula solo (unitario x unidades).
  *
- * `referencia` = slugs del catálogo minorista: si existen, se muestra su
- * precio al público como referencia de margen (sale de productos.ts, así
- * queda sincronizado con la lista de precios).
+ * Precio sugerido de venta: lo calcula `precioSugerido` (costo + $400 a
+ * $499, terminado en 90). Es solo una sugerencia para el revendedor.
  *
  * Cajas surtidas: LINEAS_SURTIDAS (una caja por línea, no se mezclan).
  *
@@ -31,7 +30,6 @@ type Oferta = {
   modelos?: string[];
   nota?: string;
   escalas: Escala[];
-  referencia?: string[];
   imagen?: Imagen;
 };
 
@@ -41,7 +39,6 @@ const OFERTAS: Oferta[] = [
     casa: "Rasasi",
     nombre: "Hawas Ice",
     escalas: [{ unidades: 12, precioUnitario: 2200, etiqueta: "Caja cerrada x 12", caja: true }],
-    referencia: ["rasasi-hawas-ice"],
     imagen: { src: "/mayoristas/rasasi-hawas-ice-caja.webp", alt: "Caja de 12 Rasasi Hawas Ice", encuadre: "cover" },
   },
   {
@@ -62,7 +59,6 @@ const OFERTAS: Oferta[] = [
     modelos: ["Mandarin Sky", "Aqua", "Mega", "Nexus"],
     nota: "Caja surtida: podés combinar los modelos, no hace falta que sean los 12 iguales. También podés armarla arriba, modelo por modelo.",
     escalas: [{ unidades: 12, precioUnitario: 1700, etiqueta: "Caja x 12 (surtida)", caja: true }],
-    referencia: ["armaf-odyssey-mandarinsky", "armaf-odyssey-aqua", "armaf-odyssey-mega"],
     imagen: { src: "/mayoristas/armaf-odyssey-lineup.webp", alt: "Armaf Odyssey Mandarin Sky, Aqua, Mega y Nexus juntos", encuadre: "cover" },
   },
   {
@@ -70,20 +66,17 @@ const OFERTAS: Oferta[] = [
     casa: "Armaf",
     nombre: "Club de Nuit Intense Man",
     escalas: [{ unidades: 12, precioUnitario: 1650, etiqueta: "Caja cerrada x 12", caja: true }],
-    referencia: ["armaf-club-de-nuit-intense-men"],
     imagen: { src: "/mayoristas/armaf-club-de-nuit-intense-man.webp", alt: "Armaf Club de Nuit Intense Man con su caja", encuadre: "contain" },
   },
 ];
 
-type ModeloBase = { nombre: string; precio: number; referencia?: string; imagen?: string };
-
-const LINEAS_SURTIDAS: (Omit<LineaSurtida, "modelos"> & { modelos: ModeloBase[] })[] = [
+const LINEAS_SURTIDAS: (Omit<LineaSurtida, "modelos"> & { modelos: ModeloSurtido[] })[] = [
   {
     id: "afnan-turathi",
     titulo: "Afnan y Turathi",
     casa: "Afnan",
     modelos: [
-      { nombre: "9PM", precio: 2250, referencia: "afnan-9pm", imagen: "/mayoristas/afnan-9pm.webp" },
+      { nombre: "9PM", precio: 2250, imagen: "/mayoristas/afnan-9pm.webp" },
       { nombre: "9PM Night Out", precio: 2800, imagen: "/mayoristas/afnan-9pm-night-out.webp" },
       { nombre: "9AM Dive", precio: 2350, imagen: "/mayoristas/afnan-9am-dive.webp" },
       { nombre: "9PM Rebel", precio: 2500, imagen: "/mayoristas/afnan-9pm-rebel.webp" },
@@ -101,24 +94,16 @@ const LINEAS_SURTIDAS: (Omit<LineaSurtida, "modelos"> & { modelos: ModeloBase[] 
       alt: "Armaf Odyssey Mandarin Sky, Aqua, Mega y Nexus juntos",
     },
     modelos: [
-      { nombre: "Odyssey Mandarin Sky", precio: 1700, referencia: "armaf-odyssey-mandarinsky" },
-      { nombre: "Odyssey Aqua", precio: 1700, referencia: "armaf-odyssey-aqua" },
-      { nombre: "Odyssey Mega", precio: 1700, referencia: "armaf-odyssey-mega" },
+      { nombre: "Odyssey Mandarin Sky", precio: 1700 },
+      { nombre: "Odyssey Aqua", precio: 1700 },
+      { nombre: "Odyssey Mega", precio: 1700 },
       { nombre: "Odyssey Nexus", precio: 1700 },
     ],
   },
 ];
 
-/** Suma el precio de tienda (si el perfume está en el catálogo). */
-function lineasConReferencia(): LineaSurtida[] {
-  return LINEAS_SURTIDAS.map((l) => ({
-    ...l,
-    modelos: l.modelos.map(({ referencia, ...m }) => ({
-      ...m,
-      precioTienda: productos.find((p) => p.slug === referencia)?.precio_uyu,
-    })),
-  }));
-}
+const AVISO_SUGERIDO =
+  "Los precios sugeridos de venta son solo una referencia, pensada para que ganes entre $400 y $500 por unidad. El precio final lo decidís vos.";
 
 const AVISO_IA =
   "Algunas de las imágenes de esta sección fueron generadas con inteligencia artificial (IA), por lo que pueden presentar pequeños detalles o variaciones menores respecto al producto físico real.";
@@ -127,12 +112,17 @@ function monto(valor: number): string {
   return `$${new Intl.NumberFormat("es-UY", { maximumFractionDigits: 0 }).format(valor)}`;
 }
 
-/** Menor precio al público de las referencias que están en el catálogo. */
-function precioPublico(o: Oferta): number | undefined {
-  const precios = productos
-    .filter((p) => o.referencia?.includes(p.slug))
-    .map((p) => p.precio_uyu);
-  return precios.length ? Math.min(...precios) : undefined;
+/** "Venta sugerida $2.690 c/u · ganás $490 por unidad ($5.880 la caja)". */
+function Sugerido({ escala: e }: { escala: Escala }) {
+  const venta = precioSugerido(e.precioUnitario);
+  const ganancia = venta - e.precioUnitario;
+  return (
+    <p className="cifras mt-2 border-t border-borde/60 pt-2 text-micro leading-relaxed text-arena">
+      Venta sugerida <span className="text-marfil">{monto(venta)}</span> c/u · ganás{" "}
+      <span className="text-vetiver">{monto(ganancia)}</span> por unidad
+      {e.caja && <> ({monto(ganancia * e.unidades)} la caja)</>}*
+    </p>
+  );
 }
 
 function mensaje(o: Oferta, e: Escala): string {
@@ -153,9 +143,10 @@ export default function OfertasMayoristas() {
           Precios por caja para revender con margen
         </h2>
         <p className="mt-4 max-w-[60ch] text-arena">
-          Comprá por caja a precio mayorista y vendé al precio de tienda.
-          Elegí la oferta, escribinos por WhatsApp con el mensaje ya armado y
-          te confirmamos disponibilidad.
+          Comprá por caja a precio mayorista y revendé con margen: en cada
+          perfume te mostramos un precio sugerido de venta. Elegí la oferta,
+          escribinos por WhatsApp con el mensaje ya armado y te confirmamos
+          disponibilidad.
         </p>
         <p className="mt-4 max-w-[64ch] rounded-xl border border-champan/30 bg-champan/[0.06] px-4 py-3 text-sm leading-relaxed text-marfil">
           <strong className="font-semibold text-champan">No todos los productos requieren {CAJA} unidades.</strong>{" "}
@@ -174,20 +165,18 @@ export default function OfertasMayoristas() {
         </p>
 
         <p className="mt-3 flex max-w-[64ch] gap-2 text-micro leading-relaxed text-arena">
+          <span aria-hidden className="text-champan">*</span>
+          <span>{AVISO_SUGERIDO}</span>
+        </p>
+        <p className="mt-2 flex max-w-[64ch] gap-2 text-micro leading-relaxed text-arena">
           <span aria-hidden className="text-champan">✦</span>
           <span>{AVISO_IA}</span>
         </p>
 
-        <div className="mt-10">
-          <ArmadorCajaSurtida lineas={lineasConReferencia()} />
-        </div>
-
-        <h3 className="mt-14 font-display text-2xl font-light text-marfil">Cajas cerradas</h3>
+        <h3 className="mt-12 font-display text-2xl font-light text-marfil">Cajas cerradas</h3>
 
         <div className="mt-6 grid gap-5 md:grid-cols-2">
           {OFERTAS.map((o) => {
-            const publico = precioPublico(o);
-            const mejor = Math.min(...o.escalas.map((e) => e.precioUnitario));
             return (
               <article
                 key={o.id}
@@ -224,32 +213,28 @@ export default function OfertasMayoristas() {
                   {o.escalas.map((e) => (
                     <div
                       key={e.etiqueta}
-                      className="flex items-end justify-between gap-4 rounded-xl border border-borde/70 bg-noche/40 px-4 py-3"
+                      className="rounded-xl border border-borde/70 bg-noche/40 px-4 py-3"
                     >
-                      <div>
-                        <p className="text-sm text-marfil">{e.etiqueta}</p>
-                        {e.caja && (
-                          <p className="cifras mt-0.5 text-micro text-arena">
-                            Total caja: {monto(e.precioUnitario * e.unidades)}
-                          </p>
-                        )}
+                      <div className="flex items-end justify-between gap-4">
+                        <div>
+                          <p className="text-sm text-marfil">{e.etiqueta}</p>
+                          {e.caja && (
+                            <p className="cifras mt-0.5 text-micro text-arena">
+                              Total caja: {monto(e.precioUnitario * e.unidades)}
+                            </p>
+                          )}
+                        </div>
+                        <p className="cifras text-right">
+                          <span className="font-display text-2xl text-champan">{monto(e.precioUnitario)}</span>
+                          <span className="block text-micro text-arena">por unidad</span>
+                        </p>
                       </div>
-                      <p className="cifras text-right">
-                        <span className="font-display text-2xl text-champan">{monto(e.precioUnitario)}</span>
-                        <span className="block text-micro text-arena">por unidad</span>
-                      </p>
+                      <Sugerido escala={e} />
                     </div>
                   ))}
                 </div>
 
                 {o.nota && <p className="mt-4 text-sm leading-relaxed text-arena">{o.nota}</p>}
-                {publico && (
-                  <p className="mt-3 text-sm text-arena">
-                    En nuestra tienda se vende a{" "}
-                    <span className="cifras text-marfil">{monto(publico)}</span>: hasta{" "}
-                    <span className="cifras text-vetiver">{monto(publico - mejor)}</span> de diferencia por unidad.
-                  </p>
-                )}
 
                 <div className="mt-auto flex flex-col gap-2 pt-6">
                   {o.escalas.map((e) => (
@@ -266,6 +251,10 @@ export default function OfertasMayoristas() {
               </article>
             );
           })}
+        </div>
+
+        <div className="mt-14">
+          <ArmadorCajaSurtida lineas={LINEAS_SURTIDAS} />
         </div>
 
         <p className="mt-8 max-w-[70ch] text-micro leading-relaxed text-arena">
