@@ -8,9 +8,13 @@ export const CAJA = 12;
 /**
  * Precio sugerido de venta al público para el revendedor: costo + al menos
  * $400, redondeado hacia arriba a un precio terminado en 90 (como los de la
- * tienda). Así la ganancia queda entre $400 y $499 por unidad.
+ * tienda), o sea $400 a $499 de ganancia por unidad.
+ *
+ * Piso: si el perfume está en el catálogo, el sugerido nunca queda por
+ * debajo del precio de la tienda (`precioTienda`); en ese caso se iguala.
  * Es solo una sugerencia: cada revendedor fija su precio.
  */
-export function precioSugerido(costo: number): number {
-  return Math.ceil((costo + 400 - 90) / 100) * 100 + 90;
+export function precioSugerido(costo: number, precioTienda?: number): number {
+  const base = Math.ceil((costo + 400 - 90) / 100) * 100 + 90;
+  return Math.max(base, precioTienda ?? 0);
 }

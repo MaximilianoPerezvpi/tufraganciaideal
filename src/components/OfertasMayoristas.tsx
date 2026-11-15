@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { linkWhatsApp } from "@/lib/site";
+import { productos } from "@/data/productos";
 import { CAJA, MINIMO, precioSugerido } from "@/lib/mayoristas";
 import ArmadorCajaSurtida, { type LineaSurtida, type ModeloSurtido } from "./ArmadorCajaSurtida";
 import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
@@ -10,7 +11,9 @@ import BotonPedidoWhatsApp from "./BotonPedidoWhatsApp";
  * caja se calcula solo (unitario x unidades).
  *
  * Precio sugerido de venta: lo calcula `precioSugerido` (costo + $400 a
- * $499, terminado en 90). Es solo una sugerencia para el revendedor.
+ * $499, terminado en 90). `catalogo` = slugs del perfume en la tienda: el
+ * sugerido nunca queda por debajo de ese precio (sale de productos.ts).
+ * Es solo una sugerencia para el revendedor.
  *
  * Cajas surtidas: LINEAS_SURTIDAS (una caja por línea, no se mezclan).
  *
@@ -30,6 +33,7 @@ type Oferta = {
   modelos?: string[];
   nota?: string;
   escalas: Escala[];
+  catalogo?: string[];
   imagen?: Imagen;
 };
 
@@ -39,6 +43,7 @@ const OFERTAS: Oferta[] = [
     casa: "Rasasi",
     nombre: "Hawas Ice",
     escalas: [{ unidades: 12, precioUnitario: 2200, etiqueta: "Caja cerrada x 12", caja: true }],
+    catalogo: ["rasasi-hawas-ice"],
     imagen: { src: "/mayoristas/rasasi-hawas-ice-caja.webp", alt: "Caja de 12 Rasasi Hawas Ice", encuadre: "cover" },
   },
   {
@@ -59,6 +64,7 @@ const OFERTAS: Oferta[] = [
     modelos: ["Mandarin Sky", "Aqua", "Mega", "Nexus"],
     nota: "Caja surtida: podés combinar los modelos, no hace falta que sean los 12 iguales. También podés armarla arriba, modelo por modelo.",
     escalas: [{ unidades: 12, precioUnitario: 1700, etiqueta: "Caja x 12 (surtida)", caja: true }],
+    catalogo: ["armaf-odyssey-mandarinsky", "armaf-odyssey-aqua", "armaf-odyssey-mega"],
     imagen: { src: "/mayoristas/armaf-odyssey-lineup.webp", alt: "Armaf Odyssey Mandarin Sky, Aqua, Mega y Nexus juntos", encuadre: "cover" },
   },
   {
@@ -66,17 +72,20 @@ const OFERTAS: Oferta[] = [
     casa: "Armaf",
     nombre: "Club de Nuit Intense Man",
     escalas: [{ unidades: 12, precioUnitario: 1650, etiqueta: "Caja cerrada x 12", caja: true }],
+    catalogo: ["armaf-club-de-nuit-intense-men"],
     imagen: { src: "/mayoristas/armaf-club-de-nuit-intense-man.webp", alt: "Armaf Club de Nuit Intense Man con su caja", encuadre: "contain" },
   },
 ];
 
-const LINEAS_SURTIDAS: (Omit<LineaSurtida, "modelos"> & { modelos: ModeloSurtido[] })[] = [
+type ModeloConCatalogo = Omit<ModeloSurtido, "precioTienda"> & { catalogo?: string };
+
+const LINEAS_SURTIDAS: (Omit<LineaSurtida, "modelos"> & { modelos: ModeloConCatalogo[] })[] = [
   {
     id: "afnan-turathi",
     titulo: "Afnan y Turathi",
     casa: "Afnan",
     modelos: [
-      { nombre: "9PM", precio: 2250, imagen: "/mayoristas/afnan-9pm.webp" },
+      { nombre: "9PM", precio: 2250, catalogo: "afnan-9pm", imagen: "/mayoristas/afnan-9pm.webp" },
       { nombre: "9PM Night Out", precio: 2800, imagen: "/mayoristas/afnan-9pm-night-out.webp" },
       { nombre: "9AM Dive", precio: 2350, imagen: "/mayoristas/afnan-9am-dive.webp" },
       { nombre: "9PM Rebel", precio: 2500, imagen: "/mayoristas/afnan-9pm-rebel.webp" },
@@ -94,16 +103,33 @@ const LINEAS_SURTIDAS: (Omit<LineaSurtida, "modelos"> & { modelos: ModeloSurtido
       alt: "Armaf Odyssey Mandarin Sky, Aqua, Mega y Nexus juntos",
     },
     modelos: [
-      { nombre: "Odyssey Mandarin Sky", precio: 1700 },
-      { nombre: "Odyssey Aqua", precio: 1700 },
-      { nombre: "Odyssey Mega", precio: 1700 },
+      { nombre: "Odyssey Mandarin Sky", precio: 1700, catalogo: "armaf-odyssey-mandarinsky" },
+      { nombre: "Odyssey Aqua", precio: 1700, catalogo: "armaf-odyssey-aqua" },
+      { nombre: "Odyssey Mega", precio: 1700, catalogo: "armaf-odyssey-mega" },
       { nombre: "Odyssey Nexus", precio: 1700 },
     ],
   },
 ];
 
 const AVISO_SUGERIDO =
-  "Los precios sugeridos de venta son solo una referencia, pensada para que ganes entre $400 y $500 por unidad. El precio final lo decidís vos.";
+  "Los precios sugeridos de venta son solo una referencia: buscan que ganes al menos $400 por unidad, sin quedar por debajo del precio de nuestra tienda. El precio final lo decidís vos.";
+
+/** Menor precio en la tienda entre los slugs dados (undefined si no está). */
+function precioTienda(slugs?: string[]): number | undefined {
+  const precios = productos.filter((p) => slugs?.includes(p.slug)).map((p) => p.precio_uyu);
+  return precios.length ? Math.min(...precios) : undefined;
+}
+
+/** Líneas del armador con el precio de tienda ya resuelto (piso del sugerido). */
+function lineasParaArmador(): LineaSurtida[] {
+  return LINEAS_SURTIDAS.map((l) => ({
+    ...l,
+    modelos: l.modelos.map(({ catalogo, ...m }) => ({
+      ...m,
+      precioTienda: precioTienda(catalogo ? [catalogo] : undefined),
+    })),
+  }));
+}
 
 const AVISO_IA =
   "Algunas de las imágenes de esta sección fueron generadas con inteligencia artificial (IA), por lo que pueden presentar pequeños detalles o variaciones menores respecto al producto físico real.";
@@ -113,8 +139,8 @@ function monto(valor: number): string {
 }
 
 /** "Venta sugerida $2.690 c/u · ganás $490 por unidad ($5.880 la caja)". */
-function Sugerido({ escala: e }: { escala: Escala }) {
-  const venta = precioSugerido(e.precioUnitario);
+function Sugerido({ escala: e, tienda }: { escala: Escala; tienda?: number }) {
+  const venta = precioSugerido(e.precioUnitario, tienda);
   const ganancia = venta - e.precioUnitario;
   return (
     <p className="cifras mt-2 border-t border-borde/60 pt-2 text-micro leading-relaxed text-arena">
@@ -229,7 +255,7 @@ export default function OfertasMayoristas() {
                           <span className="block text-micro text-arena">por unidad</span>
                         </p>
                       </div>
-                      <Sugerido escala={e} />
+                      <Sugerido escala={e} tienda={precioTienda(o.catalogo)} />
                     </div>
                   ))}
                 </div>
@@ -254,7 +280,7 @@ export default function OfertasMayoristas() {
         </div>
 
         <div className="mt-14">
-          <ArmadorCajaSurtida lineas={LINEAS_SURTIDAS} />
+          <ArmadorCajaSurtida lineas={lineasParaArmador()} />
         </div>
 
         <p className="mt-8 max-w-[70ch] text-micro leading-relaxed text-arena">
